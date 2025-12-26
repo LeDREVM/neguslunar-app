@@ -1,0 +1,212 @@
+# 🌙 NegusLunar
+
+Application web React pour suivre les phases lunaires, prendre des notes et découvrir des recettes végétaliennes selon ton humeur.
+
+Créé par **Négus Dja** - Directeur Artistique & Développeur - Guadeloupe 🇬🇵
+
+## ✨ Fonctionnalités
+
+- 🌙 **Phases Lunaires en temps réel** : Calcul automatique de la phase lunaire actuelle
+- 📝 **Journal & Notes** : Système de prise de notes avec sauvegarde locale
+- 🍃 **Recettes Végétaliennes** : 12 recettes organisées par humeur (énergique, calme, créatif, contemplatif)
+- 💾 **Sauvegarde automatique** : Les notes sont sauvegardées dans le navigateur
+- 🎨 **Design cosmique** : Interface magnifique avec animations et effets visuels
+
+## 🚀 Installation sur ton serveur Kaflow
+
+### 1. Transférer le projet sur le serveur
+
+```bash
+# Sur ton serveur Kaflow, clone ou upload le projet
+scp -r neguslunar-app/ user@kaflow:/var/www/
+```
+
+### 2. Installer Node.js (si pas déjà installé)
+
+```bash
+# Vérifier si Node.js est installé
+node --version
+
+# Si pas installé, installer Node.js 18+ :
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
+
+### 3. Installer les dépendances
+
+```bash
+cd neguslunar-app
+npm install
+```
+
+### 4. Développement local
+
+Pour tester en local :
+
+```bash
+npm run dev
+```
+
+L'app sera accessible sur `http://localhost:3000`
+
+### 5. Build pour production
+
+```bash
+npm run build
+```
+
+Cela créera un dossier `dist/` avec les fichiers optimisés.
+
+### 6. Déploiement sur serveur web
+
+#### Option A : Avec Nginx
+
+```bash
+# Copier les fichiers buildés
+sudo cp -r dist/* /var/www/neguslunar/
+
+# Configuration Nginx (créer un fichier /etc/nginx/sites-available/neguslunar)
+server {
+    listen 80;
+    server_name neguslunar.kaflow.com;  # ou ton domaine
+    
+    root /var/www/neguslunar;
+    index index.html;
+    
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+    
+    # Cache pour les assets
+    location ~* \.(js|css|png|jpg|jpeg|gif|svg|ico)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+}
+
+# Activer le site
+sudo ln -s /etc/nginx/sites-available/neguslunar /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+#### Option B : Avec PM2 (serveur Node)
+
+```bash
+# Installer PM2
+npm install -g pm2
+
+# Lancer le serveur de preview
+pm2 start npm --name "neguslunar" -- run serve
+
+# Sauvegarder la config PM2
+pm2 save
+pm2 startup
+```
+
+#### Option C : Avec Apache
+
+```bash
+# Copier les fichiers
+sudo cp -r dist/* /var/www/html/neguslunar/
+
+# Configuration Apache (.htaccess dans le dossier)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /neguslunar/
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /neguslunar/index.html [L]
+</IfModule>
+```
+
+### 7. SSL/HTTPS avec Certbot (recommandé)
+
+```bash
+sudo apt-get install certbot python3-certbot-nginx
+sudo certbot --nginx -d neguslunar.kaflow.com
+```
+
+## 📁 Structure du projet
+
+```
+neguslunar-app/
+├── public/           # Fichiers statiques
+├── src/
+│   ├── components/   # Composants React
+│   │   └── NegusLunar.jsx
+│   ├── App.jsx       # Composant principal
+│   ├── main.jsx      # Point d'entrée
+│   └── index.css     # Styles globaux
+├── index.html        # Template HTML
+├── package.json      # Dépendances
+├── vite.config.js    # Configuration Vite
+└── tailwind.config.js # Configuration Tailwind
+```
+
+## 🛠️ Technologies utilisées
+
+- **React 18** : Framework UI
+- **Vite** : Build tool ultra-rapide
+- **Tailwind CSS** : Framework CSS utility-first
+- **Lucide React** : Icônes modernes
+- **LocalStorage** : Sauvegarde des notes
+
+## 🎨 Personnalisation
+
+Tu peux modifier les couleurs, polices et recettes dans `/src/components/NegusLunar.jsx`
+
+### Ajouter des recettes :
+
+```javascript
+const recipesByMood = {
+  nouvelleHumeur: [
+    { name: 'Nom Recette', ingredients: 'Liste ingrédients' }
+  ]
+}
+```
+
+## 📱 Support navigateurs
+
+- Chrome/Edge 90+
+- Firefox 88+
+- Safari 14+
+- Tous navigateurs modernes
+
+## 🐛 Debugging
+
+```bash
+# Voir les logs en temps réel
+npm run dev
+
+# Build avec info détaillée
+npm run build -- --debug
+
+# Tester le build production localement
+npm run preview
+```
+
+## 📝 Notes importantes
+
+- Les données sont sauvegardées localement (localStorage) dans le navigateur
+- Pas de base de données externe nécessaire
+- Application 100% frontend, aucun backend requis
+
+## 🌟 Évolutions futures possibles
+
+- [ ] Synchronisation cloud des notes
+- [ ] Export PDF des notes
+- [ ] Plus de recettes et catégories
+- [ ] Calendrier lunaire complet 30 jours
+- [ ] Mode sombre/clair
+- [ ] Rappels basés sur phases lunaires
+- [ ] Partage de recettes
+
+## 📄 Licence
+
+Créé pour un usage personnel par Négus Dja
+
+---
+
+Fait avec 🌙 et 🥬 en Guadeloupe
