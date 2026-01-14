@@ -1133,7 +1133,7 @@ const NegusLunar = () => {
             <span className="sm:hidden">🌑</span>
           </button>
           <button
-            onClick={() => window.open('./recettedelasemaine/index2.html', '_blank')}
+            onClick={() => window.open('/recettedelasemaine/index2.html', '_blank')}
             className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 shadow-lg shadow-amber-500/50 hover:scale-105"
           >
             <Calendar size={16} className="sm:w-5 sm:h-5" />
