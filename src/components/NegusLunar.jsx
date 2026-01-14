@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Moon, Leaf, BookOpen, Plus, X, Calendar, ChevronLeft, ChevronRight, Download, Upload, UtensilsCrossed, Clock, Users, Sparkles, Heart, TrendingUp, Activity, Wind, Smile, Meh, Frown, Angry, Coffee } from 'lucide-react';
 import MoonCalendar from './MoonCalendar';
+import EclipseCalendar from './EclipseCalendar';
 import { getAccurateMoonPhase, isFullMoon, isNewMoon } from '../data/moonPhases2026';
+import { isEclipseDate, getEclipseForDate } from '../data/lunarEclipses2026';
 
 const NegusLunar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -92,6 +94,8 @@ const NegusLunar = () => {
   // Ajouter des informations supplémentaires
   const todayIsFullMoon = isFullMoon(currentDate);
   const todayIsNewMoon = isNewMoon(currentDate);
+  const todayIsEclipse = isEclipseDate(currentDate);
+  const todayEclipse = todayIsEclipse ? getEclipseForDate(currentDate) : null;
 
   // Recettes végétaliennes complètes par humeur
   const recipesByMood = {
@@ -1117,6 +1121,18 @@ const NegusLunar = () => {
             <span className="sm:hidden">✨</span>
           </button>
           <button
+            onClick={() => setActiveTab('eclipses')}
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base ${
+              activeTab === 'eclipses'
+                ? 'bg-gradient-to-r from-red-500 to-orange-500 shadow-lg shadow-red-500/50 scale-105'
+                : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
+            }`}
+          >
+            <Moon size={16} className="sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Éclipses</span>
+            <span className="sm:hidden">🌑</span>
+          </button>
+          <button
             onClick={() => window.open('./recettedelasemaine/index2.html', '_blank')}
             className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 shadow-lg shadow-amber-500/50 hover:scale-105"
           >
@@ -1138,8 +1154,18 @@ const NegusLunar = () => {
                 {moonPhase.name}
               </h2>
               
+              {/* Indicateur éclipse */}
+              {todayIsEclipse && todayEclipse && (
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-500/30 to-orange-500/30 border-2 border-red-400/50 rounded-full animate-pulse">
+                  <Sparkles size={20} className="text-red-300" />
+                  <span className="text-red-200 font-bold">
+                    🌑 Éclipse {todayEclipse.type} Aujourd'hui !
+                  </span>
+                </div>
+              )}
+              
               {/* Indicateur phase exacte */}
-              {(todayIsFullMoon || todayIsNewMoon) && (
+              {!todayIsEclipse && (todayIsFullMoon || todayIsNewMoon) && (
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border-2 border-yellow-400/50 rounded-full">
                   <Sparkles size={20} className="text-yellow-300" />
                   <span className="text-yellow-200 font-semibold">
@@ -1181,18 +1207,29 @@ const NegusLunar = () => {
                 })}
               </div>
               
-              {/* Lien vers calendrier complet */}
-              <button
-                onClick={() => setActiveTab('moonCalendar')}
-                className="mt-4 px-6 py-3 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 hover:from-yellow-500/30 hover:to-orange-500/30 border border-yellow-400/50 rounded-full transition-all text-yellow-200 hover:scale-105"
-              >
-                📅 Voir toutes les phases de 2026
-              </button>
+              {/* Liens vers calendrier complet */}
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <button
+                  onClick={() => setActiveTab('moonCalendar')}
+                  className="px-6 py-3 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 hover:from-yellow-500/30 hover:to-orange-500/30 border border-yellow-400/50 rounded-full transition-all text-yellow-200 hover:scale-105"
+                >
+                  📅 Voir toutes les phases de 2026
+                </button>
+                <button
+                  onClick={() => setActiveTab('eclipses')}
+                  className="px-6 py-3 bg-gradient-to-r from-red-500/20 to-orange-500/20 hover:from-red-500/30 hover:to-orange-500/30 border border-red-400/50 rounded-full transition-all text-red-200 hover:scale-105"
+                >
+                  🌑 Voir les éclipses lunaires
+                </button>
+              </div>
             </div>
           )}
 
           {/* Calendrier Lunaire Précis 2026 */}
           {activeTab === 'moonCalendar' && <MoonCalendar />}
+
+          {/* Éclipses Lunaires 2026 */}
+          {activeTab === 'eclipses' && <EclipseCalendar />}
 
           {/* Calendrier Lunaire */}
           {activeTab === 'calendar' && (
