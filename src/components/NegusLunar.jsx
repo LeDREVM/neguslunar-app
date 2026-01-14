@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Moon, Leaf, BookOpen, Plus, X, Calendar, ChevronLeft, ChevronRight, Download, Upload, UtensilsCrossed, Clock, Users, Sparkles, Heart, TrendingUp, Activity, Wind, Smile, Meh, Frown, Angry, Coffee } from 'lucide-react';
+import MoonCalendar from './MoonCalendar';
+import { getAccurateMoonPhase, isFullMoon, isNewMoon } from '../data/moonPhases2026';
 
 const NegusLunar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -83,7 +85,13 @@ const NegusLunar = () => {
     return phases[b];
   };
 
-  const moonPhase = getMoonPhase(currentDate);
+  // Utiliser les données précises si disponibles, sinon fallback sur le calcul
+  const accuratePhase = getAccurateMoonPhase(currentDate);
+  const moonPhase = accuratePhase || getMoonPhase(currentDate);
+  
+  // Ajouter des informations supplémentaires
+  const todayIsFullMoon = isFullMoon(currentDate);
+  const todayIsNewMoon = isNewMoon(currentDate);
 
   // Recettes végétaliennes complètes par humeur
   const recipesByMood = {
@@ -1049,6 +1057,18 @@ const NegusLunar = () => {
             <span className="sm:hidden">📅</span>
           </button>
           <button
+            onClick={() => setActiveTab('moonCalendar')}
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base ${
+              activeTab === 'moonCalendar'
+                ? 'bg-gradient-to-r from-yellow-500 to-orange-500 shadow-lg shadow-yellow-500/50 scale-105'
+                : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
+            }`}
+          >
+            <Moon size={16} className="sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Phases 2026</span>
+            <span className="sm:hidden">🌙</span>
+          </button>
+          <button
             onClick={() => setActiveTab('notes')}
             className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base ${
               activeTab === 'notes'
@@ -1117,6 +1137,38 @@ const NegusLunar = () => {
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent px-4">
                 {moonPhase.name}
               </h2>
+              
+              {/* Indicateur phase exacte */}
+              {(todayIsFullMoon || todayIsNewMoon) && (
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border-2 border-yellow-400/50 rounded-full">
+                  <Sparkles size={20} className="text-yellow-300" />
+                  <span className="text-yellow-200 font-semibold">
+                    {todayIsFullMoon ? 'Pleine Lune Exacte' : 'Nouvelle Lune Exacte'}
+                  </span>
+                  {moonPhase.exactTime && (
+                    <span className="text-yellow-300/80 text-sm">
+                      à {moonPhase.exactTime}
+                    </span>
+                  )}
+                </div>
+              )}
+              
+              {/* Illumination */}
+              {moonPhase.illumination !== undefined && (
+                <div className="max-w-xs mx-auto">
+                  <div className="flex items-center justify-between mb-2 text-sm text-purple-300">
+                    <span>Illumination</span>
+                    <span className="font-bold">{moonPhase.illumination}%</span>
+                  </div>
+                  <div className="w-full bg-white/10 rounded-full h-3 overflow-hidden">
+                    <div 
+                      className="h-full bg-gradient-to-r from-yellow-400 to-orange-400 transition-all duration-500"
+                      style={{ width: `${moonPhase.illumination}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+              
               <p className="text-base sm:text-lg md:text-xl text-purple-200/80 max-w-md mx-auto leading-relaxed px-4">
                 {moonPhase.description}
               </p>
@@ -1128,8 +1180,19 @@ const NegusLunar = () => {
                   day: 'numeric' 
                 })}
               </div>
+              
+              {/* Lien vers calendrier complet */}
+              <button
+                onClick={() => setActiveTab('moonCalendar')}
+                className="mt-4 px-6 py-3 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 hover:from-yellow-500/30 hover:to-orange-500/30 border border-yellow-400/50 rounded-full transition-all text-yellow-200 hover:scale-105"
+              >
+                📅 Voir toutes les phases de 2026
+              </button>
             </div>
           )}
+
+          {/* Calendrier Lunaire Précis 2026 */}
+          {activeTab === 'moonCalendar' && <MoonCalendar />}
 
           {/* Calendrier Lunaire */}
           {activeTab === 'calendar' && (
