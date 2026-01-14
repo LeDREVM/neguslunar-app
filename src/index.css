@@ -52,3 +52,48 @@ h1, h2, h3, h4, h5, h6 {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(147, 51, 234, 0.7);
 }
+
+/* Optimisations iPhone 12+ (390px × 844px et supérieur) */
+@media (max-width: 430px) {
+  /* Améliorer la lisibilité sur petits écrans */
+  body {
+    font-size: 14px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Éviter le zoom sur les inputs */
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+  
+  /* Optimiser l'espace vertical */
+  .container {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+}
+
+/* iPhone 12/13/14 (390px) */
+@media (max-width: 390px) {
+  h1 {
+    font-size: 2rem !important;
+  }
+  
+  h2 {
+    font-size: 1.5rem !important;
+  }
+  
+  h3 {
+    font-size: 1.25rem !important;
+  }
+}
+
+/* Support du notch iPhone */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+    padding-top: max(0px, env(safe-area-inset-top));
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
+}

@@ -959,15 +959,15 @@ const NegusLunar = () => {
       days.push(
         <div
           key={day}
-          className={`h-24 rounded-xl p-2 backdrop-blur-sm border transition-all hover:scale-105 ${
+          className={`h-16 sm:h-20 md:h-24 rounded-lg sm:rounded-xl p-1 sm:p-2 backdrop-blur-sm border transition-all active:scale-95 sm:hover:scale-105 ${
             isToday
               ? 'bg-purple-500/30 border-purple-400 shadow-lg shadow-purple-500/50'
               : 'bg-white/5 border-white/10 hover:border-purple-400/50'
           }`}
         >
-          <div className="text-xs font-semibold text-purple-200 mb-1">{day}</div>
-          <div className="text-2xl text-center">{phase.emoji}</div>
-          <div className="text-[10px] text-purple-300/70 text-center mt-1 leading-tight">
+          <div className="text-[10px] sm:text-xs font-semibold text-purple-200 mb-0.5 sm:mb-1">{day}</div>
+          <div className="text-lg sm:text-xl md:text-2xl text-center">{phase.emoji}</div>
+          <div className="text-[8px] sm:text-[10px] text-purple-300/70 text-center mt-0.5 sm:mt-1 leading-tight line-clamp-2">
             {phase.name}
           </div>
         </div>
@@ -976,14 +976,14 @@ const NegusLunar = () => {
     
     return (
       <div>
-        <div className="grid grid-cols-7 gap-2 mb-2">
+        <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-2">
           {dayNames.map(name => (
-            <div key={name} className="text-center text-sm font-semibold text-purple-200 py-2">
+            <div key={name} className="text-center text-xs sm:text-sm font-semibold text-purple-200 py-1 sm:py-2">
               {name}
             </div>
           ))}
         </div>
-        <div className="grid grid-cols-7 gap-2">
+        <div className="grid grid-cols-7 gap-1 sm:gap-2">
           {days}
         </div>
       </div>
@@ -1011,109 +1011,116 @@ const NegusLunar = () => {
       {/* Gradient overlay pour la profondeur */}
       <div className="absolute inset-0 bg-gradient-radial from-transparent via-purple-900/20 to-slate-900/40" />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 py-8">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
         {/* Header */}
-        <header className="mb-12 text-center">
-          <h1 className="text-6xl font-bold mb-3 bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 bg-clip-text text-transparent tracking-tight">
+        <header className="mb-8 sm:mb-12 text-center">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-2 sm:mb-3 bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 bg-clip-text text-transparent tracking-tight">
             NegusLunar
           </h1>
-          <p className="text-purple-200/80 text-lg font-light tracking-wide">
+          <p className="text-purple-200/80 text-sm sm:text-base md:text-lg font-light tracking-wide px-4">
             Phases lunaires • Notes • Cuisine végétalienne
           </p>
         </header>
 
         {/* Navigation */}
-        <nav className="flex justify-center gap-4 mb-10 flex-wrap">
+        <nav className="flex justify-center gap-2 sm:gap-3 md:gap-4 mb-6 sm:mb-8 md:mb-10 flex-wrap px-2">
           <button
             onClick={() => setActiveTab('lunar')}
-            className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base ${
               activeTab === 'lunar'
                 ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg shadow-purple-500/50 scale-105'
                 : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
             }`}
           >
-            <Moon size={20} />
-            Phase Lunaire
+            <Moon size={16} className="sm:w-5 sm:h-5" />
+            <span className="hidden xs:inline">Phase Lunaire</span>
+            <span className="xs:hidden">Phase</span>
           </button>
           <button
             onClick={() => setActiveTab('calendar')}
-            className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base ${
               activeTab === 'calendar'
                 ? 'bg-gradient-to-r from-indigo-500 to-blue-500 shadow-lg shadow-indigo-500/50 scale-105'
                 : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
             }`}
           >
-            <Calendar size={20} />
-            Calendrier
+            <Calendar size={16} className="sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Calendrier</span>
+            <span className="sm:hidden">📅</span>
           </button>
           <button
             onClick={() => setActiveTab('notes')}
-            className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base ${
               activeTab === 'notes'
                 ? 'bg-gradient-to-r from-green-500 to-teal-500 shadow-lg shadow-green-500/50 scale-105'
                 : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
             }`}
           >
-            <BookOpen size={20} />
-            Notes & Idées
+            <BookOpen size={16} className="sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Notes</span>
+            <span className="sm:hidden">📝</span>
           </button>
           <button
             onClick={() => setActiveTab('recipes')}
-            className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base ${
               activeTab === 'recipes'
                 ? 'bg-gradient-to-r from-pink-500 to-rose-500 shadow-lg shadow-pink-500/50 scale-105'
                 : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
             }`}
           >
-            <Leaf size={20} />
-            Recettes
+            <Leaf size={16} className="sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Recettes</span>
+            <span className="sm:hidden">🍃</span>
           </button>
           <button
             onClick={() => setActiveTab('dailyRecipe')}
-            className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base ${
               activeTab === 'dailyRecipe'
                 ? 'bg-gradient-to-r from-orange-500 to-amber-500 shadow-lg shadow-orange-500/50 scale-105'
                 : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
             }`}
           >
-            <UtensilsCrossed size={20} />
-            Recette du Jour
+            <UtensilsCrossed size={16} className="sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Recette</span>
+            <span className="sm:hidden">🍽️</span>
           </button>
           <button
             onClick={() => setActiveTab('ritual')}
-            className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base ${
               activeTab === 'ritual'
                 ? 'bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-lg shadow-purple-500/50 scale-105'
                 : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
             }`}
           >
-            <Sparkles size={20} />
-            Rituel Lunaire
+            <Sparkles size={16} className="sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Rituel</span>
+            <span className="sm:hidden">✨</span>
           </button>
           <button
             onClick={() => window.open('./recettedelasemaine/index2.html', '_blank')}
-            className="flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 shadow-lg shadow-amber-500/50 hover:scale-105"
+            className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 shadow-lg shadow-amber-500/50 hover:scale-105"
           >
-            <Calendar size={20} />
-            Menu Février 2026
+            <Calendar size={16} className="sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Menu Fév</span>
+            <span className="sm:hidden">📅</span>
           </button>
         </nav>
 
         {/* Contenu principal */}
-        <main className="backdrop-blur-md bg-white/5 rounded-3xl p-8 shadow-2xl border border-white/10">
+        <main className="backdrop-blur-md bg-white/5 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-2xl border border-white/10">
           {/* Phase Lunaire */}
           {activeTab === 'lunar' && (
-            <div className="text-center space-y-8 animate-fadeIn">
-              <div className="text-9xl mb-6 animate-pulse">
+            <div className="text-center space-y-4 sm:space-y-6 md:space-y-8 animate-fadeIn">
+              <div className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl mb-4 sm:mb-6 animate-pulse">
                 {moonPhase.emoji}
               </div>
-              <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent px-4">
                 {moonPhase.name}
               </h2>
-              <p className="text-xl text-purple-200/80 max-w-md mx-auto leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl text-purple-200/80 max-w-md mx-auto leading-relaxed px-4">
                 {moonPhase.description}
               </p>
-              <div className="text-purple-300/60 text-sm">
+              <div className="text-purple-300/60 text-xs sm:text-sm px-4">
                 {currentDate.toLocaleDateString('fr-FR', { 
                   weekday: 'long', 
                   year: 'numeric', 
@@ -1127,25 +1134,25 @@ const NegusLunar = () => {
           {/* Calendrier Lunaire */}
           {activeTab === 'calendar' && (
             <div className="animate-fadeIn">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-3xl font-bold bg-gradient-to-r from-indigo-200 to-blue-200 bg-clip-text text-transparent">
+              <div className="flex flex-col sm:flex-row items-center justify-between mb-4 sm:mb-6 gap-4">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-indigo-200 to-blue-200 bg-clip-text text-transparent">
                   Calendrier Lunaire
                 </h2>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 sm:gap-4">
                   <button
                     onClick={() => changeMonth(-1)}
-                    className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition-all"
+                    className="p-1.5 sm:p-2 bg-white/10 hover:bg-white/20 rounded-full transition-all"
                   >
-                    <ChevronLeft size={24} />
+                    <ChevronLeft size={20} className="sm:w-6 sm:h-6" />
                   </button>
-                  <div className="text-xl font-semibold text-indigo-200 min-w-[200px] text-center">
+                  <div className="text-base sm:text-lg md:text-xl font-semibold text-indigo-200 min-w-[150px] sm:min-w-[200px] text-center">
                     {calendarMonth.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
                   </div>
                   <button
                     onClick={() => changeMonth(1)}
-                    className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition-all"
+                    className="p-1.5 sm:p-2 bg-white/10 hover:bg-white/20 rounded-full transition-all"
                   >
-                    <ChevronRight size={24} />
+                    <ChevronRight size={20} className="sm:w-6 sm:h-6" />
                   </button>
                 </div>
               </div>
