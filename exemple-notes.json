@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1705234567890,
+    "text": "Aujourd'hui, sous la Pleine Lune, je ressens une énergie particulière. C'est le moment idéal pour célébrer mes accomplissements et exprimer ma gratitude. 🌕",
+    "mood": "contemplatif",
+    "date": "12/01/2026",
+    "moonPhase": "Pleine Lune"
+  },
+  {
+    "id": 1705234567891,
+    "text": "Nouvelle Lune = nouveaux départs ! Je pose mes intentions pour ce cycle lunaire : méditer chaque matin, cuisiner plus de recettes végétaliennes, et passer plus de temps dans la nature.",
+    "mood": "énergique",
+    "date": "28/12/2025",
+    "moonPhase": "Nouvelle Lune"
+  },
+  {
+    "id": 1705234567892,
+    "text": "Inspiration créative ce soir ! J'ai envie d'essayer de nouvelles recettes et de créer quelque chose de beau. La lune croissante me donne cette énergie constructive.",
+    "mood": "créatif",
+    "date": "05/01/2026",
+    "moonPhase": "Premier Quartier"
+  },
+  {
+    "id": 1705234567893,
+    "text": "Moment de calme et de réflexion. La lune décroissante m'invite à lâcher prise sur ce qui ne me sert plus. Je me sens en paix avec mes choix.",
+    "mood": "calme",
+    "date": "20/01/2026",
+    "moonPhase": "Dernier Quartier"
+  }
+]

@@ -1,0 +1,43 @@
+# Dépendances
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build
+dist
+dist-ssr
+*.local
+
+# Environnement
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+QUICKSTART.md
+structure.txt
+
+# Scripts
+deploy.sh
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore

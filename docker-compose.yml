@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  neguslunar:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: neguslunar-app
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    networks:
+      - neguslunar-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.neguslunar.rule=Host(`neguslunar.localhost`)"
+      - "traefik.http.services.neguslunar.loadbalancer.server.port=80"
+
+networks:
+  neguslunar-network:
+    driver: bridge
