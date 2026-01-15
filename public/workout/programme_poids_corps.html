@@ -1524,7 +1524,17 @@
             
             <!-- Historique des Rapports -->
             <div style="background: white; padding: 25px; border-radius: 15px; margin-bottom: 30px;">
-                <h3 style="color: #667eea; margin-bottom: 20px;">📊 Historique des Séances</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+                    <h3 style="color: #667eea; margin: 0;">📊 Historique des Séances</h3>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="exporterRapportsPDF()" class="btn" style="padding: 10px 20px; font-size: 0.9em; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                            📄 Export PDF
+                        </button>
+                        <button onclick="exporterRapportsJSON()" class="btn" style="padding: 10px 20px; font-size: 0.9em; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                            💾 Export JSON
+                        </button>
+                    </div>
+                </div>
                 <div id="historiqueRapports" style="display: grid; gap: 15px;">
                     <p style="text-align: center; color: #999; padding: 40px;">Aucun rapport enregistré. Commence ton suivi aujourd'hui ! 💪</p>
                 </div>
@@ -2046,6 +2056,451 @@
         // Afficher la phase lunaire au chargement
         if (document.getElementById('lunaireSuggestion')) {
             afficherPhaseLunaire();
+        }
+        
+        // ============================================
+        // SYSTÈME D'EXPORT PDF & JSON
+        // ============================================
+        
+        // Export JSON simple
+        function exporterRapportsJSON() {
+            const rapports = JSON.parse(localStorage.getItem('neguslunarRapports') || '[]');
+            
+            if (rapports.length === 0) {
+                alert('❌ Aucun rapport à exporter');
+                return;
+            }
+            
+            // Ajouter des métadonnées
+            const exportData = {
+                exportDate: new Date().toISOString(),
+                version: '1.0',
+                totalRapports: rapports.length,
+                rapports: rapports
+            };
+            
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `neguslunar-rapports-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            alert('✅ Export JSON réussi ! ' + rapports.length + ' rapport(s) exporté(s)');
+        }
+        
+        // Export PDF avec analyse lunaire
+        function exporterRapportsPDF() {
+            const rapports = JSON.parse(localStorage.getItem('neguslunarRapports') || '[]');
+            
+            if (rapports.length === 0) {
+                alert('❌ Aucun rapport à exporter');
+                return;
+            }
+            
+            // Créer le contenu HTML pour le PDF
+            const htmlContent = genererHTMLPourPDF(rapports);
+            
+            // Ouvrir dans une nouvelle fenêtre pour impression
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(htmlContent);
+            printWindow.document.close();
+            
+            // Attendre le chargement puis lancer l'impression
+            setTimeout(() => {
+                printWindow.print();
+            }, 500);
+        }
+        
+        // Générer le HTML pour le PDF
+        function genererHTMLPourPDF(rapports) {
+            // Calculer les statistiques
+            const seancesActives = rapports.filter(r => r.type !== 'repos');
+            const totalSeances = seancesActives.length;
+            const totalMinutes = seancesActives.reduce((sum, r) => sum + (parseInt(r.duree) || 0), 0);
+            const energies = seancesActives.filter(r => r.energie).map(r => parseInt(r.energie));
+            const moyenneEnergie = energies.length > 0 
+                ? (energies.reduce((sum, e) => sum + e, 0) / energies.length).toFixed(1)
+                : 0;
+            
+            // Analyser la corrélation avec les phases lunaires
+            const analyseLunaire = analyserCorrelationLunaire(rapports);
+            
+            const typeLabels = {
+                'push': '🔥 Push',
+                'pull': '💪 Pull',
+                'legs': '🦵 Legs',
+                'full': '⚡ Full Body',
+                'repos': '😴 Repos'
+            };
+            
+            return `
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapport NegusLunar - ${new Date().toLocaleDateString('fr-FR')}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: white;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 4px solid #667eea;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            font-size: 1.2em;
+            color: #666;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+            border: 2px solid #667eea;
+            border-radius: 10px;
+        }
+        
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            page-break-inside: avoid;
+        }
+        
+        .section-title {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .lunar-analysis {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .lunar-analysis h3 {
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .lunar-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .lunar-card {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .rapport-item {
+            background: #f9f9f9;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+            border-radius: 5px;
+            page-break-inside: avoid;
+        }
+        
+        .rapport-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .rapport-type {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .rapport-date {
+            color: #666;
+        }
+        
+        .rapport-content {
+            margin-top: 10px;
+        }
+        
+        .rapport-section {
+            margin-bottom: 10px;
+        }
+        
+        .rapport-section strong {
+            color: #667eea;
+        }
+        
+        .energie-bar {
+            background: #ddd;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        
+        .energie-fill {
+            background: linear-gradient(90deg, #11998e, #38ef7d);
+            height: 100%;
+            transition: width 0.3s;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+            border-top: 2px solid #667eea;
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🌙💪 NegusLunar - Rapport d'Entraînement</h1>
+        <div class="subtitle">Période : ${rapports[rapports.length - 1].date} au ${rapports[0].date}</div>
+        <div class="subtitle">Généré le ${new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</div>
+    </div>
+    
+    <div class="section">
+        <h2 class="section-title">📈 Statistiques Globales</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">${totalSeances}</div>
+                <div class="stat-label">Séances Complétées</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">${totalMinutes}</div>
+                <div class="stat-label">Minutes d'Entraînement</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">${moyenneEnergie}</div>
+                <div class="stat-label">Énergie Moyenne /10</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">${rapports.length}</div>
+                <div class="stat-label">Jours Trackés</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <div class="lunar-analysis">
+            <h3>🌙 Analyse des Phases Lunaires</h3>
+            <p>${analyseLunaire.description}</p>
+            <div class="lunar-grid">
+                <div class="lunar-card">
+                    <strong>Phase la plus productive :</strong><br>
+                    ${analyseLunaire.meilleurePhase.emoji} ${analyseLunaire.meilleurePhase.name}<br>
+                    Énergie moyenne : ${analyseLunaire.meilleurePhase.energie}/10
+                </div>
+                <div class="lunar-card">
+                    <strong>Corrélation énergie/phase :</strong><br>
+                    ${analyseLunaire.correlation}%<br>
+                    ${analyseLunaire.correlation > 70 ? '✅ Excellente synchronisation !' : analyseLunaire.correlation > 50 ? '👍 Bonne corrélation' : '💡 Amélioration possible'}
+                </div>
+                <div class="lunar-card">
+                    <strong>Recommandation :</strong><br>
+                    ${analyseLunaire.recommandation}
+                </div>
+                <div class="lunar-card">
+                    <strong>Prochaine pleine lune :</strong><br>
+                    ${analyseLunaire.prochainePleineLune}<br>
+                    🔥 Prépare-toi pour le pic !
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2 class="section-title">📊 Historique Détaillé</h2>
+        ${rapports.map(rapport => {
+            const phase = calculerPhaseLunaire(new Date(rapport.date));
+            return `
+            <div class="rapport-item">
+                <div class="rapport-header">
+                    <div class="rapport-type">${typeLabels[rapport.type] || rapport.type}</div>
+                    <div class="rapport-date">
+                        ${new Date(rapport.date).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
+                        <br>
+                        <small>${phase.emoji} ${phase.name}</small>
+                    </div>
+                </div>
+                <div class="rapport-content">
+                    ${rapport.duree ? `<div class="rapport-section">⏱️ Durée : ${rapport.duree} minutes</div>` : ''}
+                    ${rapport.energie ? `
+                    <div class="rapport-section">
+                        <strong>⚡ Énergie : ${rapport.energie}/10</strong>
+                        <div class="energie-bar">
+                            <div class="energie-fill" style="width: ${rapport.energie * 10}%"></div>
+                        </div>
+                        <small style="color: #666;">Attendue : ${phase.energie}/10 | Écart : ${rapport.energie - phase.energie > 0 ? '+' : ''}${rapport.energie - phase.energie}</small>
+                    </div>
+                    ` : ''}
+                    ${rapport.performances ? `<div class="rapport-section"><strong>💪 Performances :</strong><br>${rapport.performances.replace(/\n/g, '<br>')}</div>` : ''}
+                    ${rapport.nutrition ? `<div class="rapport-section"><strong>🍽️ Nutrition :</strong><br>${rapport.nutrition}</div>` : ''}
+                    ${rapport.notes ? `<div class="rapport-section"><strong>📝 Notes :</strong><br><em>${rapport.notes}</em></div>` : ''}
+                </div>
+            </div>
+            `;
+        }).join('')}
+    </div>
+    
+    <div class="footer">
+        <p><strong>NegusLunar</strong> - Entraînement synchronisé avec les phases lunaires</p>
+        <p>Créé avec 🌙💪 par Négus Dja • Guadeloupe</p>
+        <p style="margin-top: 10px; font-size: 0.8em;">Ce rapport a été généré automatiquement le ${new Date().toLocaleString('fr-FR')}</p>
+    </div>
+</body>
+</html>
+            `;
+        }
+        
+        // Analyser la corrélation entre énergie et phases lunaires
+        function analyserCorrelationLunaire(rapports) {
+            const seancesAvecEnergie = rapports.filter(r => r.energie && r.type !== 'repos');
+            
+            if (seancesAvecEnergie.length === 0) {
+                return {
+                    description: 'Pas assez de données pour analyser la corrélation avec les phases lunaires.',
+                    meilleurePhase: { emoji: '🌙', name: 'N/A', energie: 0 },
+                    correlation: 0,
+                    recommandation: 'Continue à tracker tes séances pour obtenir une analyse.',
+                    prochainePleineLune: 'N/A'
+                };
+            }
+            
+            // Grouper par phase
+            const energieParPhase = {};
+            seancesAvecEnergie.forEach(rapport => {
+                const phase = calculerPhaseLunaire(new Date(rapport.date));
+                if (!energieParPhase[phase.name]) {
+                    energieParPhase[phase.name] = {
+                        energies: [],
+                        emoji: phase.emoji,
+                        energieAttendue: phase.energie
+                    };
+                }
+                energieParPhase[phase.name].energies.push(parseInt(rapport.energie));
+            });
+            
+            // Calculer les moyennes
+            let meilleurePhase = { name: '', emoji: '', energie: 0 };
+            let totalEcart = 0;
+            let countPhases = 0;
+            
+            Object.keys(energieParPhase).forEach(phaseName => {
+                const data = energieParPhase[phaseName];
+                const moyenne = data.energies.reduce((sum, e) => sum + e, 0) / data.energies.length;
+                
+                if (moyenne > meilleurePhase.energie) {
+                    meilleurePhase = {
+                        name: phaseName,
+                        emoji: data.emoji,
+                        energie: moyenne.toFixed(1)
+                    };
+                }
+                
+                // Calculer l'écart avec l'énergie attendue
+                const ecart = Math.abs(moyenne - data.energieAttendue);
+                totalEcart += ecart;
+                countPhases++;
+            });
+            
+            // Calculer le pourcentage de corrélation (inverse de l'écart moyen)
+            const ecartMoyen = totalEcart / countPhases;
+            const correlation = Math.max(0, Math.min(100, 100 - (ecartMoyen * 20))).toFixed(0);
+            
+            // Trouver la prochaine pleine lune
+            const today = new Date();
+            const prochainePleineLune = phasesLunaires2026.find(p => 
+                p.type === 'Pleine Lune' && new Date(p.date) > today
+            );
+            
+            let recommandation = '';
+            if (correlation > 70) {
+                recommandation = 'Excellente synchronisation ! Continue à suivre les cycles lunaires pour optimiser tes performances.';
+            } else if (correlation > 50) {
+                recommandation = 'Bonne corrélation. Essaie d\'intensifier tes séances pendant les pleines lunes pour maximiser tes résultats.';
+            } else {
+                recommandation = 'Ta corrélation est faible. Peut-être que ton énergie suit un autre rythme. Continue à tracker pour identifier ton cycle personnel.';
+            }
+            
+            return {
+                description: `Sur ${seancesAvecEnergie.length} séances analysées, ton énergie montre une corrélation de ${correlation}% avec les phases lunaires.`,
+                meilleurePhase,
+                correlation: parseInt(correlation),
+                recommandation,
+                prochainePleineLune: prochainePleineLune 
+                    ? new Date(prochainePleineLune.date).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
+                    : 'Aucune prochaine pleine lune trouvée'
+            };
         }
         
         // Ajouter un indicateur de phase lunaire dans le rapport
