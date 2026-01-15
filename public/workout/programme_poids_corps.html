@@ -1620,6 +1620,53 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Synchronisation Phases Lunaires -->
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 15px; margin-top: 30px;">
+                <h3 style="color: white; border-bottom: 2px solid white; padding-bottom: 10px; margin-bottom: 20px;">🌙 Entraînement selon les Phases Lunaires</h3>
+                
+                <div id="lunaireSuggestion" style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <div style="text-align: center; font-size: 3em; margin-bottom: 15px;" id="lunaireEmoji">🌕</div>
+                    <div style="text-align: center; font-size: 1.5em; margin-bottom: 10px; font-weight: bold;" id="lunaireName">Pleine Lune</div>
+                    <div style="text-align: center; margin-bottom: 20px; opacity: 0.9;" id="lunaireDate">14 janvier 2026</div>
+                    <div style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <strong>💪 Recommandation Entraînement:</strong>
+                        <p style="margin-top: 10px; line-height: 1.6;" id="lunaireRecommandation">C'est le pic d'énergie ! Profite pour faire tes séances les plus intenses. Volume maximal, charges lourdes si possible.</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 8px;">
+                        <strong>⚡ Niveau d'énergie attendu:</strong>
+                        <div style="display: flex; align-items: center; margin-top: 10px;">
+                            <div style="flex: 1; background: rgba(255,255,255,0.2); height: 12px; border-radius: 6px; overflow: hidden;">
+                                <div id="lunaireEnergieBarre" style="background: linear-gradient(90deg, #ffd700, #ff6b6b); height: 100%; width: 90%; transition: width 0.3s;"></div>
+                            </div>
+                            <span style="margin-left: 15px; font-size: 1.5em; font-weight: bold;" id="lunaireEnergieValue">9/10</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">🌑</div>
+                        <strong>Nouvelle Lune</strong>
+                        <p style="font-size: 0.9em; margin-top: 5px; opacity: 0.9;">Intensité modérée<br>Focus technique</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">🌓</div>
+                        <strong>Lune Croissante</strong>
+                        <p style="font-size: 0.9em; margin-top: 5px; opacity: 0.9;">Augmentation<br>progressive</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">🌕</div>
+                        <strong>Pleine Lune</strong>
+                        <p style="font-size: 0.9em; margin-top: 5px; opacity: 0.9;">Pic d'énergie<br>Séances max</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">🌗</div>
+                        <strong>Lune Décroissante</strong>
+                        <p style="font-size: 0.9em; margin-top: 5px; opacity: 0.9;">Récupération<br>Mobilité</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1838,6 +1885,190 @@
         // Charger l'historique au chargement de la page
         if (document.getElementById('historiqueRapports')) {
             chargerHistorique();
+        }
+        
+        // ============================================
+        // SYSTÈME DE PHASES LUNAIRES
+        // ============================================
+        
+        // Calcul de la phase lunaire
+        function calculerPhaseLunaire(date) {
+            const year = date.getFullYear();
+            let month = date.getMonth() + 1;
+            const day = date.getDate();
+            
+            let c, e, jd, b;
+            
+            if (month < 3) {
+                year--;
+                month += 12;
+            }
+            
+            ++month;
+            c = 365.25 * year;
+            e = 30.6 * month;
+            jd = c + e + day - 694039.09;
+            jd /= 29.5305882;
+            b = parseInt(jd);
+            jd -= b;
+            b = Math.round(jd * 8);
+            
+            if (b >= 8) b = 0;
+            
+            const phases = [
+                { 
+                    name: 'Nouvelle Lune', 
+                    emoji: '🌑',
+                    energie: 5,
+                    recommandation: 'Nouveau départ ! Intensité modérée, focus sur la technique et la forme. Idéal pour apprendre de nouveaux exercices ou corriger ta technique.',
+                    intensite: 'Modérée',
+                    conseil: 'Écoute ton corps, ne force pas'
+                },
+                { 
+                    name: 'Premier Croissant', 
+                    emoji: '🌒',
+                    energie: 6,
+                    recommandation: 'L\'énergie commence à monter. Augmente légèrement le volume (séries/reps). Bon moment pour progresser sur les exercices de base.',
+                    intensite: 'Modérée à Élevée',
+                    conseil: 'Commence à pousser un peu plus'
+                },
+                { 
+                    name: 'Premier Quartier', 
+                    emoji: '🌓',
+                    energie: 7,
+                    recommandation: 'Énergie en hausse constante. Augmente l\'intensité, ajoute des variantes plus difficiles. Bon pour tester tes limites.',
+                    intensite: 'Élevée',
+                    conseil: 'Challenge-toi, teste de nouveaux PRs'
+                },
+                { 
+                    name: 'Gibbeuse Croissante', 
+                    emoji: '🌔',
+                    energie: 8,
+                    recommandation: 'Presque au pic ! Volume élevé, intensité maximale. Profite de cette énergie pour tes meilleures performances.',
+                    intensite: 'Très Élevée',
+                    conseil: 'C\'est le moment de briller !'
+                },
+                { 
+                    name: 'Pleine Lune', 
+                    emoji: '🌕',
+                    energie: 9,
+                    recommandation: 'PIC D\'ÉNERGIE ! Fais tes séances les plus intenses. Volume maximal, charges lourdes si possible. Record personnel en vue !',
+                    intensite: 'MAXIMALE',
+                    conseil: 'Donne tout ce que tu as ! 🔥'
+                },
+                { 
+                    name: 'Gibbeuse Décroissante', 
+                    emoji: '🌖',
+                    energie: 7,
+                    recommandation: 'L\'énergie redescend doucement. Maintiens l\'intensité mais commence à écouter ton corps. Bon pour le travail de force.',
+                    intensite: 'Élevée',
+                    conseil: 'Maintiens le cap, reste régulier'
+                },
+                { 
+                    name: 'Dernier Quartier', 
+                    emoji: '🌗',
+                    energie: 6,
+                    recommandation: 'Énergie en baisse. Réduis le volume, focus sur la qualité. Parfait pour le travail technique et la mobilité.',
+                    intensite: 'Modérée',
+                    conseil: 'Qualité > Quantité'
+                },
+                { 
+                    name: 'Dernier Croissant', 
+                    emoji: '🌘',
+                    energie: 5,
+                    recommandation: 'Phase de récupération. Intensité légère, yoga, stretching, mobilité. Prépare ton corps pour le prochain cycle.',
+                    intensite: 'Légère à Modérée',
+                    conseil: 'Repos actif, récupération'
+                }
+            ];
+            
+            return phases[b];
+        }
+        
+        // Afficher la phase lunaire actuelle
+        function afficherPhaseLunaire() {
+            const today = new Date();
+            const phase = calculerPhaseLunaire(today);
+            
+            // Mettre à jour l'affichage
+            document.getElementById('lunaireEmoji').textContent = phase.emoji;
+            document.getElementById('lunaireName').textContent = phase.name;
+            document.getElementById('lunaireDate').textContent = today.toLocaleDateString('fr-FR', { 
+                weekday: 'long', 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric' 
+            });
+            document.getElementById('lunaireRecommandation').textContent = phase.recommandation;
+            document.getElementById('lunaireEnergieValue').textContent = phase.energie + '/10';
+            document.getElementById('lunaireEnergieBarre').style.width = (phase.energie * 10) + '%';
+            
+            // Couleur de la barre selon l'énergie
+            const barre = document.getElementById('lunaireEnergieBarre');
+            if (phase.energie >= 8) {
+                barre.style.background = 'linear-gradient(90deg, #ffd700, #ff6b6b)';
+            } else if (phase.energie >= 6) {
+                barre.style.background = 'linear-gradient(90deg, #38ef7d, #11998e)';
+            } else {
+                barre.style.background = 'linear-gradient(90deg, #667eea, #764ba2)';
+            }
+        }
+        
+        // Phases lunaires 2026 (dates exactes des pleines et nouvelles lunes)
+        const phasesLunaires2026 = [
+            { type: 'Pleine Lune', date: '2026-01-03', emoji: '🌕' },
+            { type: 'Nouvelle Lune', date: '2026-01-18', emoji: '🌑' },
+            { type: 'Pleine Lune', date: '2026-02-01', emoji: '🌕' },
+            { type: 'Nouvelle Lune', date: '2026-02-17', emoji: '🌑' },
+            { type: 'Pleine Lune', date: '2026-03-03', emoji: '🌕' },
+            { type: 'Nouvelle Lune', date: '2026-03-18', emoji: '🌑' },
+            { type: 'Pleine Lune', date: '2026-04-02', emoji: '🌕' },
+            { type: 'Nouvelle Lune', date: '2026-04-17', emoji: '🌑' },
+            { type: 'Pleine Lune', date: '2026-05-01', emoji: '🌕' },
+            { type: 'Nouvelle Lune', date: '2026-05-16', emoji: '🌑' },
+            { type: 'Pleine Lune', date: '2026-05-31', emoji: '🌕' },
+            { type: 'Nouvelle Lune', date: '2026-06-15', emoji: '🌑' },
+            { type: 'Pleine Lune', date: '2026-06-29', emoji: '🌕' },
+            { type: 'Nouvelle Lune', date: '2026-07-14', emoji: '🌑' },
+            { type: 'Pleine Lune', date: '2026-07-29', emoji: '🌕' },
+            { type: 'Nouvelle Lune', date: '2026-08-13', emoji: '🌑' },
+            { type: 'Pleine Lune', date: '2026-08-27', emoji: '🌕' },
+            { type: 'Nouvelle Lune', date: '2026-09-12', emoji: '🌑' },
+            { type: 'Pleine Lune', date: '2026-09-26', emoji: '🌕' },
+            { type: 'Nouvelle Lune', date: '2026-10-11', emoji: '🌑' },
+            { type: 'Pleine Lune', date: '2026-10-26', emoji: '🌕' },
+            { type: 'Nouvelle Lune', date: '2026-11-10', emoji: '🌑' },
+            { type: 'Pleine Lune', date: '2026-11-24', emoji: '🌕' },
+            { type: 'Nouvelle Lune', date: '2026-12-09', emoji: '🌑' },
+            { type: 'Pleine Lune', date: '2026-12-24', emoji: '🌕' }
+        ];
+        
+        // Afficher la phase lunaire au chargement
+        if (document.getElementById('lunaireSuggestion')) {
+            afficherPhaseLunaire();
+        }
+        
+        // Ajouter un indicateur de phase lunaire dans le rapport
+        const rapportDateInput = document.getElementById('rapportDate');
+        if (rapportDateInput) {
+            rapportDateInput.addEventListener('change', function() {
+                const selectedDate = new Date(this.value);
+                const phase = calculerPhaseLunaire(selectedDate);
+                
+                // Afficher une suggestion d'énergie basée sur la phase
+                const energieSlider = document.getElementById('rapportEnergie');
+                if (energieSlider && !energieSlider.dataset.userModified) {
+                    energieSlider.value = phase.energie;
+                    document.getElementById('energieValue').textContent = phase.energie;
+                }
+            });
+        }
+        
+        // Marquer quand l'utilisateur modifie manuellement l'énergie
+        if (energieSlider) {
+            energieSlider.addEventListener('input', function() {
+                this.dataset.userModified = 'true';
+            });
         }
     </script>
 </body>
