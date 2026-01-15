@@ -1035,10 +1035,12 @@ const NegusLunar = () => {
         </header>
 
         {/* Navigation */}
-        <nav className="flex justify-center gap-2 sm:gap-3 md:gap-4 mb-6 sm:mb-8 md:mb-10 flex-wrap px-2">
+        <nav className="mb-6 sm:mb-8 md:mb-10 px-2">
+          <div className="flex overflow-x-auto gap-2 sm:gap-3 md:gap-4 pb-2 scrollbar-hide justify-start sm:justify-center"
+               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           <button
             onClick={() => setActiveTab('lunar')}
-            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
               activeTab === 'lunar'
                 ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg shadow-purple-500/50 scale-105'
                 : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
@@ -1050,7 +1052,7 @@ const NegusLunar = () => {
           </button>
           <button
             onClick={() => setActiveTab('calendar')}
-            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
               activeTab === 'calendar'
                 ? 'bg-gradient-to-r from-indigo-500 to-blue-500 shadow-lg shadow-indigo-500/50 scale-105'
                 : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
@@ -1062,7 +1064,7 @@ const NegusLunar = () => {
           </button>
           <button
             onClick={() => setActiveTab('moonCalendar')}
-            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
               activeTab === 'moonCalendar'
                 ? 'bg-gradient-to-r from-yellow-500 to-orange-500 shadow-lg shadow-yellow-500/50 scale-105'
                 : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
@@ -1074,7 +1076,7 @@ const NegusLunar = () => {
           </button>
           <button
             onClick={() => setActiveTab('notes')}
-            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
               activeTab === 'notes'
                 ? 'bg-gradient-to-r from-green-500 to-teal-500 shadow-lg shadow-green-500/50 scale-105'
                 : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
@@ -1086,7 +1088,7 @@ const NegusLunar = () => {
           </button>
           <button
             onClick={() => setActiveTab('recipes')}
-            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
               activeTab === 'recipes'
                 ? 'bg-gradient-to-r from-pink-500 to-rose-500 shadow-lg shadow-pink-500/50 scale-105'
                 : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
@@ -1098,7 +1100,7 @@ const NegusLunar = () => {
           </button>
           <button
             onClick={() => setActiveTab('dailyRecipe')}
-            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
               activeTab === 'dailyRecipe'
                 ? 'bg-gradient-to-r from-orange-500 to-amber-500 shadow-lg shadow-orange-500/50 scale-105'
                 : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
@@ -1110,7 +1112,7 @@ const NegusLunar = () => {
           </button>
           <button
             onClick={() => setActiveTab('ritual')}
-            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
               activeTab === 'ritual'
                 ? 'bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-lg shadow-purple-500/50 scale-105'
                 : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
@@ -1122,7 +1124,7 @@ const NegusLunar = () => {
           </button>
           <button
             onClick={() => setActiveTab('eclipses')}
-            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
               activeTab === 'eclipses'
                 ? 'bg-gradient-to-r from-red-500 to-orange-500 shadow-lg shadow-red-500/50 scale-105'
                 : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
@@ -1134,7 +1136,7 @@ const NegusLunar = () => {
           </button>
           <button
             onClick={() => window.open('/recettedelasemaine/index2.html', '_blank')}
-            className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 shadow-lg shadow-amber-500/50 hover:scale-105"
+            className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 shadow-lg shadow-amber-500/50 hover:scale-105"
           >
             <Calendar size={16} className="sm:w-5 sm:h-5" />
             <span className="hidden sm:inline">Menu Fév</span>
@@ -1142,12 +1144,13 @@ const NegusLunar = () => {
           </button>
           <button
             onClick={() => window.open('/workout/programme_poids_corps.html', '_blank')}
-            className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 shadow-lg shadow-purple-500/50 hover:scale-105"
+            className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 shadow-lg shadow-purple-500/50 hover:scale-105"
           >
             <Activity size={16} className="sm:w-5 sm:h-5" />
             <span className="hidden sm:inline">Programme Sport</span>
             <span className="sm:hidden">💪</span>
           </button>
+          </div>
         </nav>
 
         {/* Contenu principal */}
@@ -1907,6 +1910,23 @@ const NegusLunar = () => {
         
         .bg-gradient-radial {
           background: radial-gradient(circle at 50% 50%, var(--tw-gradient-stops));
+        }
+        
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .scrollbar-hide {
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
+        }
+        
+        /* Smooth scrolling for navigation */
+        .scrollbar-hide {
+          scroll-behavior: smooth;
+          -webkit-overflow-scrolling: touch;
         }
       `}</style>
     </div>
