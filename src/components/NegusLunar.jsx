@@ -1140,6 +1140,14 @@ const NegusLunar = () => {
             <span className="hidden sm:inline">Menu Fév</span>
             <span className="sm:hidden">📅</span>
           </button>
+          <button
+            onClick={() => window.open('/workout/programme_poids_corps.html', '_blank')}
+            className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 shadow-lg shadow-purple-500/50 hover:scale-105"
+          >
+            <Activity size={16} className="sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Programme Sport</span>
+            <span className="sm:hidden">💪</span>
+          </button>
         </nav>
 
         {/* Contenu principal */}

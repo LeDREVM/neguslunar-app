@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#667eea">
+    <title>Programme Poids du Corps - Prise de Masse</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 15px 25px;
+            background: #f5f5f5;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px 10px 0 0;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: #666;
+        }
+        
+        .tab:hover {
+            background: #e0e0e0;
+        }
+        
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .week-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .day-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+        
+        .workout-card {
+            background: #f9f9f9;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 250px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .workout-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+        
+        .workout-card.rest {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+        
+        .day-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .workout-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #764ba2;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #764ba2;
+        }
+        
+        .exercise {
+            background: white;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .exercise-name {
+            font-weight: bold;
+            color: #333;
+            font-size: 13px;
+        }
+        
+        .exercise-sets {
+            color: #666;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+        
+        .workout-detail {
+            background: #f9f9f9;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .workout-detail h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .exercise-detail {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .exercise-detail h4 {
+            color: #764ba2;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        
+        .exercise-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .info-box {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .tips-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+        
+        .tips-box h3 {
+            margin-bottom: 15px;
+            border-bottom: 2px solid white;
+            padding-bottom: 10px;
+        }
+        
+        .tips-box ul {
+            list-style: none;
+        }
+        
+        .tips-box li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .tips-box li::before {
+            content: '💡';
+            position: absolute;
+            left: 0;
+        }
+        
+        .progress-tracker {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .progress-week {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .progress-day {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            background: #f5f5f5;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .progress-day:hover {
+            background: #667eea;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .progress-day.completed {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px 5px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .warmup-box {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .warmup-box h4 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        @media (max-width: 768px) {
+            .week-calendar {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .exercise-info {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Support du notch iPhone */
+        @supports (padding: max(0px)) {
+            body {
+                padding-left: max(20px, env(safe-area-inset-left));
+                padding-right: max(20px, env(safe-area-inset-right));
+                padding-top: max(20px, env(safe-area-inset-top));
+                padding-bottom: max(20px, env(safe-area-inset-bottom));
+            }
+        }
+        
+        /* iPhone 12+ optimisations */
+        @media (max-width: 430px) {
+            body {
+                font-size: 14px;
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            h1 {
+                font-size: 1.6em;
+            }
+            
+            .subtitle {
+                font-size: 0.9em;
+            }
+            
+            .tabs {
+                gap: 6px;
+            }
+            
+            .tab {
+                padding: 10px 15px;
+                font-size: 13px;
+                white-space: nowrap;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .workout-card {
+                padding: 15px;
+                min-height: 200px;
+            }
+            
+            .day-number {
+                font-size: 18px;
+            }
+            
+            .workout-title {
+                font-size: 14px;
+            }
+            
+            .exercise-name {
+                font-size: 12px;
+            }
+            
+            .exercise-sets {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💪 Programme Poids du Corps - Prise de Masse</h1>
+        <p class="subtitle">Négus Dja | 30 ans, 71kg | 4 semaines progressives | TDAH-Friendly</p>
+        
+        <div class="tabs">
+            <button class="tab" onclick="window.location.href='/'" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">🌙 Retour NegusLunar</button>
+            <button class="tab active" onclick="showTab('planning')">📅 Planning Mensuel</button>
+            <button class="tab" onclick="showTab('seance-push')">🔥 Séance Push</button>
+            <button class="tab" onclick="showTab('seance-pull')">💪 Séance Pull</button>
+            <button class="tab" onclick="showTab('seance-legs')">🦵 Séance Legs</button>
+            <button class="tab" onclick="showTab('seance-full')">⚡ Séance Full Body</button>
+            <button class="tab" onclick="showTab('progression')">📈 Suivi</button>
+        </div>
+
+        <!-- PLANNING MENSUEL -->
+        <div id="planning" class="tab-content active">
+            <h2 style="color: #667eea; margin-bottom: 20px;">Calendrier d'Entraînement - Février 2026</h2>
+            
+            <div style="background: #f9f9f9; padding: 20px; border-radius: 15px; margin-bottom: 30px;">
+                <h3 style="color: #764ba2; margin-bottom: 15px;">🎯 Structure du Programme</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                    <div style="background: white; padding: 15px; border-radius: 10px;">
+                        <strong style="color: #667eea;">Split Push/Pull/Legs</strong><br>
+                        <span style="color: #666; font-size: 14px;">4-5 séances/semaine + 2-3 jours repos</span>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px;">
+                        <strong style="color: #667eea;">Progression</strong><br>
+                        <span style="color: #666; font-size: 14px;">Augmentation progressive des reps/temps</span>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px;">
+                        <strong style="color: #667eea;">Durée</strong><br>
+                        <span style="color: #666; font-size: 14px;">45-60 min par séance</span>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px;">
+                        <strong style="color: #667eea;">Repos</strong><br>
+                        <span style="color: #666; font-size: 14px;">60-90 sec entre séries</span>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="color: #667eea; margin: 30px 0 20px 0;">Semaine 1 (1-7 février)</h3>
+            <div class="week-calendar">
+                <div class="day-header">Sam 1</div>
+                <div class="day-header">Dim 2</div>
+                <div class="day-header">Lun 3</div>
+                <div class="day-header">Mar 4</div>
+                <div class="day-header">Mer 5</div>
+                <div class="day-header">Jeu 6</div>
+                <div class="day-header">Ven 7</div>
+                
+                <div class="workout-card">
+                    <div class="day-number">1</div>
+                    <div class="workout-title">🔥 PUSH A</div>
+                    <div class="exercise">
+                        <div class="exercise-name">Pompes</div>
+                        <div class="exercise-sets">4×12</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Pike Push-ups</div>
+                        <div class="exercise-sets">3×10</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Dips (chaise)</div>
+                        <div class="exercise-sets">3×12</div>
+                    </div>
+                </div>
+
+                <div class="workout-card rest">
+                    <div>😴 REPOS</div>
+                </div>
+
+                <div class="workout-card">
+                    <div class="day-number">3</div>
+                    <div class="workout-title">💪 PULL A</div>
+                    <div class="exercise">
+                        <div class="exercise-name">Tractions (ou Australiennes)</div>
+                        <div class="exercise-sets">4×8</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Rowing inversé</div>
+                        <div class="exercise-sets">4×12</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Superman</div>
+                        <div class="exercise-sets">3×15</div>
+                    </div>
+                </div>
+
+                <div class="workout-card">
+                    <div class="day-number">4</div>
+                    <div class="workout-title">🦵 LEGS A</div>
+                    <div class="exercise">
+                        <div class="exercise-name">Squats</div>
+                        <div class="exercise-sets">4×15</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Fentes alternées</div>
+                        <div class="exercise-sets">3×12/jambe</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Mollets</div>
+                        <div class="exercise-sets">4×20</div>
+                    </div>
+                </div>
+
+                <div class="workout-card rest">
+                    <div>😴 REPOS</div>
+                </div>
+
+                <div class="workout-card">
+                    <div class="day-number">6</div>
+                    <div class="workout-title">⚡ FULL BODY</div>
+                    <div class="exercise">
+                        <div class="exercise-name">Burpees</div>
+                        <div class="exercise-sets">3×10</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Mountain climbers</div>
+                        <div class="exercise-sets">3×30sec</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Planche</div>
+                        <div class="exercise-sets">3×45sec</div>
+                    </div>
+                </div>
+
+                <div class="workout-card rest">
+                    <div>😴 REPOS</div>
+                </div>
+            </div>
+
+            <h3 style="color: #667eea; margin: 30px 0 20px 0;">Semaine 2 (8-14 février)</h3>
+            <div class="week-calendar">
+                <div class="day-header">Sam 8</div>
+                <div class="day-header">Dim 9</div>
+                <div class="day-header">Lun 10</div>
+                <div class="day-header">Mar 11</div>
+                <div class="day-header">Mer 12</div>
+                <div class="day-header">Jeu 13</div>
+                <div class="day-header">Ven 14</div>
+                
+                <div class="workout-card">
+                    <div class="day-number">8</div>
+                    <div class="workout-title">🔥 PUSH B</div>
+                    <div class="exercise">
+                        <div class="exercise-name">Pompes déclinées</div>
+                        <div class="exercise-sets">4×12</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Pompes diamant</div>
+                        <div class="exercise-sets">3×10</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Pike Push-ups</div>
+                        <div class="exercise-sets">3×12</div>
+                    </div>
+                </div>
+
+                <div class="workout-card rest">
+                    <div>😴 REPOS</div>
+                </div>
+
+                <div class="workout-card">
+                    <div class="day-number">10</div>
+                    <div class="workout-title">💪 PULL B</div>
+                    <div class="exercise">
+                        <div class="exercise-name">Tractions</div>
+                        <div class="exercise-sets">4×8</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Rowing table</div>
+                        <div class="exercise-sets">4×12</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Biceps isométrique</div>
+                        <div class="exercise-sets">3×30sec</div>
+                    </div>
+                </div>
+
+                <div class="workout-card">
+                    <div class="day-number">11</div>
+                    <div class="workout-title">🦵 LEGS B</div>
+                    <div class="exercise">
+                        <div class="exercise-name">Squats bulgares</div>
+                        <div class="exercise-sets">4×12/jambe</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Nordic curl (assisté)</div>
+                        <div class="exercise-sets">3×8</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Squat sauté</div>
+                        <div class="exercise-sets">3×15</div>
+                    </div>
+                </div>
+
+                <div class="workout-card rest">
+                    <div>😴 REPOS</div>
+                </div>
+
+                <div class="workout-card">
+                    <div class="day-number">13</div>
+                    <div class="workout-title">⚡ CARDIO HIIT</div>
+                    <div class="exercise">
+                        <div class="exercise-name">Burpees</div>
+                        <div class="exercise-sets">4×12</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Jumping jacks</div>
+                        <div class="exercise-sets">4×40sec</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">High knees</div>
+                        <div class="exercise-sets">4×30sec</div>
+                    </div>
+                </div>
+
+                <div class="workout-card rest">
+                    <div>💝 REPOS<br>(Saint-Valentin)</div>
+                </div>
+            </div>
+
+            <h3 style="color: #667eea; margin: 30px 0 20px 0;">Semaine 3 (15-21 février) - Intensification</h3>
+            <div class="week-calendar">
+                <div class="day-header">Sam 15</div>
+                <div class="day-header">Dim 16</div>
+                <div class="day-header">Lun 17</div>
+                <div class="day-header">Mar 18</div>
+                <div class="day-header">Mer 19</div>
+                <div class="day-header">Jeu 20</div>
+                <div class="day-header">Ven 21</div>
+                
+                <div class="workout-card">
+                    <div class="day-number">15</div>
+                    <div class="workout-title">🔥 PUSH A+</div>
+                    <div class="exercise">
+                        <div class="exercise-name">Pompes</div>
+                        <div class="exercise-sets">5×15</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Pike Push-ups</div>
+                        <div class="exercise-sets">4×12</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Dips</div>
+                        <div class="exercise-sets">4×15</div>
+                    </div>
+                </div>
+
+                <div class="workout-card rest">
+                    <div>😴 REPOS</div>
+                </div>
+
+                <div class="workout-card">
+                    <div class="day-number">17</div>
+                    <div class="workout-title">💪 PULL A+</div>
+                    <div class="exercise">
+                        <div class="exercise-name">Tractions</div>
+                        <div class="exercise-sets">5×10</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Rowing inversé</div>
+                        <div class="exercise-sets">4×15</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Face pulls</div>
+                        <div class="exercise-sets">4×15</div>
+                    </div>
+                </div>
+
+                <div class="workout-card">
+                    <div class="day-number">18</div>
+                    <div class="workout-title">🦵 LEGS A+</div>
+                    <div class="exercise">
+                        <div class="exercise-name">Squats</div>
+                        <div class="exercise-sets">5×20</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Fentes sautées</div>
+                        <div class="exercise-sets">4×10/jambe</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Pistol squat (assisté)</div>
+                        <div class="exercise-sets">3×8/jambe</div>
+                    </div>
+                </div>
+
+                <div class="workout-card rest">
+                    <div>😴 REPOS</div>
+                </div>
+
+                <div class="workout-card">
+                    <div class="day-number">20</div>
+                    <div class="workout-title">⚡ FULL BODY+</div>
+                    <div class="exercise">
+                        <div class="exercise-name">Burpees</div>
+                        <div class="exercise-sets">4×15</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Pompes + Pull</div>
+                        <div class="exercise-sets">4×10 (chaque)</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Core circuit</div>
+                        <div class="exercise-sets">3 rounds</div>
+                    </div>
+                </div>
+
+                <div class="workout-card rest">
+                    <div>😴 REPOS</div>
+                </div>
+            </div>
+
+            <h3 style="color: #667eea; margin: 30px 0 20px 0;">Semaine 4 (22-28 février) - Pic</h3>
+            <div class="week-calendar">
+                <div class="day-header">Sam 22</div>
+                <div class="day-header">Dim 23</div>
+                <div class="day-header">Lun 24</div>
+                <div class="day-header">Mar 25</div>
+                <div class="day-header">Mer 26</div>
+                <div class="day-header">Jeu 27</div>
+                <div class="day-header">Ven 28</div>
+                
+                <div class="workout-card">
+                    <div class="day-number">22</div>
+                    <div class="workout-title">🔥 PUSH MAX</div>
+                    <div class="exercise">
+                        <div class="exercise-name">Pompes</div>
+                        <div class="exercise-sets">5×20</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">HSPU progression</div>
+                        <div class="exercise-sets">4×10</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Dips lestés</div>
+                        <div class="exercise-sets">4×15</div>
+                    </div>
+                </div>
+
+                <div class="workout-card rest">
+                    <div>😴 REPOS</div>
+                </div>
+
+                <div class="workout-card">
+                    <div class="day-number">24</div>
+                    <div class="workout-title">💪 PULL MAX</div>
+                    <div class="exercise">
+                        <div class="exercise-name">Tractions lestées</div>
+                        <div class="exercise-sets">5×12</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Muscle-up progression</div>
+                        <div class="exercise-sets">4×5</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Rowing</div>
+                        <div class="exercise-sets">4×20</div>
+                    </div>
+                </div>
+
+                <div class="workout-card">
+                    <div class="day-number">25</div>
+                    <div class="workout-title">🦵 LEGS MAX</div>
+                    <div class="exercise">
+                        <div class="exercise-name">Squats jump</div>
+                        <div class="exercise-sets">5×15</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Pistol squats</div>
+                        <div class="exercise-sets">4×10/jambe</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Nordic curl</div>
+                        <div class="exercise-sets">4×10</div>
+                    </div>
+                </div>
+
+                <div class="workout-card rest">
+                    <div>😴 REPOS</div>
+                </div>
+
+                <div class="workout-card">
+                    <div class="day-number">27</div>
+                    <div class="workout-title">⚡ CHALLENGE</div>
+                    <div class="exercise">
+                        <div class="exercise-name">100 Burpees</div>
+                        <div class="exercise-sets">Le + vite possible</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Planche</div>
+                        <div class="exercise-sets">3×90sec</div>
+                    </div>
+                    <div class="exercise">
+                        <div class="exercise-name">Abs circuit</div>
+                        <div class="exercise-sets">5 rounds</div>
+                    </div>
+                </div>
+
+                <div class="workout-card rest">
+                    <div>😴 REPOS<br>ACTIF</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SÉANCE PUSH -->
+        <div id="seance-push" class="tab-content">
+            <div class="warmup-box">
+                <h4>🔥 Échauffement (8-10 min)</h4>
+                <ul style="list-style: none;">
+                    <li>✓ 2 min jumping jacks légers</li>
+                    <li>✓ 10 rotations épaules avant/arrière</li>
+                    <li>✓ 10 pompes inclinées (mur)</li>
+                    <li>✓ 10 arm circles</li>
+                    <li>✓ 2 séries de 5 pompes lentes (tempo)</li>
+                </ul>
+            </div>
+
+            <div class="workout-detail">
+                <h3>💪 Séance PUSH - Pectoraux, Épaules, Triceps</h3>
+                
+                <div class="exercise-detail">
+                    <h4>1. Pompes Classiques</h4>
+                    <p style="color: #666; margin-bottom: 15px;">Exercice de base pour pectoraux, épaules antérieures et triceps</p>
+                    <div class="exercise-info">
+                        <div class="info-box">
+                            <div class="info-label">SÉRIES & REPS</div>
+                            <div class="info-value">4-5 séries × 12-20 reps</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">REPOS</div>
+                            <div class="info-value">60-90 secondes</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">TEMPO</div>
+                            <div class="info-value">2-0-2 (descente-pause-montée)</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">PROGRESSION</div>
+                            <div class="info-value">+ pompes déclinées, diamant, archer</div>
+                        </div>
+                    </div>
+                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                        <strong style="color: #667eea;">🎯 Points clés:</strong><br>
+                        • Mains largeur épaules, doigts légèrement tournés vers l'extérieur<br>
+                        • Corps gainé en ligne droite (planche)<br>
+                        • Coudes à 45° du corps, pas 90°<br>
+                        • Descendre jusqu'à frôler le sol avec la poitrine<br>
+                        • Pousser explosif en haut<br>
+                        • Si trop dur: pompes sur genoux ou inclinées
+                    </div>
+                </div>
+
+                <div class="exercise-detail">
+                    <h4>2. Pike Push-Ups (Pompes Pike)</h4>
+                    <p style="color: #666; margin-bottom: 15px;">Cible les épaules (deltoïdes), préparation au handstand push-up</p>
+                    <div class="exercise-info">
+                        <div class="info-box">
+                            <div class="info-label">SÉRIES & REPS</div>
+                            <div class="info-value">3-4 séries × 10-15 reps</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">REPOS</div>
+                            <div class="info-value">60 secondes</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">DIFFICULTÉ</div>
+                            <div class="info-value">⭐⭐⭐</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">PROGRESSION</div>
+                            <div class="info-value">Pieds surélevés → HSPU au mur</div>
+                        </div>
+                    </div>
+                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                        <strong style="color: #667eea;">🎯 Points clés:</strong><br>
+                        • Position en V inversé, fesses en l'air<br>
+                        • Mains largeur épaules<br>
+                        • Regard entre les mains<br>
+                        • Descendre en pliant les coudes, tête vers le sol<br>
+                        • Pousser pour revenir en position haute<br>
+                        • Pour progresser: élève les pieds sur une chaise
+                    </div>
+                </div>
+
+                <div class="exercise-detail">
+                    <h4>3. Dips sur Chaise (ou Barres)</h4>
+                    <p style="color: #666; margin-bottom: 15px;">Triceps, pectoraux inférieurs, épaules antérieures</p>
+                    <div class="exercise-info">
+                        <div class="info-box">
+                            <div class="info-label">SÉRIES & REPS</div>
+                            <div class="info-value">3-4 séries × 12-20 reps</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">REPOS</div>
+                            <div class="info-value">60-90 secondes</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">ÉQUIPEMENT</div>
+                            <div class="info-value">2 chaises ou barres parallèles</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">PROGRESSION</div>
+                            <div class="info-value">Jambes tendues → lestés (sac à dos)</div>
+                        </div>
+                    </div>
+                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                        <strong style="color: #667eea;">🎯 Points clés:</strong><br>
+                        • Mains sur chaises, bras tendus<br>
+                        • Jambes fléchies devant (débutant) ou tendues (avancé)<br>
+                        • Descendre en pliant les coudes jusqu'à 90°<br>
+                        • Coudes vers l'arrière, pas écartés<br>
+                        • Pousser pour remonter sans verrouiller complètement<br>
+                        • Penche le buste légèrement en avant pour + pectoraux
+                    </div>
+                </div>
+
+                <div class="exercise-detail">
+                    <h4>4. Pompes Diamant</h4>
+                    <p style="color: #666; margin-bottom: 15px;">Focus triceps et intérieur des pectoraux</p>
+                    <div class="exercise-info">
+                        <div class="info-box">
+                            <div class="info-label">SÉRIES & REPS</div>
+                            <div class="info-value">3 séries × 8-15 reps</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">REPOS</div>
+                            <div class="info-value">60 secondes</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">DIFFICULTÉ</div>
+                            <div class="info-value">⭐⭐⭐⭐</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">MUSCLES</div>
+                            <div class="info-value">Triceps 70%, Pecs 30%</div>
+                        </div>
+                    </div>
+                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                        <strong style="color: #667eea;">🎯 Points clés:</strong><br>
+                        • Mains rapprochées formant un diamant (index et pouces se touchent)<br>
+                        • Corps gainé en ligne droite<br>
+                        • Coudes restent près du corps<br>
+                        • Descendre lentement, poitrine touche les mains<br>
+                        • Contraction explosive en montée
+                    </div>
+                </div>
+
+                <div class="exercise-detail">
+                    <h4>5. Pompes Déclinées (Pieds surélevés)</h4>
+                    <p style="color: #666; margin-bottom: 15px;">Accent sur pectoraux supérieurs et épaules</p>
+                    <div class="exercise-info">
+                        <div class="info-box">
+                            <div class="info-label">SÉRIES & REPS</div>
+                            <div class="info-value">3-4 séries × 10-15 reps</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">HAUTEUR</div>
+                            <div class="info-value">30-60 cm (chaise, canapé)</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">DIFFICULTÉ</div>
+                            <div class="info-value">⭐⭐⭐⭐</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">INTENSITÉ</div>
+                            <div class="info-value">+30% vs pompes classiques</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tips-box">
+                <h3>💡 Tips TDAH-Friendly pour Séance PUSH</h3>
+                <ul>
+                    <li><strong>Timer visuel:</strong> Utilise une app timer avec compte à rebours pour les repos</li>
+                    <li><strong>Playlist dynamique:</strong> Choisis 5-6 morceaux upbeat (45-60 min total)</li>
+                    <li><strong>Checklist physique:</strong> Coche chaque série sur papier pour satisfaction immédiate</li>
+                    <li><strong>Environnement:</strong> Même spot à chaque fois = moins de décisions</li>
+                    <li><strong>Reward:</strong> Smoothie protéiné post-training = dopamine</li>
+                    <li><strong>Variété dans la semaine:</strong> Alterner les variantes de pompes</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SÉANCE PULL -->
+        <div id="seance-pull" class="tab-content">
+            <div class="warmup-box">
+                <h4>💪 Échauffement (8-10 min)</h4>
+                <ul style="list-style: none;">
+                    <li>✓ 2 min jumping jacks</li>
+                    <li>✓ 10 rotations bras (moulinets)</li>
+                    <li>✓ 10 band pull-aparts (élastique ou serviette)</li>
+                    <li>✓ 10 scapular pulls (suspension)</li>
+                    <li>✓ 5 tractions australiennes lentes</li>
+                </ul>
+            </div>
+
+            <div class="workout-detail">
+                <h3>💪 Séance PULL - Dos, Biceps, Arrière d'épaules</h3>
+                
+                <div class="exercise-detail">
+                    <h4>1. Tractions (Pull-ups)</h4>
+                    <p style="color: #666; margin-bottom: 15px;">ROI exercice dos - Dorsaux, biceps, trapèzes</p>
+                    <div class="exercise-info">
+                        <div class="info-box">
+                            <div class="info-label">SÉRIES & REPS</div>
+                            <div class="info-value">4-5 séries × 6-12 reps</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">REPOS</div>
+                            <div class="info-value">90-120 secondes</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">PRISE</div>
+                            <div class="info-value">Pronation (paumes devant)</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">ALTERNATIVE</div>
+                            <div class="info-value">Tractions australiennes (débutant)</div>
+                        </div>
+                    </div>
+                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                        <strong style="color: #667eea;">🎯 Points clés:</strong><br>
+                        • Barre fixe, prise largeur épaules ou + large<br>
+                        • Départ bras tendus, scapulas actives (dépression)<br>
+                        • Tirer les coudes vers le bas et l'arrière<br>
+                        • Menton au-dessus de la barre<br>
+                        • Descente contrôlée (3 sec)<br>
+                        <strong style="color: #f5576c;">Si tu ne peux pas encore:</strong> Tractions négatives (sauter en haut, descendre lentement 5 sec) ou australiennes
+                    </div>
+                </div>
+
+                <div class="exercise-detail">
+                    <h4>2. Rowing Inversé (Australian Pull-ups)</h4>
+                    <p style="color: #666; margin-bottom: 15px;">Dorsaux, rhomboïdes, trapèzes moyens</p>
+                    <div class="exercise-info">
+                        <div class="info-box">
+                            <div class="info-label">SÉRIES & REPS</div>
+                            <div class="info-value">4 séries × 12-20 reps</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">ÉQUIPEMENT</div>
+                            <div class="info-value">Table solide, barre basse</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">HAUTEUR</div>
+                            <div class="info-value">+ bas = + difficile</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">REPOS</div>
+                            <div class="info-value">60 secondes</div>
+                        </div>
+                    </div>
+                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                        <strong style="color: #667eea;">🎯 Points clés:</strong><br>
+                        • Sous la table/barre, corps incliné<br>
+                        • Talons au sol, corps gainé droit<br>
+                        • Prise supination (paumes vers toi) ou pronation<br>
+                        • Tirer la poitrine vers la barre<br>
+                        • Serrer les omoplates en haut<br>
+                        • Descente contrôlée, bras tendus sans relâcher
+                    </div>
+                </div>
+
+                <div class="exercise-detail">
+                    <h4>3. Superman / Back Extensions</h4>
+                    <p style="color: #666; margin-bottom: 15px;">Lombaires, fessiers, ischio-jambiers</p>
+                    <div class="exercise-info">
+                        <div class="info-box">
+                            <div class="info-label">SÉRIES & REPS</div>
+                            <div class="info-value">3-4 séries × 15-20 reps</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">TEMPO</div>
+                            <div class="info-value">Hold 2 sec en haut</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">REPOS</div>
+                            <div class="info-value">45-60 secondes</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">PROGRESSION</div>
+                            <div class="info-value">+ poids dans les mains</div>
+                        </div>
+                    </div>
+                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                        <strong style="color: #667eea;">🎯 Points clés:</strong><br>
+                        • Allongé face contre terre, bras tendus devant<br>
+                        • Soulever simultanément bras et jambes du sol<br>
+                        • Contracter fessiers et bas du dos<br>
+                        • Hold 2 secondes en position haute<br>
+                        • Descendre contrôlé sans poser complètement
+                    </div>
+                </div>
+
+                <div class="exercise-detail">
+                    <h4>4. Curl Biceps Isométrique</h4>
+                    <p style="color: #666; margin-bottom: 15px;">Biceps, avant-bras - Sans matériel</p>
+                    <div class="exercise-info">
+                        <div class="info-box">
+                            <div class="info-label">SÉRIES & DURÉE</div>
+                            <div class="info-value">3-4 séries × 30-45 sec</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">TECHNIQUE</div>
+                            <div class="info-value">Auto-résistance</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">REPOS</div>
+                            <div class="info-value">45 secondes</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">ALTERNATIVE</div>
+                            <div class="info-value">Curl avec sac à dos rempli</div>
+                        </div>
+                    </div>
+                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                        <strong style="color: #667eea;">🎯 Points clés:</strong><br>
+                        • Main gauche pousse contre main droite en flexion<br>
+                        • Coude à 90°, tension maximale<br>
+                        • Alterner les bras<br>
+                        • Ou: suspends-toi à une barre, coudes à 90°, hold 30-60 sec
+                    </div>
+                </div>
+
+                <div class="exercise-detail">
+                    <h4>5. Face Pulls (avec serviette/élastique)</h4>
+                    <p style="color: #666; margin-bottom: 15px;">Deltoïdes postérieurs, trapèzes, rhomboïdes</p>
+                    <div class="exercise-info">
+                        <div class="info-box">
+                            <div class="info-label">SÉRIES & REPS</div>
+                            <div class="info-value">3-4 séries × 15-20 reps</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">ÉQUIPEMENT</div>
+                            <div class="info-value">Serviette/Élastique + point fixe</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">IMPORTANCE</div>
+                            <div class="info-value">⭐⭐⭐⭐⭐ Posture</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">REPOS</div>
+                            <div class="info-value">45 secondes</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tips-box">
+                <h3>💡 Tips Séance PULL</h3>
+                <ul>
+                    <li><strong>Barre de traction:</strong> Investis dans une barre de porte (~30€) - game changer</li>
+                    <li><strong>Progression tractions:</strong> Si dur, fais des négatives (5-8 sec descente)</li>
+                    <li><strong>Élastiques:</strong> Prends un set (15€) pour résistance et assistance</li>
+                    <li><strong>Rowing maison:</strong> Table solide = ton meilleur ami</li>
+                    <li><strong>Fréquence:</strong> Pull 2x/semaine pour construire un dos massif</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SÉANCE LEGS -->
+        <div id="seance-legs" class="tab-content">
+            <div class="warmup-box">
+                <h4>🦵 Échauffement (10 min)</h4>
+                <ul style="list-style: none;">
+                    <li>✓ 3 min marche/course sur place</li>
+                    <li>✓ 10 squats au poids du corps (lents)</li>
+                    <li>✓ 10 fentes alternées</li>
+                    <li>✓ 10 leg swings (avant/arrière)</li>
+                    <li>✓ 10 rotations hanches</li>
+                    <li>✓ 20 mollets debout</li>
+                </ul>
+            </div>
+
+            <div class="workout-detail">
+                <h3>🦵 Séance LEGS - Quadriceps, Ischio, Fessiers, Mollets</h3>
+                
+                <div class="exercise-detail">
+                    <h4>1. Squats au Poids du Corps</h4>
+                    <p style="color: #666; margin-bottom: 15px;">Le roi des exercices jambes - Quadriceps, fessiers, ischio</p>
+                    <div class="exercise-info">
+                        <div class="info-box">
+                            <div class="info-label">SÉRIES & REPS</div>
+                            <div class="info-value">4-5 séries × 15-25 reps</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">REPOS</div>
+                            <div class="info-value">60-90 secondes</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">TEMPO</div>
+                            <div class="info-value">3-1-2 (descente-pause-montée)</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">PROGRESSION</div>
+                            <div class="info-value">Jump squats, pistol, lestés</div>
+                        </div>
+                    </div>
+                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                        <strong style="color: #667eea;">🎯 Points clés:</strong><br>
+                        • Pieds largeur épaules, pointes légèrement ouvertes<br>
+                        • Descendre en poussant fesses vers l'arrière<br>
+                        • Cuisses parallèles au sol minimum (ou + bas)<br>
+                        • Genoux alignés avec les pieds, pas vers l'intérieur<br>
+                        • Poitrine relevée, regard droit devant<br>
+                        • Pousser par les talons pour remonter<br>
+                        <strong>Prise de masse:</strong> Fais-les LENTS (tempo 3-1-2) pour + temps sous tension
+                    </div>
+                </div>
+
+                <div class="exercise-detail">
+                    <h4>2. Fentes Alternées / Bulgares</h4>
+                    <p style="color: #666; margin-bottom: 15px;">Quadriceps, fessiers, équilibre - Unilatéral</p>
+                    <div class="exercise-info">
+                        <div class="info-box">
+                            <div class="info-label">SÉRIES & REPS</div>
+                            <div class="info-value">3-4 séries × 12-15/jambe</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">VARIANTES</div>
+                            <div class="info-value">Marchées, statiques, bulgares</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">REPOS</div>
+                            <div class="info-value">60 secondes</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">PROGRESSION</div>
+                            <div class="info-value">Sautées, avec sac à dos</div>
+                        </div>
+                    </div>
+                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                        <strong style="color: #667eea;">🎯 Fentes classiques:</strong><br>
+                        • Grand pas en avant, descendre genou arrière vers le sol<br>
+                        • Genou avant à 90°, ne dépasse pas la pointe du pied<br>
+                        • Buste droit, core engagé<br>
+                        • Pousser sur le talon avant pour revenir<br><br>
+                        <strong style="color: #667eea;">🎯 Fentes bulgares (+ difficile):</strong><br>
+                        • Pied arrière sur une chaise/canapé<br>
+                        • Descendre le genou arrière vers le sol<br>
+                        • Fessiers et quads ultra sollicités
+                    </div>
+                </div>
+
+                <div class="exercise-detail">
+                    <h4>3. Nordic Hamstring Curls</h4>
+                    <p style="color: #666; margin-bottom: 15px;">Ischio-jambiers - Exercice eccentric king</p>
+                    <div class="exercise-info">
+                        <div class="info-box">
+                            <div class="info-label">SÉRIES & REPS</div>
+                            <div class="info-value">3-4 séries × 5-10 reps</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">DIFFICULTÉ</div>
+                            <div class="info-value">⭐⭐⭐⭐⭐</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">REPOS</div>
+                            <div class="info-value">90-120 secondes</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">BÉNÉFICE</div>
+                            <div class="info-value">Prévention blessures</div>
+                        </div>
+                    </div>
+                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                        <strong style="color: #667eea;">🎯 Points clés:</strong><br>
+                        • À genoux, pieds bloqués sous canapé/partenaire<br>
+                        • Buste et cuisses alignés<br>
+                        • Descendre LENTEMENT vers l'avant en contrôlant<br>
+                        • Rattrape avec les mains au sol si besoin<br>
+                        • Pousse sur les mains pour remonter (assisté)<br>
+                        <strong style="color: #f5576c;">Débutant:</strong> Descendre le + lentement possible (8-10 sec), utilise coussin sous genoux
+                    </div>
+                </div>
+
+                <div class="exercise-detail">
+                    <h4>4. Pistol Squats (Squat sur 1 jambe)</h4>
+                    <p style="color: #666; margin-bottom: 15px;">Quadriceps, équilibre, force unilatérale</p>
+                    <div class="exercise-info">
+                        <div class="info-box">
+                            <div class="info-label">SÉRIES & REPS</div>
+                            <div class="info-value">3 séries × 5-10/jambe</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">DIFFICULTÉ</div>
+                            <div class="info-value">⭐⭐⭐⭐⭐</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">ASSISTANCE</div>
+                            <div class="info-value">TRX, poteau, chaise</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">PROGRESSION</div>
+                            <div class="info-value">Box pistols → complets</div>
+                        </div>
+                    </div>
+                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                        <strong style="color: #667eea;">🎯 Progression:</strong><br>
+                        <strong>Niveau 1:</strong> Pistol sur box (descendre sur chaise/box bas)<br>
+                        <strong>Niveau 2:</strong> Pistol assisté (tenir un poteau)<br>
+                        <strong>Niveau 3:</strong> Pistol complet sans assistance<br>
+                        • Jambe libre tendue devant<br>
+                        • Descendre contrôlé jusqu'en bas<br>
+                        • Pousser explosif pour remonter<br>
+                        • Équilibre et mobilité cheville essentiels
+                    </div>
+                </div>
+
+                <div class="exercise-detail">
+                    <h4>5. Mollets Debout (Calf Raises)</h4>
+                    <p style="color: #666; margin-bottom: 15px;">Gastrocnémiens, soléaires</p>
+                    <div class="exercise-info">
+                        <div class="info-box">
+                            <div class="info-label">SÉRIES & REPS</div>
+                            <div class="info-value">4 séries × 20-30 reps</div>
