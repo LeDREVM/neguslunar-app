@@ -1,7 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Moon, Leaf, BookOpen, Plus, X, Calendar, ChevronLeft, ChevronRight, Download, Upload, UtensilsCrossed, Clock, Users, Sparkles, Heart, TrendingUp, Activity, Wind, Smile, Meh, Frown, Angry, Coffee } from 'lucide-react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { Moon, Leaf, BookOpen, Plus, X, Calendar, ChevronLeft, ChevronRight, Download, Upload, UtensilsCrossed, Clock, Users, Sparkles, Heart, TrendingUp, Activity, Wind, Smile, Meh, Frown, Angry, Coffee, Camera, Target } from 'lucide-react';
 import MoonCalendar from './MoonCalendar';
 import EclipseCalendar from './EclipseCalendar';
+import BarcodeScanner from './BarcodeScanner';
+import IntermittentFasting from './IntermittentFasting';
+import MealPlanner from './MealPlanner';
 import { getAccurateMoonPhase, isFullMoon, isNewMoon } from '../data/moonPhases2026';
 import { isEclipseDate, getEclipseForDate } from '../data/lunarEclipses2026';
 
@@ -90,6 +93,35 @@ const NegusLunar = () => {
   // Utiliser les données précises si disponibles, sinon fallback sur le calcul
   const accuratePhase = getAccurateMoonPhase(currentDate);
   const moonPhase = accuratePhase || getMoonPhase(currentDate);
+  
+  const getPhaseInfoForDate = (date) => {
+    const accurate = getAccurateMoonPhase(date);
+    if (accurate) {
+      const fallback = getMoonPhase(date);
+      return {
+        name: accurate.name,
+        emoji: accurate.emoji || fallback.emoji,
+        description: accurate.description || fallback.description,
+        illumination: accurate.illumination,
+        exactTime: accurate.exactTime
+      };
+    }
+    return getMoonPhase(date);
+  };
+
+  const weeklyPhases = useMemo(() => {
+    const start = new Date(currentDate);
+    start.setHours(0, 0, 0, 0);
+    return Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(start);
+      d.setDate(start.getDate() + i);
+      const info = getPhaseInfoForDate(d);
+      return {
+        ...info,
+        date: d
+      };
+    });
+  }, [currentDate]);
   
   // Ajouter des informations supplémentaires
   const todayIsFullMoon = isFullMoon(currentDate);
@@ -827,6 +859,19 @@ const NegusLunar = () => {
     return lunarRitualData[moonPhase.name] || lunarRitualData['Nouvelle Lune'];
   };
 
+  // URL sécurisée pour la musique YouTube
+  const getRitualMusicUrl = () => {
+    const url = getTodayRitual().musicUrl;
+    if (!url) return '';
+    return url.startsWith('http') ? url : `https://${url}`;
+  };
+
+  const openMusicOnYouTube = () => {
+    const url = getRitualMusicUrl();
+    if (!url || typeof window === 'undefined') return;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
   // Enregistrer l'humeur du jour
   const saveDailyMood = (mood) => {
     const today = new Date().toISOString().split('T')[0];
@@ -1002,6 +1047,8 @@ const NegusLunar = () => {
     );
   };
 
+  const musicLink = getRitualMusicUrl();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-900 to-slate-900 text-white relative overflow-hidden">
       {/* Étoiles d'arrière-plan */}
@@ -1150,6 +1197,45 @@ const NegusLunar = () => {
             <span className="hidden sm:inline">Programme Sport</span>
             <span className="sm:hidden">💪</span>
           </button>
+
+          <button
+            onClick={() => setActiveTab('scanner')}
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
+              activeTab === 'scanner'
+                ? 'bg-gradient-to-r from-green-500 to-emerald-500 shadow-lg shadow-green-500/50 scale-105'
+                : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
+            }`}
+          >
+            <Camera size={16} className="sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Scanner</span>
+            <span className="sm:hidden">📷</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('fasting')}
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
+              activeTab === 'fasting'
+                ? 'bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg shadow-indigo-500/50 scale-105'
+                : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
+            }`}
+          >
+            <Clock size={16} className="sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Jeûne</span>
+            <span className="sm:hidden">⏱️</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('mealplan')}
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
+              activeTab === 'mealplan'
+                ? 'bg-gradient-to-r from-amber-500 to-orange-500 shadow-lg shadow-amber-500/50 scale-105'
+                : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
+            }`}
+          >
+            <Target size={16} className="sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Plans Repas</span>
+            <span className="sm:hidden">🎯</span>
+          </button>
           </div>
         </nav>
 
@@ -1216,6 +1302,42 @@ const NegusLunar = () => {
                   month: 'long', 
                   day: 'numeric' 
                 })}
+              </div>
+
+              {/* Phases des 7 prochains jours */}
+              <div className="max-w-5xl mx-auto px-4">
+                <div className="flex items-center justify-between mb-3 text-sm text-purple-200/80">
+                  <div className="flex items-center gap-2 font-semibold">
+                    <Sparkles size={18} className="text-yellow-300" />
+                    Phases à venir (7 jours glissants)
+                  </div>
+                  <span className="text-purple-300/60">À partir d'aujourd'hui</span>
+                </div>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {weeklyPhases.map((phase, idx) => (
+                    <div
+                      key={phase.date.toISOString() + idx}
+                      className="bg-white/5 rounded-2xl p-4 border border-white/10 hover:border-blue-400/40 transition-all hover:scale-[1.01]"
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="text-2xl">{phase.emoji}</div>
+                        <div className="text-xs text-purple-300/70">
+                          {phase.date.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'long' })}
+                        </div>
+                      </div>
+                      <div className="font-semibold text-blue-100 mb-1">{phase.name}</div>
+                      <div className="text-xs text-purple-200/80 line-clamp-2 mb-2">
+                        {phase.description}
+                      </div>
+                      {phase.illumination !== undefined && (
+                        <div className="text-[11px] text-yellow-200/80 flex items-center gap-1">
+                          <span>Illumination :</span>
+                          <span className="font-semibold text-yellow-100">{phase.illumination}%</span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
               
               {/* Liens vers calendrier complet */}
@@ -1703,17 +1825,18 @@ const NegusLunar = () => {
                     🎵 Musique d'Ambiance Suggérée
                   </h3>
                   <p className="text-pink-100/90 mb-4">{getTodayRitual().musicTitle}</p>
-                  <a
-                    href={getTodayRitual().musicUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full transition-all hover:scale-105 shadow-lg"
+                  <button
+                    type="button"
+                    onClick={openMusicOnYouTube}
+                    disabled={!musicLink}
+                    className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full transition-all hover:scale-105 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
+                    aria-label="Ouvrir la musique sur YouTube"
                   >
                     <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                     </svg>
                     Écouter sur YouTube
-                  </a>
+                  </button>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-6">
@@ -1872,6 +1995,27 @@ const NegusLunar = () => {
                   </div>
                 )}
               </div>
+            </div>
+          )}
+
+          {/* Scanner de codes-barres */}
+          {activeTab === 'scanner' && (
+            <div className="animate-fadeIn">
+              <BarcodeScanner />
+            </div>
+          )}
+
+          {/* Jeûne intermittent */}
+          {activeTab === 'fasting' && (
+            <div className="animate-fadeIn">
+              <IntermittentFasting />
+            </div>
+          )}
+
+          {/* Plans de repas personnalisés */}
+          {activeTab === 'mealplan' && (
+            <div className="animate-fadeIn">
+              <MealPlanner />
             </div>
           )}
         </main>
