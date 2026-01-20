@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Clock, Play, Pause, RotateCcw, Calendar, TrendingUp, Moon, Sun } from 'lucide-react';
+import { Clock, Play, Pause, RotateCcw, Calendar, TrendingUp, Moon, Sun, MessageCircle, X } from 'lucide-react';
 
 const IntermittentFasting = () => {
   const [fastingType, setFastingType] = useState('16-8'); // 16:8, 18:6, 20:4, 24h
@@ -8,6 +8,8 @@ const IntermittentFasting = () => {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [fastingHistory, setFastingHistory] = useState([]);
   const [currentPhase, setCurrentPhase] = useState('eating'); // eating ou fasting
+  const [encouragementMessage, setEncouragementMessage] = useState(null);
+  const [lastEncouragementHour, setLastEncouragementHour] = useState(0);
   const intervalRef = useRef(null);
 
   // Types de jeûne disponibles
@@ -16,6 +18,70 @@ const IntermittentFasting = () => {
     '18-6': { fast: 18, eat: 6, name: '18:6 (Intermédiaire)', description: '18h jeûne, 6h alimentation' },
     '20-4': { fast: 20, eat: 4, name: '20:4 (Avancé)', description: '20h jeûne, 4h alimentation' },
     '24': { fast: 24, eat: 0, name: '24h (Warrior)', description: '24h de jeûne complet' }
+  };
+
+  // Messages d'encouragement par tranche de 2 heures
+  const encouragementMessages = {
+    2: {
+      title: "🌱 Excellent départ !",
+      message: "2 heures de jeûne accompli ! Votre corps commence à puiser dans ses réserves de glycogène. Restez hydraté !",
+      tip: "💧 Buvez un grand verre d'eau"
+    },
+    4: {
+      title: "💪 Vous êtes sur la bonne voie !",
+      message: "4 heures ! Votre insuline commence à baisser. C'est le moment idéal pour une activité légère.",
+      tip: "🚶 Une petite marche serait parfaite"
+    },
+    6: {
+      title: "🔥 La cétose approche !",
+      message: "6 heures de jeûne ! Votre corps commence la transition vers la combustion des graisses. Bravo !",
+      tip: "☕ Un thé ou café sans sucre pour vous accompagner"
+    },
+    8: {
+      title: "⭐ Vous êtes à mi-chemin !",
+      message: "8 heures ! La moitié du chemin est parcourue. Votre corps est maintenant en mode détox.",
+      tip: "🧘 Prenez quelques minutes pour méditer"
+    },
+    10: {
+      title: "🌟 Performance maximale !",
+      message: "10 heures ! Votre clarté mentale est à son pic. L'autophagie cellulaire est en marche.",
+      tip: "🧠 Profitez de cette concentration pour vos tâches importantes"
+    },
+    12: {
+      title: "🏆 Champion du jeûne !",
+      message: "12 heures accomplies ! Votre corps brûle activement les graisses. Vous êtes incroyable !",
+      tip: "💪 Vous pouvez faire quelques étirements"
+    },
+    14: {
+      title: "🎯 Presque au but !",
+      message: "14 heures ! L'autophagie bat son plein. Vos cellules se régénèrent. Continuez !",
+      tip: "🌿 Une tisane pour vous réconforter"
+    },
+    16: {
+      title: "🎉 16 heures accomplies !",
+      message: "Félicitations ! Vous avez atteint les 16 heures. Votre corps vous remercie pour ce cadeau !",
+      tip: "🍽️ Préparez un repas équilibré pour rompre le jeûne"
+    },
+    18: {
+      title: "🌙 Maître du jeûne !",
+      message: "18 heures ! Vous êtes dans la zone d'élite. Les bénéfices sont maximaux !",
+      tip: "🙏 Prenez un moment de gratitude"
+    },
+    20: {
+      title: "👑 Niveau expert atteint !",
+      message: "20 heures ! Votre résilience est impressionnante. L'autophagie profonde est active.",
+      tip: "✨ Vous êtes un guerrier du jeûne"
+    },
+    22: {
+      title: "🔮 Zone mystique !",
+      message: "22 heures ! Peu de personnes atteignent ce niveau. Votre corps se transforme.",
+      tip: "🌟 La fin approche, tenez bon"
+    },
+    24: {
+      title: "🏅 Jeûne de 24h complété !",
+      message: "Extraordinaire ! 24 heures de jeûne. Vous avez accompli quelque chose de remarquable !",
+      tip: "🎊 Célébrez cette victoire avec un repas conscient"
+    }
   };
 
   // Charger les données depuis localStorage
@@ -47,13 +113,33 @@ const IntermittentFasting = () => {
     localStorage.setItem('neguslunar-fasting-type', fastingType);
   }, [isActive, startTime, currentPhase, fastingType]);
 
-  // Timer
+  // Timer et messages d'encouragement
   useEffect(() => {
     if (isActive && startTime) {
       intervalRef.current = setInterval(() => {
         const now = Date.now();
         const elapsed = Math.floor((now - startTime) / 1000);
         setElapsedTime(elapsed);
+
+        // Calculer les heures écoulées
+        const hoursElapsed = Math.floor(elapsed / 3600);
+
+        // Afficher un message d'encouragement toutes les 2 heures
+        if (hoursElapsed > 0 && hoursElapsed % 2 === 0 && hoursElapsed !== lastEncouragementHour) {
+          if (encouragementMessages[hoursElapsed]) {
+            setEncouragementMessage(encouragementMessages[hoursElapsed]);
+            setLastEncouragementHour(hoursElapsed);
+            
+            // Notification navigateur si autorisée
+            if ('Notification' in window && Notification.permission === 'granted') {
+              new Notification('🌙 NegusLunar - Jeûne Intermittent', {
+                body: encouragementMessages[hoursElapsed].message,
+                icon: '/moon.svg',
+                badge: '/moon.svg'
+              });
+            }
+          }
+        }
 
         // Vérifier si le jeûne est terminé
         const targetHours = fastingTypes[fastingType].fast;
@@ -67,7 +153,14 @@ const IntermittentFasting = () => {
 
       return () => clearInterval(intervalRef.current);
     }
-  }, [isActive, startTime, fastingType, currentPhase]);
+  }, [isActive, startTime, fastingType, currentPhase, lastEncouragementHour]);
+
+  // Demander la permission pour les notifications
+  useEffect(() => {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }, []);
 
   // Démarrer le jeûne
   const startFast = () => {
@@ -76,6 +169,8 @@ const IntermittentFasting = () => {
     setIsActive(true);
     setElapsedTime(0);
     setCurrentPhase('fasting');
+    setLastEncouragementHour(0);
+    setEncouragementMessage(null);
   };
 
   // Mettre en pause
@@ -364,6 +459,37 @@ const IntermittentFasting = () => {
         </div>
       )}
 
+      {/* Message d'encouragement */}
+      {encouragementMessage && (
+        <div className="bg-gradient-to-br from-green-900/30 to-emerald-900/30 rounded-xl p-6 border-2 border-green-500/50 shadow-lg shadow-green-500/20 animate-fadeIn relative">
+          <button
+            onClick={() => setEncouragementMessage(null)}
+            className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+          >
+            <X size={20} />
+          </button>
+          
+          <div className="flex items-start gap-4">
+            <div className="text-4xl">
+              <MessageCircle className="text-green-400" size={40} />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-2xl font-bold text-green-400 mb-2">
+                {encouragementMessage.title}
+              </h3>
+              <p className="text-white text-base mb-3 leading-relaxed">
+                {encouragementMessage.message}
+              </p>
+              <div className="bg-green-800/30 rounded-lg p-3 border border-green-700/50">
+                <p className="text-green-300 text-sm font-semibold">
+                  {encouragementMessage.tip}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Conseils */}
       <div className="bg-gradient-to-br from-teal-900/20 to-cyan-900/20 rounded-xl p-6 border border-teal-700/30">
         <h3 className="text-lg font-bold text-teal-400 mb-3">💡 Conseils pour réussir</h3>
@@ -383,6 +509,10 @@ const IntermittentFasting = () => {
           <li className="flex items-start gap-2">
             <span className="text-teal-400 mt-1">•</span>
             <span>Privilégiez des repas équilibrés pendant la fenêtre d'alimentation</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-teal-400 mt-1">•</span>
+            <span>📬 Vous recevrez un message d'encouragement toutes les 2 heures</span>
           </li>
         </ul>
       </div>
