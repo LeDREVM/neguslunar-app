@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Moon, Leaf, BookOpen, Plus, X, Calendar, ChevronLeft, ChevronRight, Download, Upload, UtensilsCrossed, Clock, Users, Sparkles, Heart, TrendingUp, Activity, Wind, Smile, Meh, Frown, Angry, Coffee, Camera, Target } from 'lucide-react';
+import { Moon, Leaf, BookOpen, Plus, X, Calendar, ChevronLeft, ChevronRight, Download, Upload, UtensilsCrossed, Clock, Users, Sparkles, Heart, TrendingUp, Activity, Wind, Smile, Meh, Frown, Angry, Coffee, Camera, Target, Briefcase } from 'lucide-react';
 import MoonCalendar from './MoonCalendar';
 import EclipseCalendar from './EclipseCalendar';
 import BarcodeScanner from './BarcodeScanner';
 import IntermittentFasting from './IntermittentFasting';
 import MealPlanner from './MealPlanner';
+import WorkModule from './WorkModule';
 import { getAccurateMoonPhase, isFullMoon, isNewMoon } from '../data/moonPhases2026';
 import { isEclipseDate, getEclipseForDate } from '../data/lunarEclipses2026';
 
@@ -15,6 +16,7 @@ const NegusLunar = () => {
   const [newNote, setNewNote] = useState('');
   const [selectedMood, setSelectedMood] = useState('');
   const [calendarMonth, setCalendarMonth] = useState(new Date());
+  const [showWorkModule, setShowWorkModule] = useState(false);
   const fileInputRef = useRef(null);
   
   // États pour le module Rituel Lunaire
@@ -1199,6 +1201,15 @@ const NegusLunar = () => {
           </button>
 
           <button
+            onClick={() => setShowWorkModule(true)}
+            className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 shadow-lg shadow-blue-500/50 hover:scale-105"
+          >
+            <Briefcase size={16} className="sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Mode Pro</span>
+            <span className="sm:hidden">💼</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab('scanner')}
             className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
               activeTab === 'scanner'
@@ -2073,6 +2084,11 @@ const NegusLunar = () => {
           -webkit-overflow-scrolling: touch;
         }
       `}</style>
+
+      {/* Module Work (Mode Professionnel) */}
+      {showWorkModule && (
+        <WorkModule onClose={() => setShowWorkModule(false)} />
+      )}
     </div>
   );
 };
