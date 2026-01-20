@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Camera, X, Search, Plus, Check } from 'lucide-react';
+import { Camera, X, Search, Plus, Check, Store, Database } from 'lucide-react';
+import { searchInLocalDatabase, searchByName, getTotalProducts } from '../data/productsDatabase';
 
 const BarcodeScanner = () => {
   const [scanning, setScanning] = useState(false);
@@ -24,12 +25,25 @@ const BarcodeScanner = () => {
     localStorage.setItem('neguslunar-foods', JSON.stringify(savedFoods));
   }, [savedFoods]);
 
-  // Rechercher un produit par code-barres via OpenFoodFacts API
+  // Rechercher un produit par code-barres (local puis OpenFoodFacts)
   const searchByBarcode = async (code) => {
     setLoading(true);
     setError('');
     setFoodData(null);
 
+    // 1. Recherche dans la base de données locale (Carrefour & Super U)
+    const localResult = searchInLocalDatabase(code);
+    
+    if (localResult.found) {
+      setFoodData({
+        ...localResult.product,
+        source: localResult.source
+      });
+      setLoading(false);
+      return;
+    }
+
+    // 2. Si non trouvé localement, recherche dans OpenFoodFacts
     try {
       const response = await fetch(`https://world.openfoodfacts.org/api/v2/product/${code}.json`);
       const data = await response.json();
@@ -48,13 +62,14 @@ const BarcodeScanner = () => {
           image: product.image_url || null,
           quantity: product.quantity || 'N/A',
           categories: product.categories || '',
-          nutriscore: product.nutriscore_grade || null
+          nutriscore: product.nutriscore_grade || null,
+          source: 'openfoodfacts'
         });
       } else {
-        setError('Produit non trouvé dans la base de données');
+        setError('Produit non trouvé dans nos bases de données (Carrefour, Super U, OpenFoodFacts)');
       }
     } catch (err) {
-      setError('Erreur lors de la recherche du produit');
+      setError('Erreur lors de la recherche du produit (vérifiez votre connexion internet)');
       console.error(err);
     } finally {
       setLoading(false);
@@ -127,9 +142,23 @@ const BarcodeScanner = () => {
         <h2 className="text-2xl font-bold text-amber-400 mb-2">
           🍎 Scanner d'Aliments
         </h2>
-        <p className="text-gray-400 text-sm">
+        <p className="text-gray-400 text-sm mb-2">
           Scannez ou recherchez des aliments pour suivre votre nutrition
         </p>
+        <div className="flex items-center justify-center gap-2 text-xs">
+          <div className="flex items-center gap-1 bg-blue-900/30 px-3 py-1 rounded-full border border-blue-700/50">
+            <Store size={14} className="text-blue-400" />
+            <span className="text-blue-300">Carrefour</span>
+          </div>
+          <div className="flex items-center gap-1 bg-green-900/30 px-3 py-1 rounded-full border border-green-700/50">
+            <Store size={14} className="text-green-400" />
+            <span className="text-green-300">Super U</span>
+          </div>
+          <div className="flex items-center gap-1 bg-purple-900/30 px-3 py-1 rounded-full border border-purple-700/50">
+            <Database size={14} className="text-purple-400" />
+            <span className="text-purple-300">{getTotalProducts()} produits</span>
+          </div>
+        </div>
       </div>
 
       {/* Section Scanner/Recherche */}
@@ -226,17 +255,35 @@ const BarcodeScanner = () => {
             <div className="flex-1">
               <h3 className="text-xl font-bold text-white mb-1">{foodData.name}</h3>
               <p className="text-gray-400 text-sm mb-2">{foodData.brand}</p>
-              {foodData.nutriscore && (
-                <span className={`inline-block px-2 py-1 rounded text-xs font-bold ${
-                  foodData.nutriscore === 'a' ? 'bg-green-600' :
-                  foodData.nutriscore === 'b' ? 'bg-lime-600' :
-                  foodData.nutriscore === 'c' ? 'bg-yellow-600' :
-                  foodData.nutriscore === 'd' ? 'bg-orange-600' :
-                  'bg-red-600'
-                }`}>
-                  Nutri-Score {foodData.nutriscore.toUpperCase()}
-                </span>
-              )}
+              <div className="flex gap-2 flex-wrap">
+                {foodData.nutriscore && (
+                  <span className={`inline-block px-2 py-1 rounded text-xs font-bold ${
+                    foodData.nutriscore === 'a' ? 'bg-green-600' :
+                    foodData.nutriscore === 'b' ? 'bg-lime-600' :
+                    foodData.nutriscore === 'c' ? 'bg-yellow-600' :
+                    foodData.nutriscore === 'd' ? 'bg-orange-600' :
+                    'bg-red-600'
+                  }`}>
+                    Nutri-Score {foodData.nutriscore.toUpperCase()}
+                  </span>
+                )}
+                {foodData.source && (
+                  <span className={`inline-block px-2 py-1 rounded text-xs font-bold ${
+                    foodData.source === 'local-carrefour' ? 'bg-blue-600' :
+                    foodData.source === 'local-superu' ? 'bg-green-600' :
+                    'bg-purple-600'
+                  }`}>
+                    {foodData.source === 'local-carrefour' ? '🛒 Carrefour' :
+                     foodData.source === 'local-superu' ? '🛒 Super U' :
+                     '🌍 OpenFoodFacts'}
+                  </span>
+                )}
+                {foodData.store && (
+                  <span className="inline-block px-2 py-1 rounded text-xs bg-gray-700 text-gray-300">
+                    📍 {foodData.store}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
