@@ -153,6 +153,96 @@
                 0 0 20px rgba(204, 0, 0, 0.5),
                 inset 0 1px 0 rgba(255, 215, 0, 0.3);
         }
+        
+        .tab-retour {
+            background: linear-gradient(145deg, #4d3827, #3d2817);
+            border-color: #d4af37;
+        }
+        
+        .neguslunar-banner {
+            background: linear-gradient(145deg, #cc0000, #990000);
+            color: #ffd700;
+            padding: 15px;
+            border: 3px solid #d4af37;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .neguslunar-banner p {
+            margin: 0;
+            font-size: 1.1em;
+        }
+        
+        .sport-header {
+            background: linear-gradient(145deg, #cc0000 0%, #990000 100%);
+            color: #ffd700;
+            padding: 20px;
+            border: 3px solid #d4af37;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
+        }
+        
+        .sport-header h3 {
+            margin-top: 0;
+            font-family: 'Uncial Antiqua', cursive;
+        }
+        
+        .sport-header p {
+            margin: 10px 0;
+        }
+        
+        .sport-section-header {
+            grid-column: 1 / -1;
+            background: linear-gradient(145deg, #3d2817, #2d1810);
+        }
+        
+        .sport-section-header h3 {
+            color: #d4af37;
+            margin-top: 0;
+            font-family: 'Uncial Antiqua', cursive;
+        }
+        
+        .sport-section-header p {
+            margin: 10px 0;
+            color: #c9b88d;
+        }
+        
+        .prep-tips-advanced {
+            margin-top: 20px;
+            background: linear-gradient(145deg, #4d3827, #3d2817);
+            border-left: 8px solid #ffd700;
+        }
+        
+        .prep-tips-green {
+            margin-top: 20px;
+            background: linear-gradient(145deg, #3d2817, #2d1810);
+            border-left: 8px solid #009b3a;
+        }
+        
+        .prep-tips-gold {
+            margin-top: 20px;
+            background: linear-gradient(145deg, #3d2817, #2d1810);
+            border-left: 8px solid #d4af37;
+        }
+        
+        .prep-tips-red {
+            margin-top: 20px;
+            background: linear-gradient(145deg, #3d2817, #2d1810);
+            border-left: 8px solid #cc0000;
+        }
+        
+        .sport-section-header-margin {
+            margin-top: 30px;
+        }
+        
+        .prep-tips-margin {
+            margin-top: 30px;
+        }
+        
+        .valentine-card {
+            border: 3px solid #f5576c;
+        }
 
         .home-grid {
             display: grid;
@@ -510,103 +600,433 @@
                 0 0 20px rgba(204, 0, 0, 0.5);
         }
 
-        /* Responsive */
-        @media (max-width: 1024px) {
+        /* ============================================
+           RESPONSIVE - DESKTOP (Plein écran natif)
+           ============================================ */
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1600px;
+            }
+            
             .calendar {
-                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+            }
+            
+            .home-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+            
+            .shopping-categories {
+                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             }
         }
 
-        @media (max-width: 768px) {
+        /* ============================================
+           RESPONSIVE - TABLETTE
+           ============================================ */
+        @media (max-width: 1024px) and (min-width: 769px) {
             .calendar {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(3, 1fr);
             }
             
-            h1 {
-                font-size: 2em;
+            .container {
+                padding: 25px;
             }
             
-            .tab {
-                padding: 10px 16px;
-                font-size: 0.85em;
+            .home-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ============================================
+           RESPONSIVE - MOBILE GÉNÉRAL
+           ============================================ */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
             }
             
             .container {
                 padding: 15px;
             }
             
-            .tab-content {
-                padding: 20px;
-            }
-        }
-
-        /* iPhone 12+ (390px et supérieur) */
-        @media (max-width: 430px) {
-            body {
-                font-size: 14px;
-                -webkit-tap-highlight-color: transparent;
+            .calendar {
+                grid-template-columns: 1fr;
+                gap: 15px;
             }
             
             h1 {
-                font-size: 1.8em;
-            }
-            
-            h2 {
-                font-size: 1.4em;
-            }
-            
-            .subtitle {
-                font-size: 1em;
+                font-size: 2em;
             }
             
             .tabs {
                 gap: 6px;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                padding-bottom: 5px;
+            }
+            
+            .tabs::-webkit-scrollbar {
+                display: none;
+            }
+            
+            .tab {
+                padding: 10px 16px;
+                font-size: 0.85em;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+            
+            .tab-content {
+                padding: 20px;
+            }
+            
+            .home-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .shopping-categories {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ============================================
+           RESPONSIVE - iPhone 12 (390x844px)
+           Optimisé pour 390px de largeur
+           ============================================ */
+        @media (max-width: 430px) {
+            html {
+                font-size: 13px;
+            }
+            
+            body {
+                font-size: 14px;
+                -webkit-tap-highlight-color: transparent;
+                padding: 8px;
+            }
+            
+            .container {
+                padding: 12px;
+            }
+            
+            /* Titres */
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 8px;
+            }
+            
+            h1::before {
+                font-size: 0.5em;
+                margin-bottom: 8px;
+            }
+            
+            h2 {
+                font-size: 1.3em;
+                margin-bottom: 15px;
+                padding-bottom: 8px;
+            }
+            
+            h3 {
+                font-size: 1.2em;
+            }
+            
+            h4 {
+                font-size: 1.1em;
+            }
+            
+            .subtitle {
+                font-size: 0.95em;
+                margin-bottom: 20px;
+            }
+            
+            /* Bannière Rasta */
+            .rasta-banner {
+                height: 12px;
+                margin-bottom: 20px;
+            }
+            
+            /* Tabs/Onglets */
+            .tabs {
+                gap: 5px;
+                margin-bottom: 20px;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 5px;
             }
             
             .tab {
                 padding: 8px 12px;
                 font-size: 0.75em;
                 white-space: nowrap;
+                min-width: max-content;
             }
             
-            .calendar {
-                gap: 10px;
+            .tab::before {
+                font-size: 0.7em;
+                left: 4px;
             }
             
-            .day-card {
-                padding: 10px;
+            /* Tab Content */
+            .tab-content {
+                padding: 15px;
             }
             
-            .meal {
-                padding: 8px;
-                margin-bottom: 10px;
+            .tab-content::before {
+                top: 6px;
+                left: 6px;
+                right: 6px;
+                bottom: 6px;
             }
             
-            .meal-title {
+            /* Accueil */
+            .home-intro {
+                margin-bottom: 15px;
+                font-size: 14px;
+            }
+            
+            .home-intro + div {
+                padding: 12px;
+                margin-bottom: 15px;
+                border-radius: 8px;
+            }
+            
+            .home-intro + div p {
                 font-size: 0.95em;
-            }
-            
-            .meal-content {
-                font-size: 0.85em;
             }
             
             .home-grid {
                 grid-template-columns: 1fr;
-                gap: 15px;
+                gap: 12px;
             }
             
             .home-card {
                 padding: 15px;
             }
             
-            .back-home {
-                padding: 6px 12px;
-                font-size: 0.85em;
+            .home-card h3 {
+                font-size: 1.2em;
+                margin-bottom: 8px;
             }
             
+            .home-card p {
+                font-size: 13px;
+                margin-bottom: 12px;
+            }
+            
+            .home-card button {
+                padding: 10px 16px;
+                font-size: 0.9em;
+                width: 100%;
+            }
+            
+            /* Bouton retour */
+            .back-home {
+                padding: 8px 14px;
+                font-size: 0.85em;
+                margin: 10px 0 15px;
+            }
+            
+            /* Calendrier */
+            .calendar {
+                gap: 10px;
+                margin-top: 15px;
+            }
+            
+            .calendar-header {
+                padding: 10px;
+                font-size: 13px;
+            }
+            
+            .day-card {
+                padding: 12px;
+            }
+            
+            .day-card::before {
+                top: 4px;
+                left: 4px;
+                right: 4px;
+                bottom: 4px;
+            }
+            
+            .day-number {
+                font-size: 1.6em;
+                padding: 8px;
+                margin-bottom: 12px;
+            }
+            
+            .meal {
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            
+            .meal-title {
+                font-size: 0.95em;
+                margin-bottom: 6px;
+            }
+            
+            .meal-content {
+                font-size: 0.85em;
+                line-height: 1.5;
+            }
+            
+            .recipe-link {
+                font-size: 0.8em;
+                margin-left: 4px;
+            }
+            
+            .calories {
+                font-size: 0.95em;
+                padding: 8px;
+                margin-top: 12px;
+            }
+            
+            /* Shopping List */
+            .shopping-list {
+                padding: 15px;
+            }
+            
+            .shopping-categories {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .category {
+                padding: 15px;
+            }
+            
+            .category::before {
+                font-size: 1.5em;
+                top: 8px;
+                right: 8px;
+            }
+            
+            .category h4 {
+                font-size: 1.1em;
+                margin-bottom: 12px;
+                padding-bottom: 8px;
+            }
+            
+            .category li {
+                padding: 6px 0;
+                padding-left: 20px;
+                font-size: 13px;
+            }
+            
+            .category li::before {
+                font-size: 0.7em;
+            }
+            
+            /* Prep Tips */
+            .prep-tips {
+                padding: 15px;
+                margin-top: 20px;
+            }
+            
+            .prep-tips h4 {
+                font-size: 1.1em;
+                margin-bottom: 12px;
+            }
+            
+            .prep-tips li {
+                padding: 8px 0;
+                padding-left: 25px;
+                font-size: 13px;
+                line-height: 1.5;
+            }
+            
+            .prep-tips li::before {
+                font-size: 0.9em;
+            }
+            
+            /* Print Button */
             .print-btn {
                 padding: 15px 30px;
                 font-size: 1em;
+                margin: 20px auto;
+            }
+            
+            /* Programme Sport */
+            #sport .shopping-categories {
+                grid-template-columns: 1fr;
+            }
+            
+            #sport .category[style*="grid-column"] {
+                grid-column: 1;
+            }
+            
+            #sport .category h4 {
+                font-size: 1em;
+            }
+            
+            #sport .category ul li {
+                font-size: 12px;
+                padding: 5px 0;
+                padding-left: 18px;
+            }
+            
+            #sport .category ul li strong {
+                display: block;
+                margin-bottom: 3px;
+            }
+            
+            /* Ajustements spécifiques Sport */
+            #sport > div:first-child {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            
+            #sport > div:first-child h3 {
+                font-size: 1.2em;
+                margin-top: 0;
+                margin-bottom: 10px;
+            }
+            
+            #sport > div:first-child p {
+                font-size: 13px;
+                margin: 8px 0;
+            }
+        }
+
+        /* ============================================
+           OPTIMISATION POUR LA HAUTEUR (844px iPhone 12)
+           ============================================ */
+        @media (max-height: 900px) and (max-width: 430px) {
+            .day-card {
+                min-height: auto;
+            }
+            
+            .meal {
+                margin-bottom: 8px;
+            }
+            
+            .calendar {
+                gap: 8px;
+            }
+        }
+
+        /* ============================================
+           MODE PAYSAGE MOBILE
+           ============================================ */
+        @media (max-width: 844px) and (orientation: landscape) {
+            body {
+                padding: 5px;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .calendar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .home-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .shopping-categories {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -667,7 +1087,7 @@
     <div class="rasta-banner"></div>
 
 <div class="tabs">
-    <button class="tab" onclick="window.location.href='/'" style="background: linear-gradient(145deg, #4d3827, #3d2817); border-color: #d4af37;">🌙 Retour NegusLunar</button>
+    <button class="tab tab-retour" onclick="window.location.href='/'">🌙 Retour NegusLunar</button>
     <button class="tab active" data-tab="accueil" onclick="showTab('accueil')">Accueil</button>
     <button class="tab" data-tab="semaine1" onclick="showTab('semaine1')">Semaine 1</button>
     <button class="tab" data-tab="semaine2" onclick="showTab('semaine2')">Semaine 2</button>
@@ -683,8 +1103,8 @@
     <h2>Accueil - Menu Végétalien Février 2026</h2>
     <p class="home-intro">Planning complet de prise de masse avec recettes végétaliennes, courses et programme sportif. Intégré à NegusLunar pour suivre vos cycles lunaires et vos intentions.</p>
     
-    <div style="background: linear-gradient(145deg, #cc0000, #990000); color: #ffd700; padding: 15px; border: 3px solid #d4af37; margin-bottom: 20px; border-radius: 10px; text-align: center;">
-        <p style="margin: 0; font-size: 1.1em;">🌙 <strong>Connecté à NegusLunar</strong> - Synchronisez vos repas avec les phases lunaires pour optimiser votre énergie !</p>
+    <div class="neguslunar-banner">
+        <p>🌙 <strong>Connecté à NegusLunar</strong> - Synchronisez vos repas avec les phases lunaires pour optimiser votre énergie !</p>
     </div>
     
     <div class="home-grid">
@@ -989,7 +1409,7 @@
         </div>
 
         <!-- Samedi 14 (Saint-Valentin) -->
-        <div class="day-card" style="border: 3px solid #f5576c;">
+        <div class="day-card valentine-card">
             <div class="day-number">14 ❤️</div>
             <div class="meal">
                 <div class="meal-title">🌅 Petit-déj</div>
@@ -1590,20 +2010,20 @@
     <h2>💪 Programme Sport au Poids du Corps - Février 2026</h2>
     <button class="back-home" onclick="showTab('accueil')">← Retour Accueil</button>
     
-    <div style="background: linear-gradient(145deg, #cc0000 0%, #990000 100%); color: #ffd700; padding: 20px; border: 3px solid #d4af37; margin-bottom: 30px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);">
-        <h3 style="margin-top: 0; font-family: 'Uncial Antiqua', cursive;">🎯 Objectif: Prise de Masse Musculaire</h3>
-        <p style="margin: 10px 0;">Programme sur 4 semaines avec progression adaptée</p>
-        <p style="margin: 10px 0;"><strong>Fréquence:</strong> 4-5 séances par semaine</p>
-        <p style="margin: 10px 0;"><strong>Durée:</strong> 45-60 minutes par séance</p>
-        <p style="margin: 0;"><strong>Structure:</strong> Push / Pull / Legs / Full Body</p>
+    <div class="sport-header">
+        <h3>🎯 Objectif: Prise de Masse Musculaire</h3>
+        <p>Programme sur 4 semaines avec progression adaptée</p>
+        <p><strong>Fréquence:</strong> 4-5 séances par semaine</p>
+        <p><strong>Durée:</strong> 45-60 minutes par séance</p>
+        <p><strong>Structure:</strong> Push / Pull / Legs / Full Body</p>
     </div>
 
     <div class="shopping-list">
         <div class="shopping-categories">
             
             <!-- SEMAINE 1-2 -->
-            <div class="category" style="grid-column: 1 / -1; background: linear-gradient(145deg, #3d2817, #2d1810);">
-                <h3 style="color: #d4af37; margin-top: 0; font-family: 'Uncial Antiqua', cursive;">📅 Semaines 1-2 : Phase d'Adaptation</h3>
+            <div class="category sport-section-header">
+                <h3>📅 Semaines 1-2 : Phase d'Adaptation</h3>
             </div>
 
             <div class="category">
@@ -1679,9 +2099,9 @@
             </div>
 
             <!-- SEMAINE 3-4 -->
-            <div class="category" style="grid-column: 1 / -1; background: linear-gradient(145deg, #3d2817, #2d1810); margin-top: 30px;">
-                <h3 style="color: #d4af37; margin-top: 0; font-family: 'Uncial Antiqua', cursive;">📅 Semaines 3-4 : Phase d'Intensification</h3>
-                <p style="margin: 10px 0; color: #c9b88d;"><em>Augmente les répétitions de 2-3 ou ajoute des pauses isométriques de 2 sec</em></p>
+            <div class="category sport-section-header sport-section-header-margin">
+                <h3>📅 Semaines 3-4 : Phase d'Intensification</h3>
+                <p><em>Augmente les répétitions de 2-3 ou ajoute des pauses isométriques de 2 sec</em></p>
             </div>
 
             <div class="category">
@@ -1761,7 +2181,7 @@
         </div>
 
         <!-- CONSEILS PRATIQUES -->
-        <div class="prep-tips" style="margin-top: 30px;">
+        <div class="prep-tips prep-tips-margin">
             <h4>💡 Conseils Essentiels</h4>
             <ul>
                 <li><strong>Progression:</strong> Augmente les reps/séries chaque semaine de 5-10%</li>
@@ -1775,7 +2195,7 @@
             </ul>
         </div>
 
-        <div class="prep-tips" style="margin-top: 20px; background: linear-gradient(145deg, #4d3827, #3d2817); border-left: 8px solid #ffd700;">
+        <div class="prep-tips prep-tips-advanced">
             <h4>⚡ Adaptations pour Débutants</h4>
             <ul>
                 <li><strong>Pompes:</strong> Sur les genoux si nécessaire</li>
@@ -1787,7 +2207,7 @@
             </ul>
         </div>
 
-        <div class="prep-tips" style="margin-top: 20px; background: linear-gradient(145deg, #3d2817, #2d1810); border-left: 8px solid #009b3a;">
+        <div class="prep-tips prep-tips-green">
             <h4>🚀 Progressions Avancées (Mois 2+)</h4>
             <ul>
                 <li><strong>Pompes:</strong> One-arm push-ups, clapping push-ups</li>
@@ -1799,7 +2219,7 @@
             </ul>
         </div>
 
-        <div class="prep-tips" style="margin-top: 20px; background: linear-gradient(145deg, #3d2817, #2d1810); border-left: 8px solid #d4af37;">
+        <div class="prep-tips prep-tips-gold">
             <h4>📊 Suivi des Progrès</h4>
             <ul>
                 <li><strong>Semaine 1:</strong> Note tes performances de base (reps max)</li>
@@ -1811,7 +2231,7 @@
             </ul>
         </div>
 
-        <div class="prep-tips" style="margin-top: 20px; background: linear-gradient(145deg, #3d2817, #2d1810); border-left: 8px solid #cc0000;">
+        <div class="prep-tips prep-tips-red">
             <h4>⚠️ Prévention des Blessures</h4>
             <ul>
                 <li><strong>Échauffement dynamique:</strong> Jamais de stretching statique avant</li>

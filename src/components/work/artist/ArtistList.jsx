@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Plus, X, Edit2, Check, User, Mail, Phone, MapPin, Music, Instagram, Youtube } from 'lucide-react';
 
-const ArtistList = ({ artists, setArtists }) => {
+const ArtistList = ({ artists, setArtists, projects = [] }) => {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [selectedProject, setSelectedProject] = useState('all');
   const [formData, setFormData] = useState({
     name: '',
     genre: '',
@@ -15,6 +16,14 @@ const ArtistList = ({ artists, setArtists }) => {
     rate: '',
     notes: ''
   });
+
+  // Filtrer les artistes par projet
+  const filteredArtists = selectedProject === 'all' 
+    ? artists 
+    : artists.filter(a => {
+        const project = projects.find(p => p.id === parseInt(selectedProject));
+        return project?.artistIds?.includes(a.id);
+      });
 
   const resetForm = () => {
     setFormData({
@@ -62,11 +71,27 @@ const ArtistList = ({ artists, setArtists }) => {
 
   return (
     <div className="space-y-6">
-      {/* Bouton ajouter */}
-      <div className="flex justify-between items-center">
-        <h3 className="text-xl font-bold text-purple-400">
-          Liste des Artistes ({artists.length})
-        </h3>
+      {/* Bouton ajouter et filtre */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h3 className="text-xl font-bold text-purple-400">
+            Liste des Artistes ({filteredArtists.length})
+          </h3>
+          {projects.length > 0 && (
+            <div className="mt-2">
+              <select
+                value={selectedProject}
+                onChange={(e) => setSelectedProject(e.target.value)}
+                className="bg-gray-800/50 border border-gray-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-purple-500"
+              >
+                <option value="all">Tous les projets</option>
+                {projects.map(project => (
+                  <option key={project.id} value={project.id}>{project.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
         <button
           onClick={() => setShowForm(!showForm)}
           className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
@@ -205,15 +230,15 @@ const ArtistList = ({ artists, setArtists }) => {
       )}
 
       {/* Liste des artistes */}
-      {artists.length === 0 ? (
+      {filteredArtists.length === 0 ? (
         <div className="text-center py-12 text-gray-400">
           <User size={48} className="mx-auto mb-4 opacity-50" />
-          <p>Aucun artiste enregistré</p>
+          <p>Aucun artiste {selectedProject !== 'all' ? 'pour ce projet' : 'enregistré'}</p>
           <p className="text-sm">Cliquez sur "Nouvel Artiste" pour commencer</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {artists.map(artist => (
+          {filteredArtists.map(artist => (
             <div
               key={artist.id}
               className="bg-gradient-to-br from-gray-800/50 to-slate-800/50 rounded-xl p-6 border border-gray-700 hover:border-purple-600 transition-all"

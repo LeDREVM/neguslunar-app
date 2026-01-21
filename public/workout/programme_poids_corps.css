@@ -1,0 +1,1195 @@
+/* Programme Poids du Corps - Styles */
+
+/* Reset et base */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+/* Styles pour les sections avec fond */
+.section-focus {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+}
+
+.section-focus-title {
+    color: #764ba2;
+    margin-bottom: 15px;
+}
+
+.focus-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.focus-card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.focus-card strong {
+    color: #667eea;
+}
+
+.focus-card span {
+    color: #666;
+    font-size: 14px;
+}
+
+/* Titres de semaine */
+.week-title {
+    color: #667eea;
+    margin: 30px 0 20px 0;
+}
+
+/* Styles pour les listes sans puces */
+.no-bullets {
+    list-style: none;
+}
+
+/* Styles pour les détails d'exercice */
+.exercise-description {
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.exercise-tips {
+    background: #f0f0f0;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.exercise-tips strong {
+    color: #667eea;
+}
+
+.exercise-tips strong.exercise-tips-alt {
+    color: #f5576c;
+}
+
+/* Styles pour le circuit full body */
+.circuit-info {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.circuit-info h4 {
+    margin-bottom: 10px;
+    color: white;
+}
+
+.circuit-info p {
+    margin: 0;
+}
+
+/* Styles pour le suivi de progression */
+.rapport-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+}
+
+.rapport-title {
+    color: white;
+    border-bottom: 2px solid white;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.rapport-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.rapport-field {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.rapport-field label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.rapport-field input,
+.rapport-field select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+}
+
+.rapport-field-full {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.rapport-field-full label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.rapport-field-full textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    min-height: 80px;
+    font-family: inherit;
+}
+
+.rapport-field-full textarea.small {
+    min-height: 60px;
+}
+
+.energie-display {
+    text-align: center;
+    font-size: 1.5em;
+    margin-top: 5px;
+}
+
+.btn-full {
+    width: 100%;
+    font-size: 1.1em;
+}
+
+/* Historique des rapports */
+.historique-container {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+}
+
+.historique-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.historique-header h3 {
+    color: #667eea;
+    margin: 0;
+}
+
+.historique-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-export-pdf {
+    padding: 10px 20px;
+    font-size: 0.9em;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.btn-export-json {
+    padding: 10px 20px;
+    font-size: 0.9em;
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.historique-content {
+    display: grid;
+    gap: 15px;
+}
+
+.historique-empty {
+    text-align: center;
+    color: #999;
+    padding: 40px;
+}
+
+/* Nutrition végétalienne */
+.nutrition-container {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    color: white;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+}
+
+.nutrition-title {
+    color: white;
+    border-bottom: 2px solid white;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.nutrition-section {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.nutrition-section h4 {
+    color: white;
+    margin-bottom: 15px;
+}
+
+.nutrition-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.nutrition-card {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.nutrition-value {
+    font-size: 2em;
+    margin-bottom: 5px;
+}
+
+.nutrition-label {
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+.nutrition-note {
+    margin-top: 15px;
+    font-size: 0.95em;
+    opacity: 0.9;
+}
+
+.supplement-list {
+    display: grid;
+    gap: 10px;
+}
+
+.supplement-item {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.supplement-dose {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 5px 15px;
+    border-radius: 20px;
+}
+
+.micronutrient-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.micronutrient-card {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.micronutrient-value {
+    font-size: 1.5em;
+    margin-bottom: 5px;
+}
+
+.micronutrient-label {
+    font-size: 0.9em;
+}
+
+/* Statistiques */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.stat-center {
+    text-align: center;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 12px;
+}
+
+.stat-large {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+.stat-color-primary {
+    color: #667eea;
+}
+
+.stat-color-success {
+    color: #11998e;
+}
+
+.stat-color-danger {
+    color: #f5576c;
+}
+
+.stat-color-purple {
+    color: #764ba2;
+}
+
+.stat-description {
+    color: #666;
+}
+
+/* Phases lunaires */
+.lunar-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 25px;
+    border-radius: 15px;
+    margin-top: 30px;
+}
+
+.lunar-title {
+    color: white;
+    border-bottom: 2px solid white;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.lunar-suggestion {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.lunar-emoji {
+    text-align: center;
+    font-size: 3em;
+    margin-bottom: 15px;
+}
+
+.lunar-name {
+    text-align: center;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.lunar-date {
+    text-align: center;
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+.lunar-recommendation-box {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.lunar-recommendation-box strong {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.lunar-recommendation-box p {
+    margin-top: 10px;
+    line-height: 1.6;
+}
+
+.lunar-energy-box {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.lunar-energy-bar-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.lunar-energy-bar-wrapper {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.2);
+    height: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.lunar-energy-bar {
+    background: linear-gradient(90deg, #ffd700, #ff6b6b);
+    height: 100%;
+    transition: width 0.3s;
+}
+
+.lunar-energy-value {
+    margin-left: 15px;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.lunar-phases-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.lunar-phase-card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.lunar-phase-emoji {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+.lunar-phase-card strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.lunar-phase-card p {
+    font-size: 0.9em;
+    margin-top: 5px;
+    opacity: 0.9;
+}
+
+/* Bouton retour centré */
+.center-button {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* ============================================
+   RESPONSIVE - DESKTOP (Plein écran natif)
+   ============================================ */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1600px;
+    }
+    
+    .week-calendar {
+        gap: 20px;
+    }
+    
+    .workout-card {
+        padding: 25px;
+        min-height: 280px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .focus-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* ============================================
+   RESPONSIVE - TABLETTE
+   ============================================ */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .container {
+        padding: 25px;
+    }
+    
+    .week-calendar {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ============================================
+   RESPONSIVE - MOBILE GÉNÉRAL
+   ============================================ */
+@media (max-width: 768px) {
+    html {
+        font-size: 14px;
+    }
+    
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        padding: 15px;
+        border-radius: 15px;
+    }
+    
+    .week-calendar {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .tabs {
+        gap: 6px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    
+    .tabs::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .tab {
+        padding: 10px 15px;
+        font-size: 13px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    
+    .workout-card {
+        padding: 15px;
+        min-height: 200px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .focus-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .nutrition-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .rapport-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .historique-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .historique-buttons {
+        width: 100%;
+        flex-direction: column;
+    }
+    
+    .btn-export-pdf,
+    .btn-export-json {
+        width: 100%;
+    }
+}
+
+/* ============================================
+   RESPONSIVE - iPhone 12 et similaires (390x844)
+   Optimisé pour 390px de largeur
+   ============================================ */
+@media (max-width: 430px) {
+    html {
+        font-size: 13px;
+    }
+    
+    body {
+        padding: 8px;
+        font-size: 14px;
+    }
+    
+    /* Container */
+    .container {
+        padding: 12px;
+        border-radius: 12px;
+    }
+    
+    /* Titres */
+    h1 {
+        font-size: 1.6em;
+        margin-bottom: 8px;
+    }
+    
+    .subtitle {
+        font-size: 0.9em;
+        margin-bottom: 15px;
+    }
+    
+    h2, .week-title {
+        font-size: 1.3em;
+        margin-bottom: 15px;
+    }
+    
+    h3 {
+        font-size: 1.2em;
+    }
+    
+    h4 {
+        font-size: 1.1em;
+    }
+    
+    /* Tabs/Onglets */
+    .tabs {
+        gap: 5px;
+        margin-bottom: 20px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 5px;
+    }
+    
+    .tab {
+        padding: 8px 12px;
+        font-size: 12px;
+        min-width: max-content;
+    }
+    
+    /* Bouton YouTube */
+    .center-button {
+        margin-bottom: 15px;
+    }
+    
+    .center-button .btn {
+        font-size: 13px;
+        padding: 12px 20px;
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    /* Sections Focus */
+    .section-focus {
+        padding: 15px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+    }
+    
+    .section-focus-title {
+        font-size: 1.1em;
+        margin-bottom: 12px;
+    }
+    
+    .focus-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .focus-card {
+        padding: 12px;
+    }
+    
+    .focus-card strong {
+        font-size: 14px;
+    }
+    
+    .focus-card span {
+        font-size: 13px;
+    }
+    
+    /* Calendrier semaine */
+    .week-calendar {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .day-header {
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    .workout-card {
+        padding: 12px;
+        min-height: 180px;
+    }
+    
+    .day-number {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+    
+    .workout-title {
+        font-size: 13px;
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+    }
+    
+    .exercise {
+        padding: 8px;
+        margin-bottom: 6px;
+    }
+    
+    .exercise-name {
+        font-size: 12px;
+    }
+    
+    .exercise-sets {
+        font-size: 11px;
+    }
+    
+    /* Détails exercices */
+    .exercise-detail {
+        padding: 15px;
+        margin-bottom: 12px;
+    }
+    
+    .exercise-detail h4 {
+        font-size: 1.1em;
+        margin-bottom: 8px;
+    }
+    
+    .exercise-description {
+        font-size: 13px;
+        margin-bottom: 12px;
+    }
+    
+    .exercise-info {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .info-box {
+        padding: 12px;
+    }
+    
+    .info-label {
+        font-size: 11px;
+    }
+    
+    .info-value {
+        font-size: 13px;
+    }
+    
+    .exercise-tips {
+        padding: 12px;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+    
+    /* Warmup */
+    .warmup-box {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .warmup-box h4 {
+        font-size: 1.1em;
+        margin-bottom: 10px;
+    }
+    
+    .warmup-box li {
+        font-size: 13px;
+        padding: 5px 0;
+    }
+    
+    /* Tips box */
+    .tips-box {
+        padding: 15px;
+        margin-top: 20px;
+    }
+    
+    .tips-box h3 {
+        font-size: 1.2em;
+        margin-bottom: 12px;
+    }
+    
+    .tips-box li {
+        font-size: 13px;
+        padding: 6px 0;
+        padding-left: 25px;
+    }
+    
+    /* Circuit info */
+    .circuit-info {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .circuit-info h4 {
+        font-size: 1.1em;
+    }
+    
+    .circuit-info p {
+        font-size: 13px;
+    }
+    
+    /* Rapport/Suivi */
+    .rapport-container {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .rapport-title {
+        font-size: 1.2em;
+        padding-bottom: 8px;
+        margin-bottom: 15px;
+    }
+    
+    .rapport-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-bottom: 15px;
+    }
+    
+    .rapport-field {
+        padding: 12px;
+    }
+    
+    .rapport-field label {
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+    
+    .rapport-field input,
+    .rapport-field select {
+        font-size: 14px;
+        padding: 10px;
+    }
+    
+    .rapport-field-full {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+    
+    .rapport-field-full label {
+        font-size: 13px;
+    }
+    
+    .rapport-field-full textarea {
+        font-size: 13px;
+        padding: 10px;
+        min-height: 70px;
+    }
+    
+    .rapport-field-full textarea.small {
+        min-height: 50px;
+    }
+    
+    .energie-display {
+        font-size: 1.3em;
+    }
+    
+    .btn-full {
+        font-size: 15px;
+        padding: 12px;
+    }
+    
+    /* Historique */
+    .historique-container {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .historique-header h3 {
+        font-size: 1.2em;
+    }
+    
+    .historique-buttons {
+        width: 100%;
+        gap: 8px;
+    }
+    
+    .btn-export-pdf,
+    .btn-export-json {
+        width: 100%;
+        font-size: 13px;
+        padding: 10px 15px;
+    }
+    
+    /* Nutrition */
+    .nutrition-container {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .nutrition-title {
+        font-size: 1.2em;
+        padding-bottom: 8px;
+        margin-bottom: 15px;
+    }
+    
+    .nutrition-section {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .nutrition-section h4 {
+        font-size: 1.1em;
+        margin-bottom: 12px;
+    }
+    
+    .nutrition-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .nutrition-card {
+        padding: 12px;
+    }
+    
+    .nutrition-value {
+        font-size: 1.6em;
+    }
+    
+    .nutrition-label {
+        font-size: 12px;
+    }
+    
+    .nutrition-note {
+        font-size: 12px;
+        margin-top: 12px;
+    }
+    
+    .supplement-list {
+        gap: 8px;
+    }
+    
+    .supplement-item {
+        padding: 10px;
+        font-size: 13px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .supplement-dose {
+        font-size: 12px;
+        padding: 4px 12px;
+    }
+    
+    .micronutrient-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    
+    .micronutrient-card {
+        padding: 10px;
+    }
+    
+    .micronutrient-value {
+        font-size: 1.3em;
+    }
+    
+    .micronutrient-label {
+        font-size: 11px;
+    }
+    
+    /* Statistiques */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .stat-center {
+        padding: 15px;
+    }
+    
+    .stat-large {
+        font-size: 2em;
+        margin-bottom: 8px;
+    }
+    
+    .stat-description {
+        font-size: 12px;
+    }
+    
+    /* Phases lunaires */
+    .lunar-container {
+        padding: 15px;
+        margin-top: 20px;
+    }
+    
+    .lunar-title {
+        font-size: 1.2em;
+        padding-bottom: 8px;
+        margin-bottom: 15px;
+    }
+    
+    .lunar-suggestion {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .lunar-emoji {
+        font-size: 2.5em;
+        margin-bottom: 12px;
+    }
+    
+    .lunar-name {
+        font-size: 1.3em;
+        margin-bottom: 8px;
+    }
+    
+    .lunar-date {
+        font-size: 13px;
+        margin-bottom: 15px;
+    }
+    
+    .lunar-recommendation-box {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+    
+    .lunar-recommendation-box strong {
+        font-size: 13px;
+    }
+    
+    .lunar-recommendation-box p {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+    
+    .lunar-energy-box {
+        padding: 12px;
+    }
+    
+    .lunar-energy-box strong {
+        font-size: 13px;
+    }
+    
+    .lunar-energy-bar-container {
+        margin-top: 8px;
+    }
+    
+    .lunar-energy-bar-wrapper {
+        height: 10px;
+    }
+    
+    .lunar-energy-value {
+        font-size: 1.3em;
+        margin-left: 10px;
+    }
+    
+    .lunar-phases-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .lunar-phase-card {
+        padding: 12px;
+    }
+    
+    .lunar-phase-emoji {
+        font-size: 1.8em;
+        margin-bottom: 8px;
+    }
+    
+    .lunar-phase-card strong {
+        font-size: 13px;
+    }
+    
+    .lunar-phase-card p {
+        font-size: 12px;
+    }
+    
+    /* Buttons généraux */
+    .btn {
+        font-size: 14px;
+        padding: 12px 20px;
+        margin: 8px 4px;
+    }
+    
+    /* Progress tracker */
+    .progress-tracker {
+        padding: 15px;
+        margin-top: 15px;
+    }
+    
+    .progress-week {
+        grid-template-columns: repeat(7, 1fr);
+        gap: 6px;
+    }
+    
+    .progress-day {
+        padding: 10px;
+        font-size: 12px;
+    }
+}
+
+/* ============================================
+   RESPONSIVE - iPhone 12 Pro Max et + grands (428px+)
+   ============================================ */
+@media (min-width: 391px) and (max-width: 430px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .micronutrient-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .lunar-phases-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ============================================
+   OPTIMISATION POUR LA HAUTEUR (844px iPhone 12)
+   ============================================ */
+@media (max-height: 900px) and (max-width: 430px) {
+    /* Réduire les espacements verticaux pour optimiser l'espace */
+    .section-focus {
+        margin-bottom: 15px;
+    }
+    
+    .workout-card {
+        min-height: 160px;
+    }
+    
+    .week-calendar {
+        gap: 10px;
+    }
+    
+    .rapport-grid {
+        gap: 10px;
+    }
+}
+
+/* ============================================
+   MODE PAYSAGE MOBILE
+   ============================================ */
+@media (max-width: 844px) and (orientation: landscape) {
+    body {
+        padding: 5px;
+    }
+    
+    .container {
+        padding: 10px;
+    }
+    
+    .week-calendar {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .lunar-phases-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}

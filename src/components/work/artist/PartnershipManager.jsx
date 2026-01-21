@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { Plus, X, Edit2, Check, Handshake, Building, Mail, Phone, DollarSign, Calendar } from 'lucide-react';
+import { Plus, X, Edit2, Check, Users, Building, Mail, Phone, DollarSign, Calendar, Link2, Truck, Tv, HelpCircle } from 'lucide-react';
 
-const PartnershipManager = ({ partnerships, setPartnerships }) => {
+const PartnershipManager = ({ partnerships, setPartnerships, projects = [] }) => {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [selectedProject, setSelectedProject] = useState('all');
   const [formData, setFormData] = useState({
     company: '',
     contactName: '',
     email: '',
     phone: '',
+    projectId: '',
     type: 'sponsorship', // sponsorship, collaboration, distribution
     value: '',
     startDate: new Date().toISOString().split('T')[0],
@@ -18,12 +20,20 @@ const PartnershipManager = ({ partnerships, setPartnerships }) => {
     notes: ''
   });
 
+  // Filtrer les partenariats par projet
+  const filteredPartnerships = selectedProject === 'all' 
+    ? partnerships 
+    : partnerships.filter(p => {
+        const project = projects.find(proj => proj.id === parseInt(selectedProject));
+        return project?.partnershipIds?.includes(p.id);
+      });
+
   const partnershipTypes = {
-    'sponsorship': { label: 'Sponsoring', icon: '💰' },
-    'collaboration': { label: 'Collaboration', icon: '🤝' },
-    'distribution': { label: 'Distribution', icon: '📦' },
-    'media': { label: 'Média', icon: '📺' },
-    'other': { label: 'Autre', icon: '📋' }
+    'sponsorship': { label: 'Sponsoring', icon: DollarSign },
+    'collaboration': { label: 'Collaboration', icon: Link2 },
+    'distribution': { label: 'Distribution', icon: Truck },
+    'media': { label: 'Média', icon: Tv },
+    'other': { label: 'Autre', icon: HelpCircle }
   };
 
   const statusOptions = {
@@ -157,8 +167,8 @@ const PartnershipManager = ({ partnerships, setPartnerships }) => {
                 onChange={(e) => setFormData({...formData, type: e.target.value})}
                 className="w-full bg-gray-800/50 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-amber-500"
               >
-                {Object.entries(partnershipTypes).map(([key, {label, icon}]) => (
-                  <option key={key} value={key}>{icon} {label}</option>
+                {Object.entries(partnershipTypes).map(([key, {label, icon: IconComponent}]) => (
+                  <option key={key} value={key}>{label}</option>
                 ))}
               </select>
             </div>
@@ -254,7 +264,7 @@ const PartnershipManager = ({ partnerships, setPartnerships }) => {
       {/* Liste des partenariats */}
       {partnerships.length === 0 ? (
         <div className="text-center py-12 text-gray-400">
-          <Handshake size={48} className="mx-auto mb-4 opacity-50" />
+          <Users size={48} className="mx-auto mb-4 opacity-50" />
           <p>Aucun partenariat enregistré</p>
           <p className="text-sm">Cliquez sur "Nouveau Partenariat" pour commencer</p>
         </div>
@@ -277,8 +287,9 @@ const PartnershipManager = ({ partnerships, setPartnerships }) => {
                     </div>
                     
                     <div className="flex gap-2 mb-2">
-                      <span className="bg-amber-900/30 text-amber-400 px-2 py-1 rounded text-xs">
-                        {type.icon} {type.label}
+                      <span className="bg-amber-900/30 text-amber-400 px-2 py-1 rounded text-xs flex items-center gap-1">
+                        <type.icon size={14} />
+                        {type.label}
                       </span>
                       <span className={`bg-${status.color}-900/30 text-${status.color}-400 px-2 py-1 rounded text-xs border border-${status.color}-700/50`}>
                         {status.label}

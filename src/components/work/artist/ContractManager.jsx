@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Plus, X, Edit2, FileText, Download, User, Calendar, DollarSign, Check } from 'lucide-react';
 
-const ContractManager = ({ contracts, setContracts, artists }) => {
+const ContractManager = ({ contracts, setContracts, artists, projects = [] }) => {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [selectedProject, setSelectedProject] = useState('all');
   const [formData, setFormData] = useState({
     type: 'contract', // contract, quote
     artistId: '',
+    projectId: '',
     title: '',
     amount: '',
     date: new Date().toISOString().split('T')[0],
@@ -32,6 +34,7 @@ const ContractManager = ({ contracts, setContracts, artists }) => {
     setFormData({
       type: 'contract',
       artistId: '',
+      projectId: '',
       title: '',
       amount: '',
       date: new Date().toISOString().split('T')[0],
@@ -43,6 +46,11 @@ const ContractManager = ({ contracts, setContracts, artists }) => {
     setEditingId(null);
     setShowForm(false);
   };
+
+  // Filtrer les contrats par projet
+  const filteredContracts = selectedProject === 'all' 
+    ? contracts 
+    : contracts.filter(c => c.projectId === parseInt(selectedProject));
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -108,11 +116,27 @@ Créé le: ${new Date(contract.createdAt).toLocaleDateString('fr-FR')}
 
   return (
     <div className="space-y-6">
-      {/* Bouton ajouter */}
-      <div className="flex justify-between items-center">
-        <h3 className="text-xl font-bold text-red-400">
-          Contrats & Devis ({contracts.length})
-        </h3>
+      {/* Bouton ajouter et filtre */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h3 className="text-xl font-bold text-red-400">
+            Contrats & Devis ({filteredContracts.length})
+          </h3>
+          {projects.length > 0 && (
+            <div className="mt-2">
+              <select
+                value={selectedProject}
+                onChange={(e) => setSelectedProject(e.target.value)}
+                className="bg-gray-800/50 border border-gray-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-red-500"
+              >
+                <option value="all">Tous les projets</option>
+                {projects.map(project => (
+                  <option key={project.id} value={project.id}>{project.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
         <button
           onClick={() => setShowForm(!showForm)}
           className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
@@ -158,6 +182,22 @@ Créé le: ${new Date(contract.createdAt).toLocaleDateString('fr-FR')}
                 ))}
               </select>
             </div>
+
+            {projects.length > 0 && (
+              <div>
+                <label className="text-sm text-gray-400 block mb-2">Projet (optionnel)</label>
+                <select
+                  value={formData.projectId}
+                  onChange={(e) => setFormData({...formData, projectId: e.target.value})}
+                  className="w-full bg-gray-800/50 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-red-500"
+                >
+                  <option value="">Aucun projet</option>
+                  {projects.map(project => (
+                    <option key={project.id} value={project.id}>{project.name}</option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div className="md:col-span-2">
               <label className="text-sm text-gray-400 block mb-2">Titre *</label>
@@ -262,15 +302,15 @@ Créé le: ${new Date(contract.createdAt).toLocaleDateString('fr-FR')}
       )}
 
       {/* Liste des contrats */}
-      {contracts.length === 0 ? (
+      {filteredContracts.length === 0 ? (
         <div className="text-center py-12 text-gray-400">
           <FileText size={48} className="mx-auto mb-4 opacity-50" />
-          <p>Aucun contrat ou devis enregistré</p>
+          <p>Aucun contrat ou devis {selectedProject !== 'all' ? 'pour ce projet' : 'enregistré'}</p>
           <p className="text-sm">Cliquez sur "Nouveau Document" pour commencer</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {contracts.map(contract => {
+          {filteredContracts.map(contract => {
             const type = contractTypes[contract.type];
             const status = statusOptions[contract.status];
             

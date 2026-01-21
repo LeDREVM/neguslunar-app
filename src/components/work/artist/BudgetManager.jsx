@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import { Plus, X, DollarSign, Utensils, Package, Car, Download } from 'lucide-react';
 
-const BudgetManager = ({ budgets, setBudgets, shootings }) => {
+const BudgetManager = ({ budgets, setBudgets, shootings, projects = [] }) => {
   const [showForm, setShowForm] = useState(false);
+  const [selectedProject, setSelectedProject] = useState('all');
   const [formData, setFormData] = useState({
     shootingId: '',
+    projectId: '',
+    category: 'production',
+    amount: 0,
+    spent: 0,
     meals: 0,
     supplies: 0,
     transport: 0,
@@ -13,9 +18,21 @@ const BudgetManager = ({ budgets, setBudgets, shootings }) => {
     notes: ''
   });
 
+  // Filtrer les budgets par projet
+  const filteredBudgets = selectedProject === 'all' 
+    ? budgets 
+    : budgets.filter(b => {
+        const project = projects.find(p => p.id === parseInt(selectedProject));
+        return project?.budgetIds?.includes(b.id);
+      });
+
   const resetForm = () => {
     setFormData({
       shootingId: '',
+      projectId: '',
+      category: 'production',
+      amount: 0,
+      spent: 0,
       meals: 0,
       supplies: 0,
       transport: 0,
@@ -129,7 +146,7 @@ const BudgetManager = ({ budgets, setBudgets, shootings }) => {
             </div>
 
             <div>
-              <label className="text-sm text-gray-400 block mb-2 flex items-center gap-2">
+              <label className="text-sm text-gray-400 mb-2 flex items-center gap-2">
                 <Utensils size={16} />
                 Repas (€)
               </label>
@@ -144,7 +161,7 @@ const BudgetManager = ({ budgets, setBudgets, shootings }) => {
             </div>
 
             <div>
-              <label className="text-sm text-gray-400 block mb-2 flex items-center gap-2">
+              <label className="text-sm text-gray-400 mb-2 flex items-center gap-2">
                 <Package size={16} />
                 Fournitures (€)
               </label>
@@ -159,7 +176,7 @@ const BudgetManager = ({ budgets, setBudgets, shootings }) => {
             </div>
 
             <div>
-              <label className="text-sm text-gray-400 block mb-2 flex items-center gap-2">
+              <label className="text-sm text-gray-400 mb-2 flex items-center gap-2">
                 <Car size={16} />
                 Transport (€)
               </label>

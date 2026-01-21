@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Plus, X, Edit2, Check, Video, Calendar, MapPin, Camera, Package, Clock, User } from 'lucide-react';
 
-const ShootingManager = ({ shootings, setShootings, artists }) => {
+const ShootingManager = ({ shootings, setShootings, artists, projects = [] }) => {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [selectedProject, setSelectedProject] = useState('all');
   const [formData, setFormData] = useState({
     title: '',
     artistId: '',
+    projectId: '',
     date: new Date().toISOString().split('T')[0],
     startTime: '09:00',
     endTime: '18:00',
@@ -17,6 +19,14 @@ const ShootingManager = ({ shootings, setShootings, artists }) => {
     crew: '',
     notes: ''
   });
+
+  // Filtrer les tournages par projet
+  const filteredShootings = selectedProject === 'all' 
+    ? shootings 
+    : shootings.filter(s => {
+        const project = projects.find(p => p.id === parseInt(selectedProject));
+        return project?.shootingIds?.includes(s.id);
+      });
 
   const [newEquipment, setNewEquipment] = useState('');
   const [newCamera, setNewCamera] = useState('');
@@ -32,6 +42,7 @@ const ShootingManager = ({ shootings, setShootings, artists }) => {
     setFormData({
       title: '',
       artistId: '',
+      projectId: '',
       date: new Date().toISOString().split('T')[0],
       startTime: '09:00',
       endTime: '18:00',
@@ -117,11 +128,27 @@ const ShootingManager = ({ shootings, setShootings, artists }) => {
 
   return (
     <div className="space-y-6">
-      {/* Bouton ajouter */}
-      <div className="flex justify-between items-center">
-        <h3 className="text-xl font-bold text-blue-400">
-          Tournages ({shootings.length})
-        </h3>
+      {/* Bouton ajouter et filtre */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h3 className="text-xl font-bold text-blue-400">
+            Tournages ({filteredShootings.length})
+          </h3>
+          {projects.length > 0 && (
+            <div className="mt-2">
+              <select
+                value={selectedProject}
+                onChange={(e) => setSelectedProject(e.target.value)}
+                className="bg-gray-800/50 border border-gray-700 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500"
+              >
+                <option value="all">Tous les projets</option>
+                {projects.map(project => (
+                  <option key={project.id} value={project.id}>{project.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
         <button
           onClick={() => setShowForm(!showForm)}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
@@ -165,6 +192,22 @@ const ShootingManager = ({ shootings, setShootings, artists }) => {
                 ))}
               </select>
             </div>
+
+            {projects.length > 0 && (
+              <div>
+                <label className="text-sm text-gray-400 block mb-2">Projet (optionnel)</label>
+                <select
+                  value={formData.projectId}
+                  onChange={(e) => setFormData({...formData, projectId: e.target.value})}
+                  className="w-full bg-gray-800/50 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-blue-500"
+                >
+                  <option value="">Aucun projet</option>
+                  {projects.map(project => (
+                    <option key={project.id} value={project.id}>{project.name}</option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div>
               <label className="text-sm text-gray-400 block mb-2">Statut</label>
@@ -344,15 +387,15 @@ const ShootingManager = ({ shootings, setShootings, artists }) => {
       )}
 
       {/* Liste des tournages */}
-      {shootings.length === 0 ? (
+      {filteredShootings.length === 0 ? (
         <div className="text-center py-12 text-gray-400">
           <Video size={48} className="mx-auto mb-4 opacity-50" />
-          <p>Aucun tournage planifié</p>
+          <p>Aucun tournage {selectedProject !== 'all' ? 'pour ce projet' : 'planifié'}</p>
           <p className="text-sm">Cliquez sur "Nouveau Tournage" pour commencer</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {shootings.map(shooting => {
+          {filteredShootings.map(shooting => {
             const status = statusOptions[shooting.status];
             return (
               <div

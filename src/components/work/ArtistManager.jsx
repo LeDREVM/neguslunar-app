@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Video, DollarSign, FileText, Handshake, Camera, Package, Utensils, Car, Download } from 'lucide-react';
+import { Users, Video, DollarSign, FileText, UserPlus, Camera, Package, Utensils, Car, Download, Folder } from 'lucide-react';
 import ArtistList from './artist/ArtistList';
 import ShootingManager from './artist/ShootingManager';
 import BudgetManager from './artist/BudgetManager';
 import PartnershipManager from './artist/PartnershipManager';
 import ContractManager from './artist/ContractManager';
+import ProjectManager from './artist/ProjectManager';
 
 const ArtistManager = () => {
-  const [activeSection, setActiveSection] = useState('artists');
+  const [activeSection, setActiveSection] = useState('projects');
+  const [projects, setProjects] = useState([]);
   const [artists, setArtists] = useState([]);
   const [shootings, setShootings] = useState([]);
   const [budgets, setBudgets] = useState([]);
@@ -16,12 +18,14 @@ const ArtistManager = () => {
 
   // Charger les données
   useEffect(() => {
+    const loadedProjects = localStorage.getItem('neguslunar-projects');
     const loadedArtists = localStorage.getItem('neguslunar-artists');
     const loadedShootings = localStorage.getItem('neguslunar-shootings');
     const loadedBudgets = localStorage.getItem('neguslunar-budgets');
     const loadedPartnerships = localStorage.getItem('neguslunar-partnerships');
     const loadedContracts = localStorage.getItem('neguslunar-contracts');
 
+    if (loadedProjects) setProjects(JSON.parse(loadedProjects));
     if (loadedArtists) setArtists(JSON.parse(loadedArtists));
     if (loadedShootings) setShootings(JSON.parse(loadedShootings));
     if (loadedBudgets) setBudgets(JSON.parse(loadedBudgets));
@@ -30,6 +34,10 @@ const ArtistManager = () => {
   }, []);
 
   // Sauvegarder les données
+  useEffect(() => {
+    localStorage.setItem('neguslunar-projects', JSON.stringify(projects));
+  }, [projects]);
+
   useEffect(() => {
     localStorage.setItem('neguslunar-artists', JSON.stringify(artists));
   }, [artists]);
@@ -51,10 +59,11 @@ const ArtistManager = () => {
   }, [contracts]);
 
   const sections = [
-    { id: 'artists', name: 'Artistes', icon: Users, color: 'purple' },
+    { id: 'projects', name: 'Projets', icon: Folder, color: 'purple' },
+    { id: 'artists', name: 'Artistes', icon: Users, color: 'pink' },
     { id: 'shootings', name: 'Tournages', icon: Video, color: 'blue' },
     { id: 'budget', name: 'Budgets', icon: DollarSign, color: 'green' },
-    { id: 'partnerships', name: 'Partenariats', icon: Handshake, color: 'amber' },
+    { id: 'partnerships', name: 'Partenariats', icon: UserPlus, color: 'amber' },
     { id: 'contracts', name: 'Contrats', icon: FileText, color: 'red' }
   ];
 
@@ -112,7 +121,7 @@ const ArtistManager = () => {
 
         <div className="bg-gradient-to-br from-amber-900/20 to-orange-900/20 rounded-xl p-4 border border-amber-700/30">
           <div className="flex items-center gap-3">
-            <Handshake className="text-amber-400" size={32} />
+            <UserPlus className="text-amber-400" size={32} />
             <div>
               <div className="text-2xl font-bold text-white">{stats.activePartnerships}</div>
               <div className="text-xs text-gray-400">Partenariats</div>
@@ -146,10 +155,23 @@ const ArtistManager = () => {
 
       {/* Contenu des sections */}
       <div className="animate-fadeIn">
+        {activeSection === 'projects' && (
+          <ProjectManager
+            projects={projects}
+            setProjects={setProjects}
+            artists={artists}
+            shootings={shootings}
+            budgets={budgets}
+            partnerships={partnerships}
+            contracts={contracts}
+          />
+        )}
+
         {activeSection === 'artists' && (
           <ArtistList 
             artists={artists}
             setArtists={setArtists}
+            projects={projects}
           />
         )}
 
@@ -158,6 +180,7 @@ const ArtistManager = () => {
             shootings={shootings}
             setShootings={setShootings}
             artists={artists}
+            projects={projects}
           />
         )}
 
@@ -166,6 +189,7 @@ const ArtistManager = () => {
             budgets={budgets}
             setBudgets={setBudgets}
             shootings={shootings}
+            projects={projects}
           />
         )}
 
@@ -173,6 +197,7 @@ const ArtistManager = () => {
           <PartnershipManager
             partnerships={partnerships}
             setPartnerships={setPartnerships}
+            projects={projects}
           />
         )}
 
@@ -181,6 +206,7 @@ const ArtistManager = () => {
             contracts={contracts}
             setContracts={setContracts}
             artists={artists}
+            projects={projects}
           />
         )}
       </div>

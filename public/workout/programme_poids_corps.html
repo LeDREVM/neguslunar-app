@@ -7,6 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#667eea">
     <title>Programme Poids du Corps - Prise de Masse</title>
+    <link rel="stylesheet" href="programme_poids_corps.css">
     <style>
         * {
             margin: 0;
@@ -34,6 +35,7 @@
             text-align: center;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             font-size: 2.5em;
             margin-bottom: 10px;
@@ -72,6 +74,11 @@
         
         .tab.active {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .tab-retour {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             color: white;
         }
         
@@ -398,14 +405,14 @@
     <div class="container">
         <h1>💪 Programme Poids du Corps - Prise de Masse</h1>
         <p class="subtitle">Négus Dja | 30 ans, 71kg | 4 semaines progressives | TDAH-Friendly</p>
-        <div style="text-align:center; margin-bottom:20px;">
+        <div class="center-button">
             <a class="btn" href="https://www.youtube.com/watch?v=-wu4-dHZ7II&list=PLhIPNUwfjtOmjXkF6AOvbHp96beQmW5qx&index=27" target="_blank" rel="noopener noreferrer">
                 ▶️ Playlist YouTube - Séance Sport
             </a>
         </div>
         
         <div class="tabs">
-            <button class="tab" onclick="window.location.href='/'" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">🌙 Retour NegusLunar</button>
+            <button class="tab tab-retour" onclick="window.location.href='/'">🌙 Retour NegusLunar</button>
             <button class="tab active" onclick="showTab('planning')">📅 Planning Mensuel</button>
             <button class="tab" onclick="showTab('seance-push')">🔥 Séance Push</button>
             <button class="tab" onclick="showTab('seance-pull')">💪 Séance Pull</button>
@@ -416,31 +423,31 @@
 
         <!-- PLANNING MENSUEL -->
         <div id="planning" class="tab-content active">
-            <h2 style="color: #667eea; margin-bottom: 20px;">Calendrier d'Entraînement - Janvier 2026</h2>
+            <h2 class="week-title">Calendrier d'Entraînement - Janvier 2026</h2>
             
-            <div style="background: #f9f9f9; padding: 20px; border-radius: 15px; margin-bottom: 30px;">
-                <h3 style="color: #764ba2; margin-bottom: 15px;">🎯 Focus Janvier : Bases, technique, régularité</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
-                    <div style="background: white; padding: 15px; border-radius: 10px;">
-                        <strong style="color: #667eea;">Objectif</strong><br>
-                        <span style="color: #666; font-size: 14px;">Solidifier les mouvements, apprendre les repères</span>
+            <div class="section-focus">
+                <h3 class="section-focus-title">🎯 Focus Janvier : Bases, technique, régularité</h3>
+                <div class="focus-grid">
+                    <div class="focus-card">
+                        <strong>Objectif</strong><br>
+                        <span>Solidifier les mouvements, apprendre les repères</span>
                     </div>
-                    <div style="background: white; padding: 15px; border-radius: 10px;">
-                        <strong style="color: #667eea;">Fréquence</strong><br>
-                        <span style="color: #666; font-size: 14px;">4 séances / semaine + mobilité</span>
+                    <div class="focus-card">
+                        <strong>Fréquence</strong><br>
+                        <span>4 séances / semaine + mobilité</span>
                     </div>
-                    <div style="background: white; padding: 15px; border-radius: 10px;">
-                        <strong style="color: #667eea;">Tempo</strong><br>
-                        <span style="color: #666; font-size: 14px;">Contrôle 2-1-2, pauses respirations</span>
+                    <div class="focus-card">
+                        <strong>Tempo</strong><br>
+                        <span>Contrôle 2-1-2, pauses respirations</span>
                     </div>
-                    <div style="background: white; padding: 15px; border-radius: 10px;">
-                        <strong style="color: #667eea;">Respiration</strong><br>
-                        <span style="color: #666; font-size: 14px;">Inspire excentrique, expire concentrique</span>
+                    <div class="focus-card">
+                        <strong>Respiration</strong><br>
+                        <span>Inspire excentrique, expire concentrique</span>
                     </div>
                 </div>
             </div>
 
-            <h3 style="color: #667eea; margin: 30px 0 20px 0;">Semaine 1 (1-7 janvier) - Mise en route</h3>
+            <h3 class="week-title">Semaine 1 (1-7 janvier) - Mise en route</h3>
             <div class="week-calendar">
                 <div class="day-header">Jeu 1</div>
                 <div class="day-header">Ven 2</div>
@@ -544,7 +551,7 @@
                 </div>
             </div>
 
-            <h3 style="color: #667eea; margin: 30px 0 20px 0;">Semaine 2 (8-14 janvier) - Volume facile</h3>
+            <h3 class="week-title">Semaine 2 (8-14 janvier) - Volume facile</h3>
             <div class="week-calendar">
                 <div class="day-header">Jeu 8</div>
                 <div class="day-header">Ven 9</div>
@@ -652,7 +659,7 @@
                 </div>
             </div>
 
-            <h3 style="color: #667eea; margin: 30px 0 20px 0;">Semaine 3 (15-21 janvier) - Renforcement</h3>
+            <h3 class="week-title">Semaine 3 (15-21 janvier) - Renforcement</h3>
             <div class="week-calendar">
                 <div class="day-header">Jeu 15</div>
                 <div class="day-header">Ven 16</div>
@@ -760,7 +767,7 @@
                 </div>
             </div>
 
-            <h3 style="color: #667eea; margin: 30px 0 20px 0;">Semaine 4 (22-31 janvier) - Consolidation</h3>
+            <h3 class="week-title">Semaine 4 (22-31 janvier) - Consolidation</h3>
             <div class="week-calendar">
                 <div class="day-header">Jeu 22</div>
                 <div class="day-header">Ven 23</div>
@@ -868,32 +875,31 @@
                 </div>
             </div>
 
-            <h2 style="color: #667eea; margin: 40px 0 20px 0;">Calendrier d'Entraînement - Février 2026</h2>
-            <h2 style="color: #667eea; margin-bottom: 20px;">Calendrier d'Entraînement - Février 2026</h2>
+            <h2 class="week-title">Calendrier d'Entraînement - Février 2026</h2>
             
-            <div style="background: #f9f9f9; padding: 20px; border-radius: 15px; margin-bottom: 30px;">
-                <h3 style="color: #764ba2; margin-bottom: 15px;">🎯 Structure du Programme</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
-                    <div style="background: white; padding: 15px; border-radius: 10px;">
-                        <strong style="color: #667eea;">Split Push/Pull/Legs</strong><br>
-                        <span style="color: #666; font-size: 14px;">4-5 séances/semaine + 2-3 jours repos</span>
+            <div class="section-focus">
+                <h3 class="section-focus-title">🎯 Structure du Programme</h3>
+                <div class="focus-grid">
+                    <div class="focus-card">
+                        <strong>Split Push/Pull/Legs</strong><br>
+                        <span>4-5 séances/semaine + 2-3 jours repos</span>
                     </div>
-                    <div style="background: white; padding: 15px; border-radius: 10px;">
-                        <strong style="color: #667eea;">Progression</strong><br>
-                        <span style="color: #666; font-size: 14px;">Augmentation progressive des reps/temps</span>
+                    <div class="focus-card">
+                        <strong>Progression</strong><br>
+                        <span>Augmentation progressive des reps/temps</span>
                     </div>
-                    <div style="background: white; padding: 15px; border-radius: 10px;">
-                        <strong style="color: #667eea;">Durée</strong><br>
-                        <span style="color: #666; font-size: 14px;">45-60 min par séance</span>
+                    <div class="focus-card">
+                        <strong>Durée</strong><br>
+                        <span>45-60 min par séance</span>
                     </div>
-                    <div style="background: white; padding: 15px; border-radius: 10px;">
-                        <strong style="color: #667eea;">Repos</strong><br>
-                        <span style="color: #666; font-size: 14px;">60-90 sec entre séries</span>
+                    <div class="focus-card">
+                        <strong>Repos</strong><br>
+                        <span>60-90 sec entre séries</span>
                     </div>
                 </div>
             </div>
 
-            <h3 style="color: #667eea; margin: 30px 0 20px 0;">Semaine 1 (1-7 février)</h3>
+            <h3 class="week-title">Semaine 1 (1-7 février)</h3>
             <div class="week-calendar">
                 <div class="day-header">Sam 1</div>
                 <div class="day-header">Dim 2</div>
@@ -984,7 +990,7 @@
                 </div>
             </div>
 
-            <h3 style="color: #667eea; margin: 30px 0 20px 0;">Semaine 2 (8-14 février)</h3>
+            <h3 class="week-title">Semaine 2 (8-14 février)</h3>
             <div class="week-calendar">
                 <div class="day-header">Sam 8</div>
                 <div class="day-header">Dim 9</div>
@@ -1075,7 +1081,7 @@
                 </div>
             </div>
 
-            <h3 style="color: #667eea; margin: 30px 0 20px 0;">Semaine 3 (15-21 février) - Intensification</h3>
+            <h3 class="week-title">Semaine 3 (15-21 février) - Intensification</h3>
             <div class="week-calendar">
                 <div class="day-header">Sam 15</div>
                 <div class="day-header">Dim 16</div>
@@ -1166,7 +1172,7 @@
                 </div>
             </div>
 
-            <h3 style="color: #667eea; margin: 30px 0 20px 0;">Semaine 4 (22-28 février) - Pic</h3>
+            <h3 class="week-title">Semaine 4 (22-28 février) - Pic</h3>
             <div class="week-calendar">
                 <div class="day-header">Sam 22</div>
                 <div class="day-header">Dim 23</div>
@@ -1262,7 +1268,7 @@
         <div id="seance-push" class="tab-content">
             <div class="warmup-box">
                 <h4>🔥 Échauffement (8-10 min)</h4>
-                <ul style="list-style: none;">
+                <ul class="no-bullets">
                     <li>✓ 2 min jumping jacks légers</li>
                     <li>✓ 10 rotations épaules avant/arrière</li>
                     <li>✓ 10 pompes inclinées (mur)</li>
@@ -1276,7 +1282,7 @@
                 
                 <div class="exercise-detail">
                     <h4>1. Pompes Classiques</h4>
-                    <p style="color: #666; margin-bottom: 15px;">Exercice de base pour pectoraux, épaules antérieures et triceps</p>
+                    <p class="exercise-description">Exercice de base pour pectoraux, épaules antérieures et triceps</p>
                     <div class="exercise-info">
                         <div class="info-box">
                             <div class="info-label">SÉRIES & REPS</div>
@@ -1295,8 +1301,8 @@
                             <div class="info-value">+ pompes déclinées, diamant, archer</div>
                         </div>
                     </div>
-                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
-                        <strong style="color: #667eea;">🎯 Points clés:</strong><br>
+                    <div class="exercise-tips">
+                        <strong>🎯 Points clés:</strong><br>
                         • Mains largeur épaules, doigts légèrement tournés vers l'extérieur<br>
                         • Corps gainé en ligne droite (planche)<br>
                         • Coudes à 45° du corps, pas 90°<br>
@@ -1308,7 +1314,7 @@
 
                 <div class="exercise-detail">
                     <h4>2. Pike Push-Ups (Pompes Pike)</h4>
-                    <p style="color: #666; margin-bottom: 15px;">Cible les épaules (deltoïdes), préparation au handstand push-up</p>
+                    <p class="exercise-description">Cible les épaules (deltoïdes), préparation au handstand push-up</p>
                     <div class="exercise-info">
                         <div class="info-box">
                             <div class="info-label">SÉRIES & REPS</div>
@@ -1327,8 +1333,8 @@
                             <div class="info-value">Pieds surélevés → HSPU au mur</div>
                         </div>
                     </div>
-                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
-                        <strong style="color: #667eea;">🎯 Points clés:</strong><br>
+                    <div class="exercise-tips">
+                        <strong>🎯 Points clés:</strong><br>
                         • Position en V inversé, fesses en l'air<br>
                         • Mains largeur épaules<br>
                         • Regard entre les mains<br>
@@ -1340,7 +1346,7 @@
 
                 <div class="exercise-detail">
                     <h4>3. Dips sur Chaise (ou Barres)</h4>
-                    <p style="color: #666; margin-bottom: 15px;">Triceps, pectoraux inférieurs, épaules antérieures</p>
+                    <p class="exercise-description">Triceps, pectoraux inférieurs, épaules antérieures</p>
                     <div class="exercise-info">
                         <div class="info-box">
                             <div class="info-label">SÉRIES & REPS</div>
@@ -1359,8 +1365,8 @@
                             <div class="info-value">Jambes tendues → lestés (sac à dos)</div>
                         </div>
                     </div>
-                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
-                        <strong style="color: #667eea;">🎯 Points clés:</strong><br>
+                    <div class="exercise-tips">
+                        <strong>🎯 Points clés:</strong><br>
                         • Mains sur chaises, bras tendus<br>
                         • Jambes fléchies devant (débutant) ou tendues (avancé)<br>
                         • Descendre en pliant les coudes jusqu'à 90°<br>
@@ -1372,7 +1378,7 @@
 
                 <div class="exercise-detail">
                     <h4>4. Pompes Diamant</h4>
-                    <p style="color: #666; margin-bottom: 15px;">Focus triceps et intérieur des pectoraux</p>
+                    <p class="exercise-description">Focus triceps et intérieur des pectoraux</p>
                     <div class="exercise-info">
                         <div class="info-box">
                             <div class="info-label">SÉRIES & REPS</div>
@@ -1391,8 +1397,8 @@
                             <div class="info-value">Triceps 70%, Pecs 30%</div>
                         </div>
                     </div>
-                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
-                        <strong style="color: #667eea;">🎯 Points clés:</strong><br>
+                    <div class="exercise-tips">
+                        <strong>🎯 Points clés:</strong><br>
                         • Mains rapprochées formant un diamant (index et pouces se touchent)<br>
                         • Corps gainé en ligne droite<br>
                         • Coudes restent près du corps<br>
@@ -1403,7 +1409,7 @@
 
                 <div class="exercise-detail">
                     <h4>5. Pompes Déclinées (Pieds surélevés)</h4>
-                    <p style="color: #666; margin-bottom: 15px;">Accent sur pectoraux supérieurs et épaules</p>
+                    <p class="exercise-description">Accent sur pectoraux supérieurs et épaules</p>
                     <div class="exercise-info">
                         <div class="info-box">
                             <div class="info-label">SÉRIES & REPS</div>
@@ -1442,7 +1448,7 @@
         <div id="seance-pull" class="tab-content">
             <div class="warmup-box">
                 <h4>💪 Échauffement (8-10 min)</h4>
-                <ul style="list-style: none;">
+                <ul class="no-bullets">
                     <li>✓ 2 min jumping jacks</li>
                     <li>✓ 10 rotations bras (moulinets)</li>
                     <li>✓ 10 band pull-aparts (élastique ou serviette)</li>
@@ -1456,7 +1462,7 @@
                 
                 <div class="exercise-detail">
                     <h4>1. Tractions (Pull-ups)</h4>
-                    <p style="color: #666; margin-bottom: 15px;">ROI exercice dos - Dorsaux, biceps, trapèzes</p>
+                    <p class="exercise-description">ROI exercice dos - Dorsaux, biceps, trapèzes</p>
                     <div class="exercise-info">
                         <div class="info-box">
                             <div class="info-label">SÉRIES & REPS</div>
@@ -1475,20 +1481,20 @@
                             <div class="info-value">Tractions australiennes (débutant)</div>
                         </div>
                     </div>
-                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
-                        <strong style="color: #667eea;">🎯 Points clés:</strong><br>
+                    <div class="exercise-tips">
+                        <strong>🎯 Points clés:</strong><br>
                         • Barre fixe, prise largeur épaules ou + large<br>
                         • Départ bras tendus, scapulas actives (dépression)<br>
                         • Tirer les coudes vers le bas et l'arrière<br>
                         • Menton au-dessus de la barre<br>
                         • Descente contrôlée (3 sec)<br>
-                        <strong style="color: #f5576c;">Si tu ne peux pas encore:</strong> Tractions négatives (sauter en haut, descendre lentement 5 sec) ou australiennes
+                        <strong class="exercise-tips-alt">Si tu ne peux pas encore:</strong> Tractions négatives (sauter en haut, descendre lentement 5 sec) ou australiennes
                     </div>
                 </div>
 
                 <div class="exercise-detail">
                     <h4>2. Rowing Inversé (Australian Pull-ups)</h4>
-                    <p style="color: #666; margin-bottom: 15px;">Dorsaux, rhomboïdes, trapèzes moyens</p>
+                    <p class="exercise-description">Dorsaux, rhomboïdes, trapèzes moyens</p>
                     <div class="exercise-info">
                         <div class="info-box">
                             <div class="info-label">SÉRIES & REPS</div>
@@ -1507,8 +1513,8 @@
                             <div class="info-value">60 secondes</div>
                         </div>
                     </div>
-                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
-                        <strong style="color: #667eea;">🎯 Points clés:</strong><br>
+                    <div class="exercise-tips">
+                        <strong>🎯 Points clés:</strong><br>
                         • Sous la table/barre, corps incliné<br>
                         • Talons au sol, corps gainé droit<br>
                         • Prise supination (paumes vers toi) ou pronation<br>
@@ -1520,7 +1526,7 @@
 
                 <div class="exercise-detail">
                     <h4>3. Superman / Back Extensions</h4>
-                    <p style="color: #666; margin-bottom: 15px;">Lombaires, fessiers, ischio-jambiers</p>
+                    <p class="exercise-description">Lombaires, fessiers, ischio-jambiers</p>
                     <div class="exercise-info">
                         <div class="info-box">
                             <div class="info-label">SÉRIES & REPS</div>
@@ -1539,8 +1545,8 @@
                             <div class="info-value">+ poids dans les mains</div>
                         </div>
                     </div>
-                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
-                        <strong style="color: #667eea;">🎯 Points clés:</strong><br>
+                    <div class="exercise-tips">
+                        <strong>🎯 Points clés:</strong><br>
                         • Allongé face contre terre, bras tendus devant<br>
                         • Soulever simultanément bras et jambes du sol<br>
                         • Contracter fessiers et bas du dos<br>
@@ -1551,7 +1557,7 @@
 
                 <div class="exercise-detail">
                     <h4>4. Curl Biceps Isométrique</h4>
-                    <p style="color: #666; margin-bottom: 15px;">Biceps, avant-bras - Sans matériel</p>
+                    <p class="exercise-description">Biceps, avant-bras - Sans matériel</p>
                     <div class="exercise-info">
                         <div class="info-box">
                             <div class="info-label">SÉRIES & DURÉE</div>
@@ -1570,8 +1576,8 @@
                             <div class="info-value">Curl avec sac à dos rempli</div>
                         </div>
                     </div>
-                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
-                        <strong style="color: #667eea;">🎯 Points clés:</strong><br>
+                    <div class="exercise-tips">
+                        <strong>🎯 Points clés:</strong><br>
                         • Main gauche pousse contre main droite en flexion<br>
                         • Coude à 90°, tension maximale<br>
                         • Alterner les bras<br>
@@ -1581,7 +1587,7 @@
 
                 <div class="exercise-detail">
                     <h4>5. Face Pulls (avec serviette/élastique)</h4>
-                    <p style="color: #666; margin-bottom: 15px;">Deltoïdes postérieurs, trapèzes, rhomboïdes</p>
+                    <p class="exercise-description">Deltoïdes postérieurs, trapèzes, rhomboïdes</p>
                     <div class="exercise-info">
                         <div class="info-box">
                             <div class="info-label">SÉRIES & REPS</div>
@@ -1619,7 +1625,7 @@
         <div id="seance-legs" class="tab-content">
             <div class="warmup-box">
                 <h4>🦵 Échauffement (10 min)</h4>
-                <ul style="list-style: none;">
+                <ul class="no-bullets">
                     <li>✓ 3 min marche/course sur place</li>
                     <li>✓ 10 squats au poids du corps (lents)</li>
                     <li>✓ 10 fentes alternées</li>
@@ -1634,7 +1640,7 @@
                 
                 <div class="exercise-detail">
                     <h4>1. Squats au Poids du Corps</h4>
-                    <p style="color: #666; margin-bottom: 15px;">Le roi des exercices jambes - Quadriceps, fessiers, ischio</p>
+                    <p class="exercise-description">Le roi des exercices jambes - Quadriceps, fessiers, ischio</p>
                     <div class="exercise-info">
                         <div class="info-box">
                             <div class="info-label">SÉRIES & REPS</div>
@@ -1653,8 +1659,8 @@
                             <div class="info-value">Jump squats, pistol, lestés</div>
                         </div>
                     </div>
-                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
-                        <strong style="color: #667eea;">🎯 Points clés:</strong><br>
+                    <div class="exercise-tips">
+                        <strong>🎯 Points clés:</strong><br>
                         • Pieds largeur épaules, pointes légèrement ouvertes<br>
                         • Descendre en poussant fesses vers l'arrière<br>
                         • Cuisses parallèles au sol minimum (ou + bas)<br>
@@ -1667,7 +1673,7 @@
 
                 <div class="exercise-detail">
                     <h4>2. Fentes Alternées / Bulgares</h4>
-                    <p style="color: #666; margin-bottom: 15px;">Quadriceps, fessiers, équilibre - Unilatéral</p>
+                    <p class="exercise-description">Quadriceps, fessiers, équilibre - Unilatéral</p>
                     <div class="exercise-info">
                         <div class="info-box">
                             <div class="info-label">SÉRIES & REPS</div>
@@ -1686,13 +1692,13 @@
                             <div class="info-value">Sautées, avec sac à dos</div>
                         </div>
                     </div>
-                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
-                        <strong style="color: #667eea;">🎯 Fentes classiques:</strong><br>
+                    <div class="exercise-tips">
+                        <strong>🎯 Fentes classiques:</strong><br>
                         • Grand pas en avant, descendre genou arrière vers le sol<br>
                         • Genou avant à 90°, ne dépasse pas la pointe du pied<br>
                         • Buste droit, core engagé<br>
                         • Pousser sur le talon avant pour revenir<br><br>
-                        <strong style="color: #667eea;">🎯 Fentes bulgares (+ difficile):</strong><br>
+                        <strong>🎯 Fentes bulgares (+ difficile):</strong><br>
                         • Pied arrière sur une chaise/canapé<br>
                         • Descendre le genou arrière vers le sol<br>
                         • Fessiers et quads ultra sollicités
@@ -1701,7 +1707,7 @@
 
                 <div class="exercise-detail">
                     <h4>3. Nordic Hamstring Curls</h4>
-                    <p style="color: #666; margin-bottom: 15px;">Ischio-jambiers - Exercice eccentric king</p>
+                    <p class="exercise-description">Ischio-jambiers - Exercice eccentric king</p>
                     <div class="exercise-info">
                         <div class="info-box">
                             <div class="info-label">SÉRIES & REPS</div>
@@ -1720,20 +1726,20 @@
                             <div class="info-value">Prévention blessures</div>
                         </div>
                     </div>
-                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
-                        <strong style="color: #667eea;">🎯 Points clés:</strong><br>
+                    <div class="exercise-tips">
+                        <strong>🎯 Points clés:</strong><br>
                         • À genoux, pieds bloqués sous canapé/partenaire<br>
                         • Buste et cuisses alignés<br>
                         • Descendre LENTEMENT vers l'avant en contrôlant<br>
                         • Rattrape avec les mains au sol si besoin<br>
                         • Pousse sur les mains pour remonter (assisté)<br>
-                        <strong style="color: #f5576c;">Débutant:</strong> Descendre le + lentement possible (8-10 sec), utilise coussin sous genoux
+                        <strong class="exercise-tips-alt">Débutant:</strong> Descendre le + lentement possible (8-10 sec), utilise coussin sous genoux
                     </div>
                 </div>
 
                 <div class="exercise-detail">
                     <h4>4. Pistol Squats (Squat sur 1 jambe)</h4>
-                    <p style="color: #666; margin-bottom: 15px;">Quadriceps, équilibre, force unilatérale</p>
+                    <p class="exercise-description">Quadriceps, équilibre, force unilatérale</p>
                     <div class="exercise-info">
                         <div class="info-box">
                             <div class="info-label">SÉRIES & REPS</div>
@@ -1752,8 +1758,8 @@
                             <div class="info-value">Box pistols → complets</div>
                         </div>
                     </div>
-                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
-                        <strong style="color: #667eea;">🎯 Progression:</strong><br>
+                    <div class="exercise-tips">
+                        <strong>🎯 Progression:</strong><br>
                         <strong>Niveau 1:</strong> Pistol sur box (descendre sur chaise/box bas)<br>
                         <strong>Niveau 2:</strong> Pistol assisté (tenir un poteau)<br>
                         <strong>Niveau 3:</strong> Pistol complet sans assistance<br>
@@ -1766,7 +1772,7 @@
 
                 <div class="exercise-detail">
                     <h4>5. Mollets Debout (Calf Raises)</h4>
-                    <p style="color: #666; margin-bottom: 15px;">Gastrocnémiens, soléaires</p>
+                    <p class="exercise-description">Gastrocnémiens, soléaires</p>
                     <div class="exercise-info">
                         <div class="info-box">
                             <div class="info-label">SÉRIES & REPS</div>
@@ -1800,7 +1806,7 @@
         <div id="seance-full" class="tab-content">
             <div class="warmup-box">
                 <h4>⚡ Échauffement (10 min)</h4>
-                <ul style="list-style: none;">
+                <ul class="no-bullets">
                     <li>✓ 3 min course sur place (montées de genoux)</li>
                     <li>✓ 20 jumping jacks</li>
                     <li>✓ 10 squats dynamiques</li>
@@ -1813,14 +1819,14 @@
             <div class="workout-detail">
                 <h3>⚡ Séance FULL BODY - Circuit Complet + HIIT</h3>
                 
-                <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-                    <h4 style="margin-bottom: 10px; color: white;">🔥 Format Circuit</h4>
-                    <p style="margin: 0;">Enchaîne tous les exercices avec 15 sec de repos entre chaque. Repos 2 min entre chaque circuit complet. Répète 3-4 fois.</p>
+                <div class="circuit-info">
+                    <h4>🔥 Format Circuit</h4>
+                    <p>Enchaîne tous les exercices avec 15 sec de repos entre chaque. Repos 2 min entre chaque circuit complet. Répète 3-4 fois.</p>
                 </div>
 
                 <div class="exercise-detail">
                     <h4>1. Burpees</h4>
-                    <p style="color: #666; margin-bottom: 15px;">Exercice roi du full body - Cardio + Force</p>
+                    <p class="exercise-description">Exercice roi du full body - Cardio + Force</p>
                     <div class="exercise-info">
                         <div class="info-box">
                             <div class="info-label">REPS</div>
@@ -1839,21 +1845,21 @@
                             <div class="info-value">Sans saut, avec traction</div>
                         </div>
                     </div>
-                    <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 15px;">
-                        <strong style="color: #667eea;">🎯 Technique:</strong><br>
+                    <div class="exercise-tips">
+                        <strong>🎯 Technique:</strong><br>
                         • Position debout, pieds largeur épaules<br>
                         • Descendre en squat, mains au sol<br>
                         • Kick back en position pompe<br>
                         • Faire 1 pompe (optionnel)<br>
                         • Ramener pieds vers mains d'un bond<br>
                         • Saut vertical explosif avec mains en l'air<br>
-                        <strong style="color: #f5576c;">Débutant:</strong> Pas de pompe, pas de saut (step back)
+                        <strong class="exercise-tips-alt">Débutant:</strong> Pas de pompe, pas de saut (step back)
                     </div>
                 </div>
 
                 <div class="exercise-detail">
                     <h4>2. Mountain Climbers</h4>
-                    <p style="color: #666; margin-bottom: 15px;">Cardio + Core + Épaules</p>
+                    <p class="exercise-description">Cardio + Core + Épaules</p>
                     <div class="exercise-info">
                         <div class="info-box">
                             <div class="info-label">DURÉE</div>
@@ -1872,7 +1878,7 @@
 
                 <div class="exercise-detail">
                     <h4>3. Jump Squats</h4>
-                    <p style="color: #666; margin-bottom: 15px;">Puissance explosive des jambes</p>
+                    <p class="exercise-description">Puissance explosive des jambes</p>
                     <div class="exercise-info">
                         <div class="info-box">
                             <div class="info-label">REPS</div>
@@ -1887,7 +1893,7 @@
 
                 <div class="exercise-detail">
                     <h4>4. Planche Dynamique</h4>
-                    <p style="color: #666; margin-bottom: 15px;">Core stability + Endurance</p>
+                    <p class="exercise-description">Core stability + Endurance</p>
                     <div class="exercise-info">
                         <div class="info-box">
                             <div class="info-label">DURÉE</div>
@@ -1902,7 +1908,7 @@
 
                 <div class="exercise-detail">
                     <h4>5. High Knees</h4>
-                    <p style="color: #666; margin-bottom: 15px;">Cardio explosif</p>
+                    <p class="exercise-description">Cardio explosif</p>
                     <div class="exercise-info">
                         <div class="info-box">
                             <div class="info-label">DURÉE</div>
@@ -1926,21 +1932,21 @@
 
         <!-- SUIVI & PROGRESSION -->
         <div id="progression" class="tab-content">
-            <h2 style="color: #667eea; margin-bottom: 20px;">📈 Suivi de Progression & Rapport Quotidien</h2>
+            <h2 class="week-title">📈 Suivi de Progression & Rapport Quotidien</h2>
             
             <!-- Rapport du Jour -->
-            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 15px; margin-bottom: 30px;">
-                <h3 style="color: white; border-bottom: 2px solid white; padding-bottom: 10px; margin-bottom: 20px;">📝 Rapport de Fin de Journée</h3>
+            <div class="rapport-container">
+                <h3 class="rapport-title">📝 Rapport de Fin de Journée</h3>
                 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 20px;">
-                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
-                        <label style="display: block; margin-bottom: 10px; font-weight: bold;">Date</label>
-                        <input type="date" id="rapportDate" style="width: 100%; padding: 10px; border-radius: 5px; border: none;">
+                <div class="rapport-grid">
+                    <div class="rapport-field">
+                        <label>Date</label>
+                        <input type="date" id="rapportDate">
                     </div>
                     
-                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
-                        <label style="display: block; margin-bottom: 10px; font-weight: bold;">Type de Séance</label>
-                        <select id="rapportType" style="width: 100%; padding: 10px; border-radius: 5px; border: none;">
+                    <div class="rapport-field">
+                        <label>Type de Séance</label>
+                        <select id="rapportType">
                             <option value="">Sélectionner...</option>
                             <option value="push">🔥 Push</option>
                             <option value="pull">💪 Pull</option>
@@ -1950,117 +1956,117 @@
                         </select>
                     </div>
                     
-                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
-                        <label style="display: block; margin-bottom: 10px; font-weight: bold;">Durée (min)</label>
-                        <input type="number" id="rapportDuree" placeholder="45" style="width: 100%; padding: 10px; border-radius: 5px; border: none;">
+                    <div class="rapport-field">
+                        <label>Durée (min)</label>
+                        <input type="number" id="rapportDuree" placeholder="45">
                     </div>
                     
-                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
-                        <label style="display: block; margin-bottom: 10px; font-weight: bold;">Énergie (1-10)</label>
-                        <input type="range" id="rapportEnergie" min="1" max="10" value="7" style="width: 100%;">
-                        <div id="energieValue" style="text-align: center; font-size: 1.5em; margin-top: 5px;">7</div>
+                    <div class="rapport-field">
+                        <label>Énergie (1-10)</label>
+                        <input type="range" id="rapportEnergie" min="1" max="10" value="7">
+                        <div id="energieValue" class="energie-display">7</div>
                     </div>
                 </div>
                 
-                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 10px; font-weight: bold;">💪 Performances du Jour</label>
-                    <textarea id="rapportPerformances" placeholder="Ex: Pompes 4×15, Tractions 3×8, Squats 5×20..." style="width: 100%; padding: 10px; border-radius: 5px; border: none; min-height: 80px; font-family: inherit;"></textarea>
+                <div class="rapport-field-full">
+                    <label>💪 Performances du Jour</label>
+                    <textarea id="rapportPerformances" placeholder="Ex: Pompes 4×15, Tractions 3×8, Squats 5×20..."></textarea>
                 </div>
                 
-                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 10px; font-weight: bold;">🍽️ Nutrition du Jour</label>
-                    <textarea id="rapportNutrition" placeholder="Protéines, calories, hydratation..." style="width: 100%; padding: 10px; border-radius: 5px; border: none; min-height: 60px; font-family: inherit;"></textarea>
+                <div class="rapport-field-full">
+                    <label>🍽️ Nutrition du Jour</label>
+                    <textarea id="rapportNutrition" placeholder="Protéines, calories, hydratation..." class="small"></textarea>
                 </div>
                 
-                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 10px; font-weight: bold;">📝 Notes & Ressenti</label>
-                    <textarea id="rapportNotes" placeholder="Comment tu t'es senti, difficultés, victoires..." style="width: 100%; padding: 10px; border-radius: 5px; border: none; min-height: 80px; font-family: inherit;"></textarea>
+                <div class="rapport-field-full">
+                    <label>📝 Notes & Ressenti</label>
+                    <textarea id="rapportNotes" placeholder="Comment tu t'es senti, difficultés, victoires..."></textarea>
                 </div>
                 
-                <button onclick="sauvegarderRapport()" class="btn" style="width: 100%; font-size: 1.1em;">💾 Sauvegarder le Rapport</button>
+                <button onclick="sauvegarderRapport()" class="btn btn-full">💾 Sauvegarder le Rapport</button>
             </div>
             
             <!-- Historique des Rapports -->
-            <div style="background: white; padding: 25px; border-radius: 15px; margin-bottom: 30px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
-                    <h3 style="color: #667eea; margin: 0;">📊 Historique des Séances</h3>
-                    <div style="display: flex; gap: 10px;">
-                        <button onclick="exporterRapportsPDF()" class="btn" style="padding: 10px 20px; font-size: 0.9em; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+            <div class="historique-container">
+                <div class="historique-header">
+                    <h3>📊 Historique des Séances</h3>
+                    <div class="historique-buttons">
+                        <button onclick="exporterRapportsPDF()" class="btn btn-export-pdf">
                             📄 Export PDF
                         </button>
-                        <button onclick="exporterRapportsJSON()" class="btn" style="padding: 10px 20px; font-size: 0.9em; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                        <button onclick="exporterRapportsJSON()" class="btn btn-export-json">
                             💾 Export JSON
                         </button>
                     </div>
                 </div>
-                <div id="historiqueRapports" style="display: grid; gap: 15px;">
-                    <p style="text-align: center; color: #999; padding: 40px;">Aucun rapport enregistré. Commence ton suivi aujourd'hui ! 💪</p>
+                <div id="historiqueRapports" class="historique-content">
+                    <p class="historique-empty">Aucun rapport enregistré. Commence ton suivi aujourd'hui ! 💪</p>
                 </div>
             </div>
             
             <!-- Nutrition Végétalienne -->
-            <div style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding: 25px; border-radius: 15px; margin-bottom: 30px;">
-                <h3 style="color: white; border-bottom: 2px solid white; padding-bottom: 10px; margin-bottom: 20px;">🌱 Guide Nutrition Végétalienne - Prise de Masse</h3>
+            <div class="nutrition-container">
+                <h3 class="nutrition-title">🌱 Guide Nutrition Végétalienne - Prise de Masse</h3>
                 
-                <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-                    <h4 style="color: white; margin-bottom: 15px;">💪 Protéines (71kg)</h4>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                        <div style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 8px;">
-                            <div style="font-size: 2em; margin-bottom: 5px;">99-142g</div>
-                            <div style="font-size: 0.9em; opacity: 0.9;">Maintenance (1.4-2.0 g/kg)</div>
+                <div class="nutrition-section">
+                    <h4>💪 Protéines (71kg)</h4>
+                    <div class="nutrition-grid">
+                        <div class="nutrition-card">
+                            <div class="nutrition-value">99-142g</div>
+                            <div class="nutrition-label">Maintenance (1.4-2.0 g/kg)</div>
                         </div>
-                        <div style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 8px;">
-                            <div style="font-size: 2em; margin-bottom: 5px;">128-192g</div>
-                            <div style="font-size: 0.9em; opacity: 0.9;">Prise de Masse (1.8-2.7 g/kg)</div>
+                        <div class="nutrition-card">
+                            <div class="nutrition-value">128-192g</div>
+                            <div class="nutrition-label">Prise de Masse (1.8-2.7 g/kg)</div>
                         </div>
                     </div>
-                    <p style="margin-top: 15px; font-size: 0.95em; opacity: 0.9;">✅ Basé sur études scientifiques pour athlètes végétaliens</p>
+                    <p class="nutrition-note">✅ Basé sur études scientifiques pour athlètes végétaliens</p>
                 </div>
                 
-                <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-                    <h4 style="color: white; margin-bottom: 15px;">💊 Suppléments ESSENTIELS</h4>
-                    <div style="display: grid; gap: 10px;">
-                        <div style="background: rgba(255,255,255,0.15); padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                <div class="nutrition-section">
+                    <h4>💊 Suppléments ESSENTIELS</h4>
+                    <div class="supplement-list">
+                        <div class="supplement-item">
                             <span><strong>B12</strong> (Obligatoire)</span>
-                            <span style="background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px;">6 μg/jour</span>
+                            <span class="supplement-dose">6 μg/jour</span>
                         </div>
-                        <div style="background: rgba(255,255,255,0.15); padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <div class="supplement-item">
                             <span><strong>Vitamine D3</strong> (lichen)</span>
-                            <span style="background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px;">1000-2000 IU</span>
+                            <span class="supplement-dose">1000-2000 IU</span>
                         </div>
-                        <div style="background: rgba(255,255,255,0.15); padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <div class="supplement-item">
                             <span><strong>EPA/DHA</strong> (microalgues)</span>
-                            <span style="background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px;">1-2g/jour</span>
+                            <span class="supplement-dose">1-2g/jour</span>
                         </div>
-                        <div style="background: rgba(255,255,255,0.15); padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <div class="supplement-item">
                             <span><strong>Créatine</strong> (crucial végétaliens)</span>
-                            <span style="background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px;">3-5g/jour</span>
+                            <span class="supplement-dose">3-5g/jour</span>
                         </div>
-                        <div style="background: rgba(255,255,255,0.15); padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <div class="supplement-item">
                             <span><strong>Bêta-alanine</strong></span>
-                            <span style="background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px;">4-6g/jour</span>
+                            <span class="supplement-dose">4-6g/jour</span>
                         </div>
                     </div>
                 </div>
                 
-                <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
-                    <h4 style="color: white; margin-bottom: 15px;">🔬 Micronutriments Critiques</h4>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
-                        <div style="background: rgba(255,255,255,0.15); padding: 12px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 1.5em; margin-bottom: 5px;">14mg</div>
-                            <div style="font-size: 0.9em;">Fer + Vit C</div>
+                <div class="nutrition-section">
+                    <h4>🔬 Micronutriments Critiques</h4>
+                    <div class="micronutrient-grid">
+                        <div class="micronutrient-card">
+                            <div class="micronutrient-value">14mg</div>
+                            <div class="micronutrient-label">Fer + Vit C</div>
                         </div>
-                        <div style="background: rgba(255,255,255,0.15); padding: 12px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 1.5em; margin-bottom: 5px;">16.5mg</div>
-                            <div style="font-size: 0.9em;">Zinc</div>
+                        <div class="micronutrient-card">
+                            <div class="micronutrient-value">16.5mg</div>
+                            <div class="micronutrient-label">Zinc</div>
                         </div>
-                        <div style="background: rgba(255,255,255,0.15); padding: 12px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 1.5em; margin-bottom: 5px;">1000mg</div>
-                            <div style="font-size: 0.9em;">Calcium</div>
+                        <div class="micronutrient-card">
+                            <div class="micronutrient-value">1000mg</div>
+                            <div class="micronutrient-label">Calcium</div>
                         </div>
-                        <div style="background: rgba(255,255,255,0.15); padding: 12px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 1.5em; margin-bottom: 5px;">150μg</div>
-                            <div style="font-size: 0.9em;">Iode</div>
+                        <div class="micronutrient-card">
+                            <div class="micronutrient-value">150μg</div>
+                            <div class="micronutrient-label">Iode</div>
                         </div>
                     </div>
                 </div>
@@ -2068,70 +2074,70 @@
             
             <!-- Statistiques -->
             <div class="progress-tracker">
-                <h3 style="color: #667eea; margin-bottom: 20px;">📈 Statistiques du Mois</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
-                    <div style="text-align: center; padding: 20px; background: #f9f9f9; border-radius: 12px;">
-                        <div style="font-size: 3em; color: #667eea; margin-bottom: 10px;" id="totalSeances">0</div>
-                        <div style="color: #666;">Séances Complétées</div>
+                <h3 class="week-title">📈 Statistiques du Mois</h3>
+                <div class="stats-grid">
+                    <div class="stat-center">
+                        <div class="stat-large stat-color-primary" id="totalSeances">0</div>
+                        <div class="stat-description">Séances Complétées</div>
                     </div>
-                    <div style="text-align: center; padding: 20px; background: #f9f9f9; border-radius: 12px;">
-                        <div style="font-size: 3em; color: #11998e; margin-bottom: 10px;" id="totalMinutes">0</div>
-                        <div style="color: #666;">Minutes d'Entraînement</div>
+                    <div class="stat-center">
+                        <div class="stat-large stat-color-success" id="totalMinutes">0</div>
+                        <div class="stat-description">Minutes d'Entraînement</div>
                     </div>
-                    <div style="text-align: center; padding: 20px; background: #f9f9f9; border-radius: 12px;">
-                        <div style="font-size: 3em; color: #f5576c; margin-bottom: 10px;" id="moyenneEnergie">0</div>
-                        <div style="color: #666;">Énergie Moyenne /10</div>
+                    <div class="stat-center">
+                        <div class="stat-large stat-color-danger" id="moyenneEnergie">0</div>
+                        <div class="stat-description">Énergie Moyenne /10</div>
                     </div>
-                    <div style="text-align: center; padding: 20px; background: #f9f9f9; border-radius: 12px;">
-                        <div style="font-size: 3em; color: #764ba2; margin-bottom: 10px;" id="streak">0</div>
-                        <div style="color: #666;">Jours Consécutifs 🔥</div>
+                    <div class="stat-center">
+                        <div class="stat-large stat-color-purple" id="streak">0</div>
+                        <div class="stat-description">Jours Consécutifs 🔥</div>
                     </div>
                 </div>
             </div>
             
             <!-- Synchronisation Phases Lunaires -->
-            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 15px; margin-top: 30px;">
-                <h3 style="color: white; border-bottom: 2px solid white; padding-bottom: 10px; margin-bottom: 20px;">🌙 Entraînement selon les Phases Lunaires</h3>
+            <div class="lunar-container">
+                <h3 class="lunar-title">🌙 Entraînement selon les Phases Lunaires</h3>
                 
-                <div id="lunaireSuggestion" style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-                    <div style="text-align: center; font-size: 3em; margin-bottom: 15px;" id="lunaireEmoji">🌕</div>
-                    <div style="text-align: center; font-size: 1.5em; margin-bottom: 10px; font-weight: bold;" id="lunaireName">Pleine Lune</div>
-                    <div style="text-align: center; margin-bottom: 20px; opacity: 0.9;" id="lunaireDate">14 janvier 2026</div>
-                    <div style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                <div id="lunaireSuggestion" class="lunar-suggestion">
+                    <div class="lunar-emoji" id="lunaireEmoji">🌕</div>
+                    <div class="lunar-name" id="lunaireName">Pleine Lune</div>
+                    <div class="lunar-date" id="lunaireDate">14 janvier 2026</div>
+                    <div class="lunar-recommendation-box">
                         <strong>💪 Recommandation Entraînement:</strong>
-                        <p style="margin-top: 10px; line-height: 1.6;" id="lunaireRecommandation">C'est le pic d'énergie ! Profite pour faire tes séances les plus intenses. Volume maximal, charges lourdes si possible.</p>
+                        <p id="lunaireRecommandation">C'est le pic d'énergie ! Profite pour faire tes séances les plus intenses. Volume maximal, charges lourdes si possible.</p>
                     </div>
-                    <div style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 8px;">
+                    <div class="lunar-energy-box">
                         <strong>⚡ Niveau d'énergie attendu:</strong>
-                        <div style="display: flex; align-items: center; margin-top: 10px;">
-                            <div style="flex: 1; background: rgba(255,255,255,0.2); height: 12px; border-radius: 6px; overflow: hidden;">
-                                <div id="lunaireEnergieBarre" style="background: linear-gradient(90deg, #ffd700, #ff6b6b); height: 100%; width: 90%; transition: width 0.3s;"></div>
+                        <div class="lunar-energy-bar-container">
+                            <div class="lunar-energy-bar-wrapper">
+                                <div id="lunaireEnergieBarre" class="lunar-energy-bar"></div>
                             </div>
-                            <span style="margin-left: 15px; font-size: 1.5em; font-weight: bold;" id="lunaireEnergieValue">9/10</span>
+                            <span class="lunar-energy-value" id="lunaireEnergieValue">9/10</span>
                         </div>
                     </div>
                 </div>
                 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; text-align: center;">
-                        <div style="font-size: 2em; margin-bottom: 10px;">🌑</div>
+                <div class="lunar-phases-grid">
+                    <div class="lunar-phase-card">
+                        <div class="lunar-phase-emoji">🌑</div>
                         <strong>Nouvelle Lune</strong>
-                        <p style="font-size: 0.9em; margin-top: 5px; opacity: 0.9;">Intensité modérée<br>Focus technique</p>
+                        <p>Intensité modérée<br>Focus technique</p>
                     </div>
-                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; text-align: center;">
-                        <div style="font-size: 2em; margin-bottom: 10px;">🌓</div>
+                    <div class="lunar-phase-card">
+                        <div class="lunar-phase-emoji">🌓</div>
                         <strong>Lune Croissante</strong>
-                        <p style="font-size: 0.9em; margin-top: 5px; opacity: 0.9;">Augmentation<br>progressive</p>
+                        <p>Augmentation<br>progressive</p>
                     </div>
-                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; text-align: center;">
-                        <div style="font-size: 2em; margin-bottom: 10px;">🌕</div>
+                    <div class="lunar-phase-card">
+                        <div class="lunar-phase-emoji">🌕</div>
                         <strong>Pleine Lune</strong>
-                        <p style="font-size: 0.9em; margin-top: 5px; opacity: 0.9;">Pic d'énergie<br>Séances max</p>
+                        <p>Pic d'énergie<br>Séances max</p>
                     </div>
-                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; text-align: center;">
-                        <div style="font-size: 2em; margin-bottom: 10px;">🌗</div>
+                    <div class="lunar-phase-card">
+                        <div class="lunar-phase-emoji">🌗</div>
                         <strong>Lune Décroissante</strong>
-                        <p style="font-size: 0.9em; margin-top: 5px; opacity: 0.9;">Récupération<br>Mobilité</p>
+                        <p>Récupération<br>Mobilité</p>
                     </div>
                 </div>
             </div>
