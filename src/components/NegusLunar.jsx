@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Moon, Leaf, BookOpen, Plus, X, Calendar, ChevronLeft, ChevronRight, Download, Upload, UtensilsCrossed, Clock, Users, Sparkles, Heart, TrendingUp, Activity, Wind, Smile, Meh, Frown, Angry, Coffee, Camera, Target, Briefcase } from 'lucide-react';
+import { Moon, Leaf, BookOpen, Plus, X, Calendar, ChevronLeft, ChevronRight, Download, Upload, UtensilsCrossed, Clock, Users, Sparkles, Heart, TrendingUp, Activity, Wind, Smile, Meh, Frown, Angry, Coffee, Camera, Target, Briefcase, ArrowUp, Menu } from 'lucide-react';
 import MoonCalendar from './MoonCalendar';
 import EclipseCalendar from './EclipseCalendar';
 import BarcodeScanner from './BarcodeScanner';
@@ -8,51 +8,59 @@ import MealPlanner from './MealPlanner';
 import WorkModule from './WorkModule';
 import { getAccurateMoonPhase, isFullMoon, isNewMoon } from '../data/moonPhases2026';
 import { isEclipseDate, getEclipseForDate } from '../data/lunarEclipses2026';
+import { useNotes, useMoodHistory } from '../hooks/useDatabase';
+import { exportAllData, importAllData } from '../utils/database';
 
 const NegusLunar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [activeTab, setActiveTab] = useState('lunar');
-  const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState('');
   const [selectedMood, setSelectedMood] = useState('');
   const [calendarMonth, setCalendarMonth] = useState(new Date());
   const [showWorkModule, setShowWorkModule] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const fileInputRef = useRef(null);
+  
+  // Utiliser les hooks de base de données
+  const { data: notes, addItem: addNoteDB, removeItem: removeNoteDB, loading: notesLoading } = useNotes();
+  const { data: moodHistory, addItem: addMoodDB, updateItems: updateMoodHistory } = useMoodHistory();
   
   // États pour le module Rituel Lunaire
   const [gratitudeText, setGratitudeText] = useState('');
   const [dailyMood, setDailyMood] = useState(null);
-  const [moodHistory, setMoodHistory] = useState([]);
   const [exerciseCompleted, setExerciseCompleted] = useState(false);
   
   // État pour la navigation des recettes (0 = Lundi, 6 = Dimanche)
   const [selectedRecipeDay, setSelectedRecipeDay] = useState(null);
 
-  // Charger les notes depuis localStorage
+  // Gérer le bouton "Scroll to Top"
   useEffect(() => {
-    const savedNotes = localStorage.getItem('negusLunarNotes');
-    if (savedNotes) {
-      setNotes(JSON.parse(savedNotes));
-    }
+    const handleScroll = () => {
+      setShowScrollTop(window.pageYOffset > 300);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Sauvegarder les notes dans localStorage
-  useEffect(() => {
-    localStorage.setItem('negusLunarNotes', JSON.stringify(notes));
-  }, [notes]);
+  // Fonction pour remonter en haut
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
 
-  // Charger les données du rituel depuis localStorage
-  useEffect(() => {
-    const savedMoodHistory = localStorage.getItem('negusLunarMoodHistory');
-    if (savedMoodHistory) {
-      setMoodHistory(JSON.parse(savedMoodHistory));
-    }
-  }, []);
+  // Fonction pour changer d'onglet et fermer le menu mobile
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setShowMobileMenu(false);
+    scrollToTop();
+  };
 
-  // Sauvegarder l'historique d'humeur dans localStorage
-  useEffect(() => {
-    localStorage.setItem('negusLunarMoodHistory', JSON.stringify(moodHistory));
-  }, [moodHistory]);
+  // Les données sont maintenant gérées automatiquement par les hooks useNotes et useMoodHistory
+  // Plus besoin de gérer localStorage manuellement
 
   // Calcul de la phase lunaire
   const getMoonPhase = (date) => {
@@ -875,7 +883,7 @@ const NegusLunar = () => {
   };
 
   // Enregistrer l'humeur du jour
-  const saveDailyMood = (mood) => {
+  const saveDailyMood = async (mood) => {
     const today = new Date().toISOString().split('T')[0];
     const newMoodEntry = {
       date: today,
@@ -883,23 +891,12 @@ const NegusLunar = () => {
       moonPhase: moonPhase.name
     };
     
-    // Vérifier si une humeur existe déjà pour aujourd'hui
-    const existingIndex = moodHistory.findIndex(entry => entry.date === today);
-    
-    if (existingIndex >= 0) {
-      // Mettre à jour l'humeur existante
-      const updatedHistory = [...moodHistory];
-      updatedHistory[existingIndex] = newMoodEntry;
-      setMoodHistory(updatedHistory);
-    } else {
-      // Ajouter une nouvelle entrée
-      setMoodHistory([...moodHistory, newMoodEntry]);
-    }
-    
+    // Sauvegarder dans IndexedDB
+    await addMoodDB(newMoodEntry);
     setDailyMood(mood);
   };
 
-  const addNote = () => {
+  const addNote = async () => {
     if (newNote.trim() && selectedMood) {
       const note = {
         id: Date.now(),
@@ -908,71 +905,66 @@ const NegusLunar = () => {
         date: new Date().toLocaleDateString('fr-FR'),
         moonPhase: moonPhase.name
       };
-      setNotes([note, ...notes]);
+      await addNoteDB(note);
       setNewNote('');
+      setSelectedMood('');
     }
   };
 
-  const deleteNote = (id) => {
-    setNotes(notes.filter(note => note.id !== id));
+  const deleteNote = async (id) => {
+    await removeNoteDB(id);
   };
 
-  // Exporter les notes en JSON
-  const exportNotes = () => {
-    const dataStr = JSON.stringify(notes, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `neguslunar-notes-${new Date().toISOString().split('T')[0]}.json`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+  // Exporter toutes les données
+  const exportNotes = async () => {
+    try {
+      const allData = await exportAllData();
+      const dataStr = JSON.stringify(allData, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `neguslunar-backup-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      alert('✅ Données exportées avec succès !');
+    } catch (error) {
+      alert('❌ Erreur lors de l\'export des données.');
+      console.error('Erreur d\'export:', error);
+    }
   };
 
-  // Importer les notes depuis un fichier JSON
-  const importNotes = (event) => {
+  // Importer les données depuis un fichier JSON
+  const importNotes = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       try {
-        const importedNotes = JSON.parse(e.target.result);
+        const importedData = JSON.parse(e.target.result);
         
-        // Vérifier que c'est bien un tableau
-        if (!Array.isArray(importedNotes)) {
-          alert('❌ Format de fichier invalide. Le fichier doit contenir un tableau de notes.');
+        // Vérifier le format
+        if (!importedData.data) {
+          alert('❌ Format de fichier invalide.');
           return;
         }
 
-        // Vérifier la structure des notes
-        const isValid = importedNotes.every(note => 
-          note.hasOwnProperty('id') && 
-          note.hasOwnProperty('text') && 
-          note.hasOwnProperty('mood')
-        );
-
-        if (!isValid) {
-          alert('❌ Format de notes invalide. Vérifiez la structure du fichier.');
-          return;
-        }
-
-        // Fusionner avec les notes existantes (éviter les doublons par ID)
-        const existingIds = new Set(notes.map(n => n.id));
-        const newNotes = importedNotes.filter(n => !existingIds.has(n.id));
+        const totalImported = await importAllData(importedData);
+        alert(`✅ ${totalImported} élément(s) importé(s) avec succès !`);
         
-        setNotes([...notes, ...newNotes]);
-        alert(`✅ ${newNotes.length} note(s) importée(s) avec succès !`);
+        // Recharger la page pour afficher les nouvelles données
+        window.location.reload();
       } catch (error) {
-        alert('❌ Erreur lors de la lecture du fichier. Assurez-vous qu\'il s\'agit d\'un fichier JSON valide.');
+        alert('❌ Erreur lors de l\'import des données.');
         console.error('Erreur d\'import:', error);
       }
     };
     reader.readAsText(file);
     
-    // Réinitialiser l'input pour permettre de réimporter le même fichier
+    // Réinitialiser l'input
     event.target.value = '';
   };
 
@@ -1085,10 +1077,35 @@ const NegusLunar = () => {
 
         {/* Navigation */}
         <nav className="mb-6 sm:mb-8 md:mb-10 px-2">
-          <div className="flex overflow-x-auto gap-2 sm:gap-3 md:gap-4 pb-2 scrollbar-hide justify-start sm:justify-center"
+          {/* Bouton Menu Mobile */}
+          <div className="flex justify-between items-center mb-4 lg:hidden">
+            <button
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
+              className="flex items-center gap-2 px-4 py-2 bg-purple-500/30 hover:bg-purple-500/40 rounded-full transition-all border border-purple-400/50"
+            >
+              <Menu size={20} />
+              <span className="text-sm font-medium">Menu</span>
+            </button>
+            <span className="text-purple-200/80 text-sm">
+              {activeTab === 'lunar' ? '🌙 Phase Lunaire' :
+               activeTab === 'calendar' ? '📅 Calendrier' :
+               activeTab === 'moonCalendar' ? '🌙 Phases 2026' :
+               activeTab === 'notes' ? '📝 Notes' :
+               activeTab === 'recipes' ? '🍃 Recettes' :
+               activeTab === 'dailyRecipe' ? '🍽️ Recette' :
+               activeTab === 'ritual' ? '✨ Rituel' :
+               activeTab === 'eclipses' ? '🌑 Éclipses' :
+               activeTab === 'scanner' ? '📷 Scanner' :
+               activeTab === 'fasting' ? '⏱️ Jeûne' :
+               activeTab === 'mealplan' ? '🎯 Plans Repas' : 'Menu'}
+            </span>
+          </div>
+
+          {/* Menu Desktop / Mobile déroulant */}
+          <div className={`${showMobileMenu ? 'flex' : 'hidden'} lg:flex flex-col lg:flex-row overflow-x-auto gap-2 sm:gap-3 md:gap-4 pb-2 scrollbar-hide justify-start sm:justify-center`}
                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           <button
-            onClick={() => setActiveTab('lunar')}
+            onClick={() => handleTabChange('lunar')}
             className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
               activeTab === 'lunar'
                 ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg shadow-purple-500/50 scale-105'
@@ -1100,7 +1117,7 @@ const NegusLunar = () => {
             <span className="xs:hidden">Phase</span>
           </button>
           <button
-            onClick={() => setActiveTab('calendar')}
+            onClick={() => handleTabChange('calendar')}
             className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
               activeTab === 'calendar'
                 ? 'bg-gradient-to-r from-indigo-500 to-blue-500 shadow-lg shadow-indigo-500/50 scale-105'
@@ -1112,7 +1129,7 @@ const NegusLunar = () => {
             <span className="sm:hidden">📅</span>
           </button>
           <button
-            onClick={() => setActiveTab('moonCalendar')}
+            onClick={() => handleTabChange('moonCalendar')}
             className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
               activeTab === 'moonCalendar'
                 ? 'bg-gradient-to-r from-yellow-500 to-orange-500 shadow-lg shadow-yellow-500/50 scale-105'
@@ -1124,7 +1141,7 @@ const NegusLunar = () => {
             <span className="sm:hidden">🌙</span>
           </button>
           <button
-            onClick={() => setActiveTab('notes')}
+            onClick={() => handleTabChange('notes')}
             className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
               activeTab === 'notes'
                 ? 'bg-gradient-to-r from-green-500 to-teal-500 shadow-lg shadow-green-500/50 scale-105'
@@ -1136,7 +1153,7 @@ const NegusLunar = () => {
             <span className="sm:hidden">📝</span>
           </button>
           <button
-            onClick={() => setActiveTab('recipes')}
+            onClick={() => handleTabChange('recipes')}
             className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
               activeTab === 'recipes'
                 ? 'bg-gradient-to-r from-pink-500 to-rose-500 shadow-lg shadow-pink-500/50 scale-105'
@@ -1148,7 +1165,7 @@ const NegusLunar = () => {
             <span className="sm:hidden">🍃</span>
           </button>
           <button
-            onClick={() => setActiveTab('dailyRecipe')}
+            onClick={() => handleTabChange('dailyRecipe')}
             className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
               activeTab === 'dailyRecipe'
                 ? 'bg-gradient-to-r from-orange-500 to-amber-500 shadow-lg shadow-orange-500/50 scale-105'
@@ -1160,7 +1177,7 @@ const NegusLunar = () => {
             <span className="sm:hidden">🍽️</span>
           </button>
           <button
-            onClick={() => setActiveTab('ritual')}
+            onClick={() => handleTabChange('ritual')}
             className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
               activeTab === 'ritual'
                 ? 'bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-lg shadow-purple-500/50 scale-105'
@@ -1172,7 +1189,7 @@ const NegusLunar = () => {
             <span className="sm:hidden">✨</span>
           </button>
           <button
-            onClick={() => setActiveTab('eclipses')}
+            onClick={() => handleTabChange('eclipses')}
             className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
               activeTab === 'eclipses'
                 ? 'bg-gradient-to-r from-red-500 to-orange-500 shadow-lg shadow-red-500/50 scale-105'
@@ -1210,7 +1227,7 @@ const NegusLunar = () => {
           </button>
 
           <button
-            onClick={() => setActiveTab('scanner')}
+            onClick={() => handleTabChange('scanner')}
             className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
               activeTab === 'scanner'
                 ? 'bg-gradient-to-r from-green-500 to-emerald-500 shadow-lg shadow-green-500/50 scale-105'
@@ -1223,7 +1240,7 @@ const NegusLunar = () => {
           </button>
 
           <button
-            onClick={() => setActiveTab('fasting')}
+            onClick={() => handleTabChange('fasting')}
             className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
               activeTab === 'fasting'
                 ? 'bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg shadow-indigo-500/50 scale-105'
@@ -1236,7 +1253,7 @@ const NegusLunar = () => {
           </button>
 
           <button
-            onClick={() => setActiveTab('mealplan')}
+            onClick={() => handleTabChange('mealplan')}
             className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
               activeTab === 'mealplan'
                 ? 'bg-gradient-to-r from-amber-500 to-orange-500 shadow-lg shadow-amber-500/50 scale-105'
@@ -2032,10 +2049,69 @@ const NegusLunar = () => {
         </main>
 
         {/* Footer */}
-        <footer className="mt-12 text-center text-purple-300/60 text-sm">
-          <p>Créé avec 🌙 par Négus Dja • Guadeloupe</p>
+        <footer className="mt-16 mb-8">
+          <div className="max-w-4xl mx-auto">
+            {/* Ligne de séparation élégante */}
+            <div className="relative mb-8">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-purple-500/20"></div>
+              </div>
+              <div className="relative flex justify-center">
+                <span className="bg-gradient-to-br from-indigo-950 via-purple-900 to-slate-900 px-4 text-2xl">
+                  🌙
+                </span>
+              </div>
+            </div>
+
+            {/* Contenu du footer */}
+            <div className="text-center space-y-4">
+              <div className="flex items-center justify-center gap-2 text-purple-200/90">
+                <span className="text-sm font-light">Créé avec</span>
+                <Heart size={16} className="text-pink-400 animate-pulse" />
+                <span className="text-sm font-light">par</span>
+                <span className="font-semibold bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
+                  Négus Dja
+                </span>
+              </div>
+              
+              <div className="flex items-center justify-center gap-3 text-xs text-purple-300/50">
+                <span>🏝️ Guadeloupe</span>
+                <span>•</span>
+                <span>{new Date().getFullYear()}</span>
+                <span>•</span>
+                <span>v1.0.0</span>
+              </div>
+
+              {/* Stats de l'app */}
+              <div className="flex items-center justify-center gap-6 pt-4 text-xs text-purple-300/40">
+                <div className="flex items-center gap-1">
+                  <Moon size={12} />
+                  <span>Phases Lunaires</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Leaf size={12} />
+                  <span>Nutrition</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Briefcase size={12} />
+                  <span>Productivité</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </footer>
       </div>
+
+      {/* Bouton Scroll to Top */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-6 right-6 z-50 p-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-full shadow-2xl shadow-purple-500/50 transition-all duration-300 hover:scale-110 active:scale-95 group"
+          aria-label="Remonter en haut de la page"
+        >
+          <ArrowUp size={24} className="text-white group-hover:animate-bounce" />
+        </button>
+      )}
 
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap');
