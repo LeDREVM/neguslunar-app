@@ -104,32 +104,32 @@ const RecipeBrowser = ({ onSelectRecipe }) => {
   return (
     <div className="space-y-6">
       {/* En-tête avec recherche */}
-      <div className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 rounded-xl p-6 border border-purple-700/30">
-        <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-purple-200 to-pink-200 bg-clip-text text-transparent">
+      <div className="p-6 border bg-gradient-to-br from-purple-900/20 to-pink-900/20 rounded-xl border-purple-700/30">
+        <h2 className="mb-4 text-3xl font-bold text-transparent bg-gradient-to-r from-purple-200 to-pink-200 bg-clip-text">
           🍽️ Bibliothèque de Recettes BODY DREVM
         </h2>
         
         {/* Barre de recherche */}
         <div className="relative mb-4">
-          <Search size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <Search size={20} className="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
           <input
             type="text"
             placeholder="Rechercher une recette, un ingrédient..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-white/5 border border-white/20 rounded-xl pl-10 pr-4 py-3 text-white placeholder-purple-300/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+            className="w-full py-3 pl-10 pr-4 text-white border bg-white/5 border-white/20 rounded-xl placeholder-purple-300/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
           />
         </div>
 
         {/* Bouton Filtres */}
         <button
           onClick={() => setShowFilters(!showFilters)}
-          className="flex items-center gap-2 px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-400/50 rounded-lg transition-all"
+          className="flex items-center gap-2 px-4 py-2 transition-all border rounded-lg bg-purple-500/20 hover:bg-purple-500/30 border-purple-400/50"
         >
           <Filter size={18} />
           <span>Filtres {showFilters ? '▼' : '▶'}</span>
           {(selectedIngredient || selectedMood !== 'all' || selectedCategory !== 'all' || selectedDay !== null || showDetoxOnly || showPostWorkoutOnly) && (
-            <span className="bg-purple-600 text-white text-xs px-2 py-1 rounded-full">
+            <span className="px-2 py-1 text-xs text-white bg-purple-600 rounded-full">
               Actifs
             </span>
           )}
@@ -137,16 +137,16 @@ const RecipeBrowser = ({ onSelectRecipe }) => {
 
         {/* Panneau de filtres */}
         {showFilters && (
-          <div className="mt-4 space-y-4 bg-white/5 rounded-xl p-4 border border-white/10">
+          <div className="p-4 mt-4 space-y-4 border bg-white/5 rounded-xl border-white/10">
             {/* Filtre par Ingrédient */}
             <div>
-              <label className="text-sm text-purple-300 block mb-2">Par Ingrédient/Légume 🥬</label>
+              <label className="block mb-2 text-sm text-purple-300">Par Ingrédient/Légume 🥬</label>
               
               {/* Ingrédient sélectionné */}
               {selectedIngredient && (
-                <div className="mb-3 flex items-center gap-2 bg-green-500/20 border border-green-500/50 rounded-lg p-3">
+                <div className="flex items-center gap-2 p-3 mb-3 border rounded-lg bg-green-500/20 border-green-500/50">
                   <span className="text-2xl">{selectedIngredient.emoji}</span>
-                  <span className="text-green-200 font-medium flex-1">{selectedIngredient.name}</span>
+                  <span className="flex-1 font-medium text-green-200">{selectedIngredient.name}</span>
                   <button
                     onClick={() => {
                       setSelectedIngredient(null);
@@ -182,11 +182,11 @@ const RecipeBrowser = ({ onSelectRecipe }) => {
                 value={ingredientSearchTerm}
                 onChange={(e) => setIngredientSearchTerm(e.target.value)}
                 placeholder="Rechercher un ingrédient..."
-                className="w-full bg-white/5 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-purple-300/50 focus:outline-none focus:ring-2 focus:ring-green-500/50 mb-3"
+                className="w-full px-3 py-2 mb-3 text-white border rounded-lg bg-white/5 border-white/20 placeholder-purple-300/50 focus:outline-none focus:ring-2 focus:ring-green-500/50"
               />
 
               {/* Grille d'ingrédients */}
-              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 max-h-48 overflow-y-auto">
+              <div className="grid grid-cols-3 gap-2 overflow-y-auto sm:grid-cols-4 md:grid-cols-6 max-h-48">
                 {availableIngredients.map(ing => (
                   <button
                     key={ing.id}
@@ -198,8 +198,8 @@ const RecipeBrowser = ({ onSelectRecipe }) => {
                     }`}
                     title={ing.name}
                   >
-                    <span className="text-2xl block mb-1">{ing.emoji}</span>
-                    <span className="text-xs text-purple-200 block truncate">{ing.name}</span>
+                    <span className="block mb-1 text-2xl">{ing.emoji}</span>
+                    <span className="block text-xs text-purple-200 truncate">{ing.name}</span>
                   </button>
                 ))}
               </div>
@@ -207,7 +207,7 @@ const RecipeBrowser = ({ onSelectRecipe }) => {
 
             {/* Filtres Mood */}
             <div>
-              <label className="text-sm text-purple-300 block mb-2">Par Humeur</label>
+              <label className="block mb-2 text-sm text-purple-300">Par Humeur</label>
               <div className="flex flex-wrap gap-2">
                 {moods.map(mood => (
                   <button
@@ -227,7 +227,7 @@ const RecipeBrowser = ({ onSelectRecipe }) => {
 
             {/* Filtres Catégorie */}
             <div>
-              <label className="text-sm text-purple-300 block mb-2">Par Type</label>
+              <label className="block mb-2 text-sm text-purple-300">Par Type</label>
               <div className="flex flex-wrap gap-2">
                 {categories.map(cat => (
                   <button
@@ -247,7 +247,7 @@ const RecipeBrowser = ({ onSelectRecipe }) => {
 
             {/* Filtres Jour */}
             <div>
-              <label className="text-sm text-purple-300 block mb-2">Par Jour de la Semaine</label>
+              <label className="block mb-2 text-sm text-purple-300">Par Jour de la Semaine</label>
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => setSelectedDay(null)}
@@ -302,13 +302,13 @@ const RecipeBrowser = ({ onSelectRecipe }) => {
         )}
 
         {/* Résultats */}
-        <div className="mt-4 text-purple-300/80 text-sm">
+        <div className="mt-4 text-sm text-purple-300/80">
           {filteredRecipes.length} recette{filteredRecipes.length > 1 ? 's' : ''} trouvée{filteredRecipes.length > 1 ? 's' : ''}
         </div>
       </div>
 
       {/* Grille des recettes */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {filteredRecipes.map(recipe => (
           <div
             key={recipe.id}
@@ -318,14 +318,14 @@ const RecipeBrowser = ({ onSelectRecipe }) => {
             {/* En-tête */}
             <div className="mb-3">
               <div className="flex items-start justify-between mb-2">
-                <h3 className="font-bold text-lg text-purple-100 flex-1">{recipe.name}</h3>
+                <h3 className="flex-1 text-lg font-bold text-purple-100">{recipe.name}</h3>
                 {onSelectRecipe && (
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleAddToDay(recipe);
                     }}
-                    className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg transition-all ml-2"
+                    className="p-2 ml-2 text-white transition-all bg-green-600 rounded-lg hover:bg-green-700"
                     title="Ajouter à ma journée"
                   >
                     <Plus size={18} />
@@ -339,16 +339,16 @@ const RecipeBrowser = ({ onSelectRecipe }) => {
                     {moods.find(m => m.id === recipe.mood)?.emoji} {recipe.mood}
                   </span>
                 )}
-                <span className="bg-pink-500/20 text-pink-200 px-2 py-1 rounded-full text-xs">
+                <span className="px-2 py-1 text-xs text-pink-200 rounded-full bg-pink-500/20">
                   {categories.find(c => c.id === recipe.category)?.emoji} {recipe.category}
                 </span>
                 {recipe.isDetox && (
-                  <span className="bg-green-500/20 text-green-200 px-2 py-1 rounded-full text-xs">
+                  <span className="px-2 py-1 text-xs text-green-200 rounded-full bg-green-500/20">
                     🌿 Détox
                   </span>
                 )}
                 {recipe.isPostWorkout && (
-                  <span className="bg-orange-500/20 text-orange-200 px-2 py-1 rounded-full text-xs">
+                  <span className="px-2 py-1 text-xs text-orange-200 rounded-full bg-orange-500/20">
                     💪 Post-sport
                   </span>
                 )}
@@ -356,7 +356,7 @@ const RecipeBrowser = ({ onSelectRecipe }) => {
             </div>
 
             {/* Infos rapides */}
-            <div className="flex items-center gap-4 text-xs text-purple-300/80 mb-3">
+            <div className="flex items-center gap-4 mb-3 text-xs text-purple-300/80">
               <div className="flex items-center gap-1">
                 <Clock size={14} />
                 <span>{recipe.time} min</span>
@@ -371,23 +371,23 @@ const RecipeBrowser = ({ onSelectRecipe }) => {
             </div>
 
             {/* Nutrition */}
-            <div className="bg-white/5 rounded-lg p-3 mb-3">
+            <div className="p-3 mb-3 rounded-lg bg-white/5">
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <div>
                   <span className="text-gray-400">Calories:</span>
-                  <span className="text-yellow-200 font-semibold ml-1">{recipe.nutrition.calories} kcal</span>
+                  <span className="ml-1 font-semibold text-yellow-200">{recipe.nutrition.calories} kcal</span>
                 </div>
                 <div>
                   <span className="text-gray-400">Protéines:</span>
-                  <span className="text-blue-200 font-semibold ml-1">{recipe.nutrition.proteins}g</span>
+                  <span className="ml-1 font-semibold text-blue-200">{recipe.nutrition.proteins}g</span>
                 </div>
                 <div>
                   <span className="text-gray-400">Glucides:</span>
-                  <span className="text-green-200 font-semibold ml-1">{recipe.nutrition.carbs}g</span>
+                  <span className="ml-1 font-semibold text-green-200">{recipe.nutrition.carbs}g</span>
                 </div>
                 <div>
                   <span className="text-gray-400">Lipides:</span>
-                  <span className="text-orange-200 font-semibold ml-1">{recipe.nutrition.fats}g</span>
+                  <span className="ml-1 font-semibold text-orange-200">{recipe.nutrition.fats}g</span>
                 </div>
               </div>
             </div>
@@ -400,15 +400,16 @@ const RecipeBrowser = ({ onSelectRecipe }) => {
                 </span>
               ))}
               {recipe.tags.length > 3 && (
-                <span className="text-purple-400 text-xs">+{recipe.tags.length - 3}</span>
+                <span className="text-xs text-purple-400">+{recipe.tags.length - 3}</span>
               )}
             </div>
           </div>
         ))}
       </div>
 
-      {filteredRecipes.length === 0 && (
-        <div className="text-center py-12 text-purple-300/60">
+      <>
+        {filteredRecipes.length === 0 && (
+        <div className="py-12 text-center text-purple-300/60">
           <Search size={48} className="mx-auto mb-4 opacity-50" />
           <p>Aucune recette trouvée avec ces critères</p>
           <button
@@ -423,7 +424,7 @@ const RecipeBrowser = ({ onSelectRecipe }) => {
               setShowDetoxOnly(false);
               setShowPostWorkoutOnly(false);
             }}
-            className="mt-4 px-6 py-2 bg-purple-500/20 hover:bg-purple-500/30 rounded-lg transition-all"
+            className="px-6 py-2 mt-4 transition-all rounded-lg bg-purple-500/20 hover:bg-purple-500/30"
           >
             Réinitialiser les filtres
           </button>
@@ -432,30 +433,30 @@ const RecipeBrowser = ({ onSelectRecipe }) => {
 
       {/* Modal de détails de recette */}
       {selectedRecipe && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setSelectedRecipe(null)}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedRecipe(null)}>
           <div 
             className="bg-gradient-to-br from-gray-900 to-purple-900 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border-2 border-purple-500/30"
             onClick={(e) => e.stopPropagation()}
           >
             {/* En-tête du modal */}
-            <div className="sticky top-0 bg-gradient-to-r from-purple-600 to-pink-600 p-6 rounded-t-2xl">
+            <div className="sticky top-0 p-6 bg-gradient-to-r from-purple-600 to-pink-600 rounded-t-2xl">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-white mb-2">{selectedRecipe.name}</h3>
+                  <h3 className="mb-2 text-2xl font-bold text-white">{selectedRecipe.name}</h3>
                   <div className="flex flex-wrap gap-2">
                     {selectedRecipe.mood && (
-                      <span className="bg-white/20 text-white px-3 py-1 rounded-full text-sm">
+                      <span className="px-3 py-1 text-sm text-white rounded-full bg-white/20">
                         {moods.find(m => m.id === selectedRecipe.mood)?.emoji} {selectedRecipe.mood}
                       </span>
                     )}
-                    <span className="bg-white/20 text-white px-3 py-1 rounded-full text-sm">
+                    <span className="px-3 py-1 text-sm text-white rounded-full bg-white/20">
                       {categories.find(c => c.id === selectedRecipe.category)?.emoji} {selectedRecipe.category}
                     </span>
                   </div>
                 </div>
                 <button
                   onClick={() => setSelectedRecipe(null)}
-                  className="bg-white/20 hover:bg-white/30 text-white p-2 rounded-lg transition-all"
+                  className="p-2 text-white transition-all rounded-lg bg-white/20 hover:bg-white/30"
                 >
                   <X size={24} />
                 </button>
@@ -465,17 +466,17 @@ const RecipeBrowser = ({ onSelectRecipe }) => {
             <div className="p-6 space-y-6">
               {/* Infos pratiques */}
               <div className="grid grid-cols-3 gap-4">
-                <div className="bg-white/5 rounded-lg p-3 text-center">
+                <div className="p-3 text-center rounded-lg bg-white/5">
                   <Clock size={20} className="mx-auto mb-1 text-purple-300" />
                   <div className="text-sm text-gray-400">Temps</div>
                   <div className="font-bold text-white">{selectedRecipe.time} min</div>
                 </div>
-                <div className="bg-white/5 rounded-lg p-3 text-center">
+                <div className="p-3 text-center rounded-lg bg-white/5">
                   <Users size={20} className="mx-auto mb-1 text-purple-300" />
                   <div className="text-sm text-gray-400">Portions</div>
                   <div className="font-bold text-white">{selectedRecipe.servings}</div>
                 </div>
-                <div className="bg-white/5 rounded-lg p-3 text-center">
+                <div className="p-3 text-center rounded-lg bg-white/5">
                   <Flame size={20} className="mx-auto mb-1 text-purple-300" />
                   <div className="text-sm text-gray-400">Difficulté</div>
                   <div className={`font-bold capitalize ${getDifficultyColor(selectedRecipe.difficulty)}`}>
@@ -485,38 +486,38 @@ const RecipeBrowser = ({ onSelectRecipe }) => {
               </div>
 
               {/* Nutrition */}
-              <div className="bg-gradient-to-br from-yellow-500/10 to-orange-500/10 rounded-xl p-4 border border-yellow-500/20">
-                <h4 className="font-semibold text-yellow-200 mb-3 flex items-center gap-2">
+              <div className="p-4 border bg-gradient-to-br from-yellow-500/10 to-orange-500/10 rounded-xl border-yellow-500/20">
+                <h4 className="flex items-center gap-2 mb-3 font-semibold text-yellow-200">
                   <Flame size={20} />
                   Apports Nutritionnels (par portion)
                 </h4>
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-white/5 rounded-lg p-2">
-                    <span className="text-gray-400 text-sm">Calories</span>
-                    <p className="font-bold text-yellow-200 text-lg">{selectedRecipe.nutrition.calories} kcal</p>
+                  <div className="p-2 rounded-lg bg-white/5">
+                    <span className="text-sm text-gray-400">Calories</span>
+                    <p className="text-lg font-bold text-yellow-200">{selectedRecipe.nutrition.calories} kcal</p>
                   </div>
-                  <div className="bg-white/5 rounded-lg p-2">
-                    <span className="text-gray-400 text-sm">Protéines</span>
-                    <p className="font-bold text-blue-200 text-lg">{selectedRecipe.nutrition.proteins}g</p>
+                  <div className="p-2 rounded-lg bg-white/5">
+                    <span className="text-sm text-gray-400">Protéines</span>
+                    <p className="text-lg font-bold text-blue-200">{selectedRecipe.nutrition.proteins}g</p>
                   </div>
-                  <div className="bg-white/5 rounded-lg p-2">
-                    <span className="text-gray-400 text-sm">Glucides</span>
-                    <p className="font-bold text-green-200 text-lg">{selectedRecipe.nutrition.carbs}g</p>
+                  <div className="p-2 rounded-lg bg-white/5">
+                    <span className="text-sm text-gray-400">Glucides</span>
+                    <p className="text-lg font-bold text-green-200">{selectedRecipe.nutrition.carbs}g</p>
                   </div>
-                  <div className="bg-white/5 rounded-lg p-2">
-                    <span className="text-gray-400 text-sm">Lipides</span>
-                    <p className="font-bold text-orange-200 text-lg">{selectedRecipe.nutrition.fats}g</p>
+                  <div className="p-2 rounded-lg bg-white/5">
+                    <span className="text-sm text-gray-400">Lipides</span>
+                    <p className="text-lg font-bold text-orange-200">{selectedRecipe.nutrition.fats}g</p>
                   </div>
                 </div>
               </div>
 
               {/* Ingrédients */}
-              <div className="bg-white/5 rounded-xl p-4">
-                <h4 className="font-semibold text-green-300 mb-3">🥬 Ingrédients</h4>
+              <div className="p-4 bg-white/5 rounded-xl">
+                <h4 className="mb-3 font-semibold text-green-300">🥬 Ingrédients</h4>
                 <ul className="space-y-2">
                   {selectedRecipe.ingredients.map((ing, idx) => (
                     <li key={idx} className="flex items-start gap-2 text-purple-200/90">
-                      <span className="text-green-400 mt-1">✓</span>
+                      <span className="mt-1 text-green-400">✓</span>
                       <span>{ing}</span>
                     </li>
                   ))}
@@ -524,8 +525,8 @@ const RecipeBrowser = ({ onSelectRecipe }) => {
               </div>
 
               {/* Instructions */}
-              <div className="bg-white/5 rounded-xl p-4">
-                <h4 className="font-semibold text-blue-300 mb-3">👨‍🍳 Préparation</h4>
+              <div className="p-4 bg-white/5 rounded-xl">
+                <h4 className="mb-3 font-semibold text-blue-300">👨‍🍳 Préparation</h4>
                 <ol className="space-y-2">
                   {selectedRecipe.instructions.map((step, idx) => (
                     <li key={idx} className="flex items-start gap-3 text-purple-200/90">
@@ -540,21 +541,21 @@ const RecipeBrowser = ({ onSelectRecipe }) => {
 
               {/* Bienfaits */}
               {selectedRecipe.benefits && (
-                <div className="bg-gradient-to-br from-pink-500/10 to-purple-500/10 rounded-xl p-4 border border-pink-500/20">
-                  <h4 className="font-semibold text-pink-200 mb-2 flex items-center gap-2">
+                <div className="p-4 border bg-gradient-to-br from-pink-500/10 to-purple-500/10 rounded-xl border-pink-500/20">
+                  <h4 className="flex items-center gap-2 mb-2 font-semibold text-pink-200">
                     <Heart size={20} />
                     Bienfaits
                   </h4>
-                  <p className="text-purple-200/90 italic">{selectedRecipe.benefits}</p>
+                  <p className="italic text-purple-200/90">{selectedRecipe.benefits}</p>
                 </div>
               )}
 
               {/* Tags complets */}
               <div>
-                <h4 className="font-semibold text-purple-300 mb-2 text-sm">Tags</h4>
+                <h4 className="mb-2 text-sm font-semibold text-purple-300">Tags</h4>
                 <div className="flex flex-wrap gap-2">
                   {selectedRecipe.tags.map((tag, idx) => (
-                    <span key={idx} className="bg-purple-600/20 text-purple-300 px-3 py-1 rounded-full text-xs">
+                    <span key={idx} className="px-3 py-1 text-xs text-purple-300 rounded-full bg-purple-600/20">
                       {tag}
                     </span>
                   ))}
@@ -565,7 +566,7 @@ const RecipeBrowser = ({ onSelectRecipe }) => {
               {onSelectRecipe && (
                 <button
                   onClick={() => handleAddToDay(selectedRecipe)}
-                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all"
+                  className="flex items-center justify-center w-full gap-2 py-3 font-semibold text-white transition-all bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-xl"
                 >
                   <Plus size={20} />
                   Ajouter à ma journée
@@ -573,8 +574,9 @@ const RecipeBrowser = ({ onSelectRecipe }) => {
               )}
             </div>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
+      </>
     </div>
   );
 };
