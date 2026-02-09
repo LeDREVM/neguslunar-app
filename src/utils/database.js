@@ -4,7 +4,7 @@
  */
 
 const DB_NAME = 'NegusLunarDB';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 // Stores (tables) de la base de données
 const STORES = {
@@ -14,6 +14,8 @@ const STORES = {
   WORK_SESSIONS: 'workSessions',
   FASTING_SESSIONS: 'fastingSessions',
   MEAL_PLANS: 'mealPlans',
+  DAILY_MEALS: 'dailyMeals',
+  DAILY_EXERCISES: 'dailyExercises',
   USER_SETTINGS: 'userSettings'
 };
 
@@ -76,6 +78,19 @@ export const initDB = () => {
       if (!db.objectStoreNames.contains(STORES.MEAL_PLANS)) {
         const mealPlansStore = db.createObjectStore(STORES.MEAL_PLANS, { keyPath: 'id' });
         mealPlansStore.createIndex('date', 'date', { unique: false });
+      }
+
+      // Store pour les repas quotidiens
+      if (!db.objectStoreNames.contains(STORES.DAILY_MEALS)) {
+        const dailyMealsStore = db.createObjectStore(STORES.DAILY_MEALS, { keyPath: 'id' });
+        dailyMealsStore.createIndex('date', 'date', { unique: false });
+        dailyMealsStore.createIndex('type', 'type', { unique: false });
+      }
+
+      // Store pour les exercices quotidiens
+      if (!db.objectStoreNames.contains(STORES.DAILY_EXERCISES)) {
+        const dailyExercisesStore = db.createObjectStore(STORES.DAILY_EXERCISES, { keyPath: 'id' });
+        dailyExercisesStore.createIndex('date', 'date', { unique: false });
       }
 
       // Store pour les paramètres utilisateur

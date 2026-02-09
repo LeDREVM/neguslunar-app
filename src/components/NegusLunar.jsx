@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Moon, Leaf, BookOpen, Plus, X, Calendar, ChevronLeft, ChevronRight, Download, Upload, UtensilsCrossed, Clock, Users, Sparkles, Heart, TrendingUp, Activity, Wind, Smile, Meh, Frown, Angry, Coffee, Camera, Target, Briefcase, ArrowUp, Menu } from 'lucide-react';
+import { Moon, Leaf, BookOpen, Plus, X, Calendar, ChevronLeft, ChevronRight, Download, Upload, UtensilsCrossed, Clock, Users, Sparkles, Heart, TrendingUp, Activity, Wind, Smile, Meh, Frown, Angry, Coffee, Camera, Target, Briefcase, ArrowUp, Menu, ShoppingCart } from 'lucide-react';
 import MoonCalendar from './MoonCalendar';
 import EclipseCalendar from './EclipseCalendar';
 import BarcodeScanner from './BarcodeScanner';
 import IntermittentFasting from './IntermittentFasting';
 import MealPlanner from './MealPlanner';
 import WorkModule from './WorkModule';
+import DailyTracker from './DailyTracker';
+import ShoppingList from './ShoppingList';
 import { getAccurateMoonPhase, isFullMoon, isNewMoon } from '../data/moonPhases2026';
 import { isEclipseDate, getEclipseForDate } from '../data/lunarEclipses2026';
 import { useNotes, useMoodHistory } from '../hooks/useDatabase';
@@ -33,6 +35,9 @@ const NegusLunar = () => {
   
   // État pour la navigation des recettes (0 = Lundi, 6 = Dimanche)
   const [selectedRecipeDay, setSelectedRecipeDay] = useState(null);
+  
+  // État pour afficher la liste de courses
+  const [showShoppingList, setShowShoppingList] = useState(false);
 
   // Gérer le bouton "Scroll to Top"
   useEffect(() => {
@@ -1097,7 +1102,8 @@ const NegusLunar = () => {
                activeTab === 'eclipses' ? '🌑 Éclipses' :
                activeTab === 'scanner' ? '📷 Scanner' :
                activeTab === 'fasting' ? '⏱️ Jeûne' :
-               activeTab === 'mealplan' ? '🎯 Plans Repas' : 'Menu'}
+               activeTab === 'mealplan' ? '🎯 Plans Repas' :
+               activeTab === 'tracker' ? '📊 Mon Suivi' : 'Menu'}
             </span>
           </div>
 
@@ -1263,6 +1269,19 @@ const NegusLunar = () => {
             <Target size={16} className="sm:w-5 sm:h-5" />
             <span className="hidden sm:inline">Plans Repas</span>
             <span className="sm:hidden">🎯</span>
+          </button>
+
+          <button
+            onClick={() => handleTabChange('tracker')}
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
+              activeTab === 'tracker'
+                ? 'bg-gradient-to-r from-cyan-500 to-blue-500 shadow-lg shadow-cyan-500/50 scale-105'
+                : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
+            }`}
+          >
+            <TrendingUp size={16} className="sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Mon Suivi</span>
+            <span className="sm:hidden">📊</span>
           </button>
           </div>
         </nav>
@@ -1561,9 +1580,25 @@ const NegusLunar = () => {
           {/* Recettes */}
           {activeTab === 'recipes' && (
             <div className="space-y-8 animate-fadeIn">
-              <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-pink-200 to-rose-200 bg-clip-text text-transparent">
-                Recettes Végétaliennes Complètes
-              </h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-3xl font-bold bg-gradient-to-r from-pink-200 to-rose-200 bg-clip-text text-transparent">
+                  Recettes Végétaliennes Complètes
+                </h2>
+                <button
+                  onClick={() => setShowShoppingList(!showShoppingList)}
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg transition-all shadow-lg"
+                >
+                  <ShoppingCart size={20} />
+                  <span className="hidden sm:inline">Liste de Courses</span>
+                </button>
+              </div>
+
+              {/* Liste de courses */}
+              {showShoppingList && (
+                <div className="mb-8">
+                  <ShoppingList />
+                </div>
+              )}
               
               <div className="space-y-8">
                 {Object.entries(recipesByMood).map(([mood, recipes]) => (
@@ -2044,6 +2079,13 @@ const NegusLunar = () => {
           {activeTab === 'mealplan' && (
             <div className="animate-fadeIn">
               <MealPlanner />
+            </div>
+          )}
+
+          {/* Dashboard de suivi journalier */}
+          {activeTab === 'tracker' && (
+            <div className="animate-fadeIn">
+              <DailyTracker />
             </div>
           )}
         </main>

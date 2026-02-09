@@ -34,7 +34,7 @@ docker-compose up -d
 
 **Application accessible sur** : http://localhost:3000
 
-📖 **Documentation complète** : Voir `DOCKER-QUICKSTART.md` et `DOCKER.md`
+📖 **Documentation complète** : Voir [`docs/DOCKER-QUICKSTART.md`](docs/DOCKER-QUICKSTART.md) et [`docs/DOCKER.md`](docs/DOCKER.md)
 
 ## 🚀 Installation Traditionnelle
 
@@ -156,10 +156,13 @@ sudo certbot --nginx -d neguslunar.kaflow.com
 
 ```
 neguslunar-app/
-├── public/           # Fichiers statiques
+├── docs/             # 📚 Toute la documentation (57 fichiers)
+├── public/           # 📦 Fichiers statiques & documents BODY DREVM
 ├── src/
-│   ├── components/   # Composants React
-│   │   └── NegusLunar.jsx
+│   ├── components/   # ⚛️ Composants React (15+)
+│   ├── data/         # 📊 Données (recettes, ingrédients, lune)
+│   ├── hooks/        # 🎣 Hooks personnalisés
+│   ├── utils/        # 🛠️ Utilitaires (database, etc.)
 │   ├── App.jsx       # Composant principal
 │   ├── main.jsx      # Point d'entrée
 │   └── index.css     # Styles globaux
@@ -168,6 +171,8 @@ neguslunar-app/
 ├── vite.config.js    # Configuration Vite
 └── tailwind.config.js # Configuration Tailwind
 ```
+
+📖 **Voir [docs/PROJECT-ORGANIZATION.md](docs/PROJECT-ORGANIZATION.md) pour l'organisation détaillée**
 
 ## 🛠️ Technologies utilisées
 
@@ -211,23 +216,44 @@ npm run build -- --debug
 npm run preview
 ```
 
+## 📚 Documentation
+
+Toute la documentation est disponible dans le dossier [`docs/`](docs/) :
+
+- **[Guide de Démarrage](docs/QUICKSTART.md)** - Démarrer rapidement
+- **[Guide Nutrition](docs/SUIVI-NUTRITIONNEL-GUIDE.md)** - Suivi nutritionnel & recettes
+- **[Liste de Courses](docs/LISTE-COURSES-GUIDE.md)** - 🆕 Gérer vos courses
+- **[Base de Données](docs/DATABASE-GUIDE.md)** - Architecture IndexedDB
+- **[Export/Import](docs/EXPORT-IMPORT-GUIDE.md)** - Sauvegarde des données
+- **[Index Complet](docs/README.md)** - Toute la documentation
+
 ## 📝 Notes importantes
 
-- Les données sont sauvegardées localement (localStorage) dans le navigateur
+- Les données sont sauvegardées localement (IndexedDB + localStorage) dans le navigateur
 - Pas de base de données externe nécessaire
 - Application 100% frontend, aucun backend requis
-- **Nouveau** : Export/Import de notes en JSON pour sauvegarder vos données (voir `EXPORT-IMPORT-GUIDE.md`)
+- **Nouveau** : Module de liste de courses avec 70+ ingrédients
+- **Nouveau** : Suivi nutritionnel journalier complet
 
-## 🌟 Évolutions futures possibles
+## 🌟 Fonctionnalités Récentes
 
 - [x] Export/Import JSON des notes ✅
 - [x] Calendrier lunaire complet 30 jours ✅
+- [x] Base de données IndexedDB robuste ✅
+- [x] Module de suivi nutritionnel ✅
+- [x] Bibliothèque de recettes BODY DREVM ✅
+- [x] Liste de courses intelligente ✅
+- [x] Filtrage avancé par ingrédient ✅
+- [x] Module Work professionnel ✅
+
+## 🚀 Évolutions futures possibles
+
 - [ ] Synchronisation cloud des notes
-- [ ] Export PDF des notes
-- [ ] Plus de recettes et catégories
-- [ ] Mode sombre/clair
+- [ ] Export PDF des analyses
+- [ ] Application mobile native
+- [ ] Mode hors ligne avancé
 - [ ] Rappels basés sur phases lunaires
-- [ ] Partage de recettes
+- [ ] Partage de recettes entre utilisateurs
 
 ## 📄 Licence
 

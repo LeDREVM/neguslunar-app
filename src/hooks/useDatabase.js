@@ -143,3 +143,17 @@ export const useFastingSessions = () => {
 export const useMealPlans = () => {
   return useDatabase(STORES.MEAL_PLANS, 'mealPlans');
 };
+
+/**
+ * Hook pour les repas quotidiens
+ */
+export const useDailyMeals = () => {
+  return useDatabase(STORES.DAILY_MEALS);
+};
+
+/**
+ * Hook pour les exercices quotidiens
+ */
+export const useDailyExercises = () => {
+  return useDatabase(STORES.DAILY_EXERCISES);
+};
