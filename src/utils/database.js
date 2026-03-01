@@ -16,7 +16,8 @@ const STORES = {
   MEAL_PLANS: 'mealPlans',
   DAILY_MEALS: 'dailyMeals',
   DAILY_EXERCISES: 'dailyExercises',
-  USER_SETTINGS: 'userSettings'
+  USER_SETTINGS: 'userSettings',
+  USER_PROFILE: 'userProfile'
 };
 
 /**
@@ -96,6 +97,13 @@ export const initDB = () => {
       // Store pour les paramètres utilisateur
       if (!db.objectStoreNames.contains(STORES.USER_SETTINGS)) {
         db.createObjectStore(STORES.USER_SETTINGS, { keyPath: 'key' });
+      }
+
+      // Store pour le profil utilisateur
+      if (!db.objectStoreNames.contains(STORES.USER_PROFILE)) {
+        const profileStore = db.createObjectStore(STORES.USER_PROFILE, { keyPath: 'id' });
+        profileStore.createIndex('name', 'name', { unique: false });
+        profileStore.createIndex('email', 'email', { unique: false });
       }
     };
   });
@@ -232,6 +240,37 @@ export const getByIndex = async (storeName, indexName, value) => {
   } catch (error) {
     console.error(`Erreur lors de la recherche par index dans ${storeName}:`, error);
     return [];
+  }
+};
+
+/**
+ * Fonctions utilitaires pour le profil utilisateur (clé fixe 'me')
+ */
+export const getProfile = async () => {
+  try {
+    return await getItem(STORES.USER_PROFILE, 'me');
+  } catch (error) {
+    console.error('Erreur getProfile:', error);
+    return null;
+  }
+};
+
+export const setProfile = async (profile) => {
+  try {
+    const toSave = Object.assign({ id: 'me' }, profile || {});
+    return await setItem(STORES.USER_PROFILE, toSave);
+  } catch (error) {
+    console.error('Erreur setProfile:', error);
+    throw error;
+  }
+};
+
+export const deleteProfile = async () => {
+  try {
+    return await deleteItem(STORES.USER_PROFILE, 'me');
+  } catch (error) {
+    console.error('Erreur deleteProfile:', error);
+    throw error;
   }
 };
 
