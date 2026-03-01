@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Moon, Leaf, BookOpen, Plus, X, Calendar, ChevronLeft, ChevronRight, Download, Upload, UtensilsCrossed, Clock, Users, Sparkles, Heart, TrendingUp, Activity, Wind, Smile, Meh, Frown, Angry, Coffee, Camera, Target, Briefcase, ArrowUp, Menu, ShoppingCart } from 'lucide-react';
+import { Moon, Leaf, BookOpen, Plus, X, Calendar, ChevronLeft, ChevronRight, Download, Upload, UtensilsCrossed, Clock, Users, Sparkles, Heart, TrendingUp, Activity, Wind, Smile, Meh, Frown, Angry, Coffee, Camera, Target, Briefcase, ArrowUp, Menu, ShoppingCart, Home, User } from 'lucide-react';
 import MoonCalendar from './MoonCalendar';
 import EclipseCalendar from './EclipseCalendar';
 import BarcodeScanner from './BarcodeScanner';
@@ -8,6 +8,8 @@ import MealPlanner from './MealPlanner';
 import WorkModule from './WorkModule';
 import DailyTracker from './DailyTracker';
 import ShoppingList from './ShoppingList';
+import HomePage from './HomePage';
+import UserProfile from './UserProfile';
 import { getAccurateMoonPhase, isFullMoon, isNewMoon } from '../data/moonPhases2026';
 import { isEclipseDate, getEclipseForDate } from '../data/lunarEclipses2026';
 import { useNotes, useMoodHistory } from '../hooks/useDatabase';
@@ -15,7 +17,8 @@ import { exportAllData, importAllData } from '../utils/database';
 
 const NegusLunar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [activeTab, setActiveTab] = useState('lunar');
+  const [activeTab, setActiveTab] = useState('home');
+  const [showProfile, setShowProfile] = useState(false);
   const [newNote, setNewNote] = useState('');
   const [selectedMood, setSelectedMood] = useState('');
   const [calendarMonth, setCalendarMonth] = useState(new Date());
@@ -1022,7 +1025,7 @@ const NegusLunar = () => {
           }`}
         >
           <div className="text-[10px] sm:text-xs font-semibold text-purple-200 mb-0.5 sm:mb-1">{day}</div>
-          <div className="text-lg sm:text-xl md:text-2xl text-center">{phase.emoji}</div>
+          <div className="text-lg text-center sm:text-xl md:text-2xl">{phase.emoji}</div>
           <div className="text-[8px] sm:text-[10px] text-purple-300/70 text-center mt-0.5 sm:mt-1 leading-tight line-clamp-2">
             {phase.name}
           </div>
@@ -1032,9 +1035,9 @@ const NegusLunar = () => {
     
     return (
       <div>
-        <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-2">
+        <div className="grid grid-cols-7 gap-1 mb-2 sm:gap-2">
           {dayNames.map(name => (
-            <div key={name} className="text-center text-xs sm:text-sm font-semibold text-purple-200 py-1 sm:py-2">
+            <div key={name} className="py-1 text-xs font-semibold text-center text-purple-200 sm:text-sm sm:py-2">
               {name}
             </div>
           ))}
@@ -1049,7 +1052,7 @@ const NegusLunar = () => {
   const musicLink = getRitualMusicUrl();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-900 to-slate-900 text-white relative overflow-hidden">
+    <div className="relative min-h-screen overflow-hidden text-white bg-gradient-to-br from-indigo-950 via-purple-900 to-slate-900">
       {/* Étoiles d'arrière-plan */}
       <div className="absolute inset-0 opacity-30">
         {[...Array(50)].map((_, i) => (
@@ -1069,29 +1072,58 @@ const NegusLunar = () => {
       {/* Gradient overlay pour la profondeur */}
       <div className="absolute inset-0 bg-gradient-radial from-transparent via-purple-900/20 to-slate-900/40" />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
+      <div className="relative z-10 max-w-6xl px-4 py-4 mx-auto sm:px-6 sm:py-8">
         {/* Header */}
-        <header className="mb-8 sm:mb-12 text-center">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-2 sm:mb-3 bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 bg-clip-text text-transparent tracking-tight">
-            NegusLunar
-          </h1>
-          <p className="text-purple-200/80 text-sm sm:text-base md:text-lg font-light tracking-wide px-4">
+        <header className="mb-8 sm:mb-12">
+          <div className="flex items-center justify-between mb-3">
+            {/* Bouton Accueil */}
+            <button
+              onClick={() => handleTabChange('home')}
+              title="Retour à l'accueil"
+              className={`flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-300 ${
+                activeTab === 'home'
+                  ? 'bg-gradient-to-r from-purple-500/50 to-pink-500/50 border border-purple-400/60 shadow-lg shadow-purple-500/30'
+                  : 'bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/20'
+              }`}
+            >
+              <Home size={20} className={activeTab === 'home' ? 'text-pink-200' : 'text-white/70'} />
+              <span className="hidden sm:inline text-sm font-medium text-white/80">Accueil</span>
+            </button>
+
+            {/* Titre centré */}
+            <div className="text-center flex-1">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-transparent bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 bg-clip-text">
+                NegusLunar
+              </h1>
+            </div>
+
+            {/* Bouton Profil */}
+            <button
+              onClick={() => setShowProfile(true)}
+              title="Mon profil"
+              className="flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-300 bg-white/10 hover:bg-white/20 border border-white/10 hover:border-purple-400/40"
+            >
+              <User size={20} className="text-white/70" />
+              <span className="hidden sm:inline text-sm font-medium text-white/80">Profil</span>
+            </button>
+          </div>
+          <p className="px-4 text-sm font-light tracking-wide text-purple-200/80 sm:text-base text-center">
             Phases lunaires • Notes • Cuisine végétalienne
           </p>
         </header>
 
         {/* Navigation */}
-        <nav className="mb-6 sm:mb-8 md:mb-10 px-2">
+        <nav className="px-2 mb-6 sm:mb-8 md:mb-10">
           {/* Bouton Menu Mobile */}
-          <div className="flex justify-between items-center mb-4 lg:hidden">
+          <div className="flex items-center justify-between mb-4 lg:hidden">
             <button
               onClick={() => setShowMobileMenu(!showMobileMenu)}
-              className="flex items-center gap-2 px-4 py-2 bg-purple-500/30 hover:bg-purple-500/40 rounded-full transition-all border border-purple-400/50"
+              className="flex items-center gap-2 px-4 py-2 transition-all border rounded-full bg-purple-500/30 hover:bg-purple-500/40 border-purple-400/50"
             >
               <Menu size={20} />
               <span className="text-sm font-medium">Menu</span>
             </button>
-            <span className="text-purple-200/80 text-sm">
+            <span className="text-sm text-purple-200/80">
               {activeTab === 'lunar' ? '🌙 Phase Lunaire' :
                activeTab === 'calendar' ? '📅 Calendrier' :
                activeTab === 'moonCalendar' ? '🌙 Phases 2026' :
@@ -1287,22 +1319,39 @@ const NegusLunar = () => {
         </nav>
 
         {/* Contenu principal */}
-        <main className="backdrop-blur-md bg-white/5 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-2xl border border-white/10">
+        <main className="p-4 border shadow-2xl backdrop-blur-md bg-white/5 rounded-2xl sm:rounded-3xl sm:p-6 md:p-8 border-white/10">
+          {/* Page Accueil */}
+          {activeTab === 'home' && (
+            <HomePage
+              moonPhase={moonPhase}
+              currentDate={currentDate}
+              notes={notes}
+              onNavigate={handleTabChange}
+              onOpenWork={() => setShowWorkModule(true)}
+              userName={(() => {
+                try {
+                  const p = JSON.parse(localStorage.getItem('neguslunar_profile') || '{}');
+                  return p.name || '';
+                } catch { return ''; }
+              })()}
+            />
+          )}
+
           {/* Phase Lunaire */}
           {activeTab === 'lunar' && (
-            <div className="text-center space-y-4 sm:space-y-6 md:space-y-8 animate-fadeIn">
-              <div className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl mb-4 sm:mb-6 animate-pulse">
+            <div className="space-y-4 text-center sm:space-y-6 md:space-y-8 animate-fadeIn">
+              <div className="mb-4 text-6xl sm:text-7xl md:text-8xl lg:text-9xl sm:mb-6 animate-pulse">
                 {moonPhase.emoji}
               </div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent px-4">
+              <h2 className="px-4 text-2xl font-bold text-transparent sm:text-3xl md:text-4xl bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text">
                 {moonPhase.name}
               </h2>
               
               {/* Indicateur éclipse */}
               {todayIsEclipse && todayEclipse && (
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-500/30 to-orange-500/30 border-2 border-red-400/50 rounded-full animate-pulse">
+                <div className="inline-flex items-center gap-2 px-4 py-2 border-2 rounded-full bg-gradient-to-r from-red-500/30 to-orange-500/30 border-red-400/50 animate-pulse">
                   <Sparkles size={20} className="text-red-300" />
-                  <span className="text-red-200 font-bold">
+                  <span className="font-bold text-red-200">
                     🌑 Éclipse {todayEclipse.type} Aujourd'hui !
                   </span>
                 </div>
@@ -1310,13 +1359,13 @@ const NegusLunar = () => {
               
               {/* Indicateur phase exacte */}
               {!todayIsEclipse && (todayIsFullMoon || todayIsNewMoon) && (
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border-2 border-yellow-400/50 rounded-full">
+                <div className="inline-flex items-center gap-2 px-4 py-2 border-2 rounded-full bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border-yellow-400/50">
                   <Sparkles size={20} className="text-yellow-300" />
-                  <span className="text-yellow-200 font-semibold">
+                  <span className="font-semibold text-yellow-200">
                     {todayIsFullMoon ? 'Pleine Lune Exacte' : 'Nouvelle Lune Exacte'}
                   </span>
                   {moonPhase.exactTime && (
-                    <span className="text-yellow-300/80 text-sm">
+                    <span className="text-sm text-yellow-300/80">
                       à {moonPhase.exactTime}
                     </span>
                   )}
@@ -1330,19 +1379,19 @@ const NegusLunar = () => {
                     <span>Illumination</span>
                     <span className="font-bold">{moonPhase.illumination}%</span>
                   </div>
-                  <div className="w-full bg-white/10 rounded-full h-3 overflow-hidden">
+                  <div className="w-full h-3 overflow-hidden rounded-full bg-white/10">
                     <div 
-                      className="h-full bg-gradient-to-r from-yellow-400 to-orange-400 transition-all duration-500"
+                      className="h-full transition-all duration-500 bg-gradient-to-r from-yellow-400 to-orange-400"
                       style={{ width: `${moonPhase.illumination}%` }}
                     />
                   </div>
                 </div>
               )}
               
-              <p className="text-base sm:text-lg md:text-xl text-purple-200/80 max-w-md mx-auto leading-relaxed px-4">
+              <p className="max-w-md px-4 mx-auto text-base leading-relaxed sm:text-lg md:text-xl text-purple-200/80">
                 {moonPhase.description}
               </p>
-              <div className="text-purple-300/60 text-xs sm:text-sm px-4">
+              <div className="px-4 text-xs text-purple-300/60 sm:text-sm">
                 {currentDate.toLocaleDateString('fr-FR', { 
                   weekday: 'long', 
                   year: 'numeric', 
@@ -1352,7 +1401,7 @@ const NegusLunar = () => {
               </div>
 
               {/* Phases des 7 prochains jours */}
-              <div className="max-w-5xl mx-auto px-4">
+              <div className="max-w-5xl px-4 mx-auto">
                 <div className="flex items-center justify-between mb-3 text-sm text-purple-200/80">
                   <div className="flex items-center gap-2 font-semibold">
                     <Sparkles size={18} className="text-yellow-300" />
@@ -1360,7 +1409,7 @@ const NegusLunar = () => {
                   </div>
                   <span className="text-purple-300/60">À partir d'aujourd'hui</span>
                 </div>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                   {weeklyPhases.map((phase, idx) => (
                     <div
                       key={phase.date.toISOString() + idx}
@@ -1372,8 +1421,8 @@ const NegusLunar = () => {
                           {phase.date.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'long' })}
                         </div>
                       </div>
-                      <div className="font-semibold text-blue-100 mb-1">{phase.name}</div>
-                      <div className="text-xs text-purple-200/80 line-clamp-2 mb-2">
+                      <div className="mb-1 font-semibold text-blue-100">{phase.name}</div>
+                      <div className="mb-2 text-xs text-purple-200/80 line-clamp-2">
                         {phase.description}
                       </div>
                       {phase.illumination !== undefined && (
@@ -1388,16 +1437,16 @@ const NegusLunar = () => {
               </div>
               
               {/* Liens vers calendrier complet */}
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <div className="flex flex-col justify-center gap-3 sm:flex-row">
                 <button
                   onClick={() => setActiveTab('moonCalendar')}
-                  className="px-6 py-3 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 hover:from-yellow-500/30 hover:to-orange-500/30 border border-yellow-400/50 rounded-full transition-all text-yellow-200 hover:scale-105"
+                  className="px-6 py-3 text-yellow-200 transition-all border rounded-full bg-gradient-to-r from-yellow-500/20 to-orange-500/20 hover:from-yellow-500/30 hover:to-orange-500/30 border-yellow-400/50 hover:scale-105"
                 >
                   📅 Voir toutes les phases de 2026
                 </button>
                 <button
                   onClick={() => setActiveTab('eclipses')}
-                  className="px-6 py-3 bg-gradient-to-r from-red-500/20 to-orange-500/20 hover:from-red-500/30 hover:to-orange-500/30 border border-red-400/50 rounded-full transition-all text-red-200 hover:scale-105"
+                  className="px-6 py-3 text-red-200 transition-all border rounded-full bg-gradient-to-r from-red-500/20 to-orange-500/20 hover:from-red-500/30 hover:to-orange-500/30 border-red-400/50 hover:scale-105"
                 >
                   🌑 Voir les éclipses lunaires
                 </button>
@@ -1414,8 +1463,8 @@ const NegusLunar = () => {
           {/* Calendrier Lunaire */}
           {activeTab === 'calendar' && (
             <div className="animate-fadeIn">
-              <div className="flex flex-col sm:flex-row items-center justify-between mb-4 sm:mb-6 gap-4">
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-indigo-200 to-blue-200 bg-clip-text text-transparent">
+              <div className="flex flex-col items-center justify-between gap-4 mb-4 sm:flex-row sm:mb-6">
+                <h2 className="text-xl font-bold text-transparent sm:text-2xl md:text-3xl bg-gradient-to-r from-indigo-200 to-blue-200 bg-clip-text">
                   Calendrier Lunaire
                 </h2>
                 <div className="flex items-center gap-2 sm:gap-4">
@@ -1439,9 +1488,9 @@ const NegusLunar = () => {
               
               {renderCalendar()}
               
-              <div className="mt-6 p-4 bg-white/10 rounded-xl border border-white/20">
-                <h3 className="text-lg font-semibold text-indigo-200 mb-3">Légende des phases lunaires</h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+              <div className="p-4 mt-6 border bg-white/10 rounded-xl border-white/20">
+                <h3 className="mb-3 text-lg font-semibold text-indigo-200">Légende des phases lunaires</h3>
+                <div className="grid grid-cols-2 gap-3 text-sm md:grid-cols-4">
                   <div className="flex items-center gap-2">
                     <span className="text-2xl">🌑</span>
                     <span className="text-purple-200">Nouvelle Lune</span>
@@ -1467,7 +1516,7 @@ const NegusLunar = () => {
           {activeTab === 'notes' && (
             <div className="space-y-6 animate-fadeIn">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-3xl font-bold bg-gradient-to-r from-green-200 to-teal-200 bg-clip-text text-transparent">
+                <h2 className="text-3xl font-bold text-transparent bg-gradient-to-r from-green-200 to-teal-200 bg-clip-text">
                 Journal & Intentions
               </h2>
                 
@@ -1476,7 +1525,7 @@ const NegusLunar = () => {
                   <button
                     onClick={exportNotes}
                     disabled={notes.length === 0}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-400/50 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed text-blue-200 hover:scale-105"
+                    className="flex items-center gap-2 px-4 py-2 text-blue-200 transition-all border bg-blue-500/20 hover:bg-blue-500/30 border-blue-400/50 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105"
                     title="Exporter les notes en JSON"
                   >
                     <Download size={18} />
@@ -1485,7 +1534,7 @@ const NegusLunar = () => {
                   
                   <button
                     onClick={triggerFileInput}
-                    className="flex items-center gap-2 px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-400/50 rounded-xl transition-all text-purple-200 hover:scale-105"
+                    className="flex items-center gap-2 px-4 py-2 text-purple-200 transition-all border bg-purple-500/20 hover:bg-purple-500/30 border-purple-400/50 rounded-xl hover:scale-105"
                     title="Importer des notes depuis un fichier JSON"
                   >
                     <Upload size={18} />
@@ -1504,13 +1553,13 @@ const NegusLunar = () => {
               </div>
               
               {/* Formulaire de nouvelle note */}
-              <div className="bg-white/10 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
+              <div className="p-6 border bg-white/10 rounded-2xl backdrop-blur-sm border-white/20">
                 <div className="space-y-4">
                   <textarea
                     value={newNote}
                     onChange={(e) => setNewNote(e.target.value)}
                     placeholder="Écris tes pensées, intentions ou idées..."
-                    className="w-full bg-white/5 border border-white/20 rounded-xl p-4 text-white placeholder-purple-300/50 focus:outline-none focus:ring-2 focus:ring-green-500/50 min-h-32 resize-none"
+                    className="w-full p-4 text-white border resize-none bg-white/5 border-white/20 rounded-xl placeholder-purple-300/50 focus:outline-none focus:ring-2 focus:ring-green-500/50 min-h-32"
                   />
                   
                   <div className="flex gap-3">
@@ -1532,7 +1581,7 @@ const NegusLunar = () => {
                   <button
                     onClick={addNote}
                     disabled={!newNote.trim() || !selectedMood}
-                    className="w-full bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 disabled:opacity-50 disabled:cursor-not-allowed py-3 rounded-xl font-medium flex items-center justify-center gap-2 transition-all"
+                    className="flex items-center justify-center w-full gap-2 py-3 font-medium transition-all bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl"
                   >
                     <Plus size={20} />
                     Ajouter la note
@@ -1545,11 +1594,11 @@ const NegusLunar = () => {
                 {notes.map((note) => (
                   <div
                     key={note.id}
-                    className="bg-white/10 rounded-2xl p-5 backdrop-blur-sm border border-white/20 hover:border-green-500/50 transition-all group"
+                    className="p-5 transition-all border bg-white/10 rounded-2xl backdrop-blur-sm border-white/20 hover:border-green-500/50 group"
                   >
-                    <div className="flex justify-between items-start mb-3">
-                      <div className="flex gap-3 items-center">
-                        <span className="px-3 py-1 bg-green-500/20 text-green-200 rounded-full text-xs font-medium">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <span className="px-3 py-1 text-xs font-medium text-green-200 rounded-full bg-green-500/20">
                           {note.mood}
                         </span>
                         <span className="text-xs text-purple-300/60">
@@ -1558,17 +1607,17 @@ const NegusLunar = () => {
                       </div>
                       <button
                         onClick={() => deleteNote(note.id)}
-                        className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 transition-all"
+                        className="text-red-400 transition-all opacity-0 group-hover:opacity-100 hover:text-red-300"
                       >
                         <X size={18} />
                       </button>
                     </div>
-                    <p className="text-purple-100 leading-relaxed">{note.text}</p>
+                    <p className="leading-relaxed text-purple-100">{note.text}</p>
                   </div>
                 ))}
                 
                 {notes.length === 0 && (
-                  <div className="text-center py-12 text-purple-300/60">
+                  <div className="py-12 text-center text-purple-300/60">
                     <BookOpen size={48} className="mx-auto mb-4 opacity-50" />
                     <p>Aucune note pour le moment. Commence ton journal lunaire !</p>
                   </div>
@@ -1581,12 +1630,12 @@ const NegusLunar = () => {
           {activeTab === 'recipes' && (
             <div className="space-y-8 animate-fadeIn">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-3xl font-bold bg-gradient-to-r from-pink-200 to-rose-200 bg-clip-text text-transparent">
+                <h2 className="text-3xl font-bold text-transparent bg-gradient-to-r from-pink-200 to-rose-200 bg-clip-text">
                   Recettes Végétaliennes Complètes
                 </h2>
                 <button
                   onClick={() => setShowShoppingList(!showShoppingList)}
-                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg transition-all shadow-lg"
+                  className="flex items-center gap-2 px-4 py-2 transition-all rounded-lg shadow-lg bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
                 >
                   <ShoppingCart size={20} />
                   <span className="hidden sm:inline">Liste de Courses</span>
@@ -1603,11 +1652,11 @@ const NegusLunar = () => {
               <div className="space-y-8">
                 {Object.entries(recipesByMood).map(([mood, recipes]) => (
                   <div key={mood} className="space-y-4">
-                    <h3 className="text-2xl font-semibold capitalize text-pink-200 flex items-center gap-2">
+                    <h3 className="flex items-center gap-2 text-2xl font-semibold text-pink-200 capitalize">
                       <Leaf size={24} className="text-green-400" />
                       {mood}
                     </h3>
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                       {recipes.map((recipe, idx) => (
                         <div
                           key={idx}
@@ -1615,7 +1664,7 @@ const NegusLunar = () => {
                         >
                           {/* En-tête de la recette */}
                           <div className="mb-4">
-                            <h4 className="font-bold text-lg text-pink-100 mb-2">
+                            <h4 className="mb-2 text-lg font-bold text-pink-100">
                             {recipe.name}
                           </h4>
                             <div className="flex gap-3 text-xs text-purple-300/80">
@@ -1626,8 +1675,8 @@ const NegusLunar = () => {
 
                           {/* Ingrédients */}
                           <div className="mb-4">
-                            <h5 className="font-semibold text-sm text-green-300 mb-2">Ingrédients :</h5>
-                            <ul className="text-xs text-purple-200/80 space-y-1">
+                            <h5 className="mb-2 text-sm font-semibold text-green-300">Ingrédients :</h5>
+                            <ul className="space-y-1 text-xs text-purple-200/80">
                               {recipe.ingredients.map((ingredient, i) => (
                                 <li key={i} className="flex items-start gap-2">
                                   <span className="text-green-400 mt-0.5">•</span>
@@ -1639,8 +1688,8 @@ const NegusLunar = () => {
 
                           {/* Instructions */}
                           <div className="mb-4">
-                            <h5 className="font-semibold text-sm text-blue-300 mb-2">Préparation :</h5>
-                            <ol className="text-xs text-purple-200/80 space-y-1">
+                            <h5 className="mb-2 text-sm font-semibold text-blue-300">Préparation :</h5>
+                            <ol className="space-y-1 text-xs text-purple-200/80">
                               {recipe.instructions.map((step, i) => (
                                 <li key={i} className="flex items-start gap-2">
                                   <span className="text-blue-400 font-semibold min-w-[16px]">{i + 1}.</span>
@@ -1651,26 +1700,26 @@ const NegusLunar = () => {
                           </div>
 
                           {/* Apports nutritionnels */}
-                          <div className="mt-auto pt-4 border-t border-white/10">
-                            <h5 className="font-semibold text-sm text-yellow-300 mb-2">Apports nutritionnels :</h5>
+                          <div className="pt-4 mt-auto border-t border-white/10">
+                            <h5 className="mb-2 text-sm font-semibold text-yellow-300">Apports nutritionnels :</h5>
                             <div className="grid grid-cols-2 gap-2 text-xs">
-                              <div className="bg-white/5 rounded-lg p-2">
+                              <div className="p-2 rounded-lg bg-white/5">
                                 <span className="text-purple-300/60">Calories</span>
                                 <p className="font-semibold text-yellow-200">{recipe.nutrition.calories}</p>
                               </div>
-                              <div className="bg-white/5 rounded-lg p-2">
+                              <div className="p-2 rounded-lg bg-white/5">
                                 <span className="text-purple-300/60">Protéines</span>
                                 <p className="font-semibold text-yellow-200">{recipe.nutrition.proteines}</p>
                               </div>
-                              <div className="bg-white/5 rounded-lg p-2">
+                              <div className="p-2 rounded-lg bg-white/5">
                                 <span className="text-purple-300/60">Glucides</span>
                                 <p className="font-semibold text-yellow-200">{recipe.nutrition.glucides}</p>
                               </div>
-                              <div className="bg-white/5 rounded-lg p-2">
+                              <div className="p-2 rounded-lg bg-white/5">
                                 <span className="text-purple-300/60">Lipides</span>
                                 <p className="font-semibold text-yellow-200">{recipe.nutrition.lipides}</p>
                               </div>
-                              <div className="bg-white/5 rounded-lg p-2 col-span-2">
+                              <div className="col-span-2 p-2 rounded-lg bg-white/5">
                                 <span className="text-purple-300/60">Fibres</span>
                                 <p className="font-semibold text-yellow-200">{recipe.nutrition.fibres}</p>
                               </div>
@@ -1688,8 +1737,8 @@ const NegusLunar = () => {
           {/* Recette du Jour */}
           {activeTab === 'dailyRecipe' && (
             <div className="space-y-6 animate-fadeIn">
-              <div className="text-center mb-8">
-                <h2 className="text-4xl font-bold mb-3 bg-gradient-to-r from-orange-200 to-amber-200 bg-clip-text text-transparent">
+              <div className="mb-8 text-center">
+                <h2 className="mb-3 text-4xl font-bold text-transparent bg-gradient-to-r from-orange-200 to-amber-200 bg-clip-text">
                   🍽️ Recette du Jour
                 </h2>
                 
@@ -1697,7 +1746,7 @@ const NegusLunar = () => {
                 <div className="flex items-center justify-center gap-4 mb-4">
                   <button
                     onClick={goToPreviousDay}
-                    className="p-3 bg-orange-500/20 hover:bg-orange-500/30 rounded-full transition-all hover:scale-110 border border-orange-400/50"
+                    className="p-3 transition-all border rounded-full bg-orange-500/20 hover:bg-orange-500/30 hover:scale-110 border-orange-400/50"
                     title="Jour précédent"
                   >
                     <ChevronLeft size={24} className="text-orange-300" />
@@ -1707,14 +1756,14 @@ const NegusLunar = () => {
                     <p className="text-2xl font-bold text-orange-200">
                       {getDisplayedRecipe().day}
                     </p>
-                    <p className="text-purple-200/80 text-sm">
+                    <p className="text-sm text-purple-200/80">
                       {selectedRecipeDay === null ? "Aujourd'hui" : "Recette de la semaine"}
                     </p>
                   </div>
                   
                   <button
                     onClick={goToNextDay}
-                    className="p-3 bg-orange-500/20 hover:bg-orange-500/30 rounded-full transition-all hover:scale-110 border border-orange-400/50"
+                    className="p-3 transition-all border rounded-full bg-orange-500/20 hover:bg-orange-500/30 hover:scale-110 border-orange-400/50"
                     title="Jour suivant"
                   >
                     <ChevronRight size={24} className="text-orange-300" />
@@ -1725,7 +1774,7 @@ const NegusLunar = () => {
                 {selectedRecipeDay !== null && (
                   <button
                     onClick={goToToday}
-                    className="px-4 py-2 bg-amber-500/20 hover:bg-amber-500/30 rounded-full transition-all text-amber-200 text-sm border border-amber-400/50"
+                    className="px-4 py-2 text-sm transition-all border rounded-full bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border-amber-400/50"
                   >
                     ↺ Retour à aujourd'hui
                   </button>
@@ -1733,46 +1782,46 @@ const NegusLunar = () => {
               </div>
 
               <div className="max-w-4xl mx-auto">
-                <div className="bg-gradient-to-br from-white/15 to-white/5 rounded-3xl p-8 backdrop-blur-sm border-2 border-orange-400/30 shadow-2xl">
+                <div className="p-8 border-2 shadow-2xl bg-gradient-to-br from-white/15 to-white/5 rounded-3xl backdrop-blur-sm border-orange-400/30">
                   {/* En-tête de la recette */}
-                  <div className="mb-6 pb-6 border-b border-white/20">
-                    <h3 className="text-3xl font-bold text-orange-100 mb-4">
+                  <div className="pb-6 mb-6 border-b border-white/20">
+                    <h3 className="mb-4 text-3xl font-bold text-orange-100">
                       {getDisplayedRecipe().name}
                     </h3>
-                    <p className="text-purple-200/90 leading-relaxed mb-4">
+                    <p className="mb-4 leading-relaxed text-purple-200/90">
                       {getDisplayedRecipe().description}
                     </p>
                     <div className="flex flex-wrap gap-4 text-sm">
-                      <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full">
+                      <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10">
                         <Clock size={16} className="text-orange-300" />
                         <span className="text-orange-200">{getDisplayedRecipe().time}</span>
                       </div>
-                      <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full">
+                      <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10">
                         <Users size={16} className="text-orange-300" />
                         <span className="text-orange-200">{getDisplayedRecipe().servings}</span>
                       </div>
-                      <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full">
+                      <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10">
                         <span className="text-orange-300">📊</span>
                         <span className="text-orange-200">{getDisplayedRecipe().calories}</span>
                       </div>
-                      <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full">
+                      <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10">
                         <span className="text-orange-300">⭐</span>
                         <span className="text-orange-200 capitalize">{getDisplayedRecipe().difficulty}</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-8">
+                  <div className="grid gap-8 md:grid-cols-2">
                     {/* Ingrédients */}
-                    <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
-                      <h4 className="text-xl font-semibold text-green-300 mb-4 flex items-center gap-2">
+                    <div className="p-6 border bg-white/5 rounded-2xl border-white/10">
+                      <h4 className="flex items-center gap-2 mb-4 text-xl font-semibold text-green-300">
                         <Leaf size={20} />
                         Ingrédients
                       </h4>
                       <ul className="space-y-2">
                         {getDisplayedRecipe().ingredients.map((ingredient, idx) => (
                           <li key={idx} className="flex items-start gap-3 text-purple-200/90">
-                            <span className="text-green-400 mt-1">✓</span>
+                            <span className="mt-1 text-green-400">✓</span>
                             <span>{ingredient}</span>
                           </li>
                         ))}
@@ -1780,8 +1829,8 @@ const NegusLunar = () => {
                     </div>
 
                     {/* Instructions */}
-                    <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
-                      <h4 className="text-xl font-semibold text-blue-300 mb-4 flex items-center gap-2">
+                    <div className="p-6 border bg-white/5 rounded-2xl border-white/10">
+                      <h4 className="flex items-center gap-2 mb-4 text-xl font-semibold text-blue-300">
                         <UtensilsCrossed size={20} />
                         Préparation
                       </h4>
@@ -1799,11 +1848,11 @@ const NegusLunar = () => {
                   </div>
 
                   {/* Toutes les recettes de la semaine */}
-                  <div className="mt-8 pt-8 border-t border-white/20">
-                    <h4 className="text-xl font-semibold text-amber-300 mb-4 text-center">
+                  <div className="pt-8 mt-8 border-t border-white/20">
+                    <h4 className="mb-4 text-xl font-semibold text-center text-amber-300">
                       📅 Recettes de la semaine
                     </h4>
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
+                    <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-7">
                       {weeklyRecipes.map((recipe, idx) => (
                         <button
                           key={idx}
@@ -1823,7 +1872,7 @@ const NegusLunar = () => {
                             }`}>
                               {recipe.day}
                             </div>
-                            <div className="text-2xl mb-1">
+                            <div className="mb-1 text-2xl">
                               {idx === 0 ? '🍪' : idx === 1 ? '🥗' : idx === 2 ? '🐟' : idx === 3 ? '🥘' : idx === 4 ? '🍫' : idx === 5 ? '🥕' : '🍎'}
                             </div>
                             <div className="text-[10px] text-purple-200/60 line-clamp-2">
@@ -1842,23 +1891,23 @@ const NegusLunar = () => {
           {/* Rituel Lunaire */}
           {activeTab === 'ritual' && (
             <div className="space-y-8 animate-fadeIn">
-              <div className="text-center mb-8">
-                <h2 className="text-5xl font-bold mb-3 bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 bg-clip-text text-transparent">
+              <div className="mb-8 text-center">
+                <h2 className="mb-3 text-5xl font-bold text-transparent bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 bg-clip-text">
                   ✨ Rituel Lunaire du Jour
                 </h2>
-                <p className="text-purple-200/80 text-xl">
+                <p className="text-xl text-purple-200/80">
                   {moonPhase.name} • {currentDate.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
                 </p>
               </div>
 
               <div className="max-w-6xl mx-auto space-y-6">
                 {/* Affirmation du Jour */}
-                <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-3xl p-8 backdrop-blur-sm border-2 border-purple-400/30 shadow-2xl">
+                <div className="p-8 border-2 shadow-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-3xl backdrop-blur-sm border-purple-400/30">
                   <div className="flex items-start gap-4">
-                    <Heart size={32} className="text-pink-300 flex-shrink-0 mt-1" />
+                    <Heart size={32} className="flex-shrink-0 mt-1 text-pink-300" />
                     <div>
-                      <h3 className="text-2xl font-bold text-purple-100 mb-3">💭 Affirmation Positive du Jour</h3>
-                      <p className="text-xl text-purple-100/90 leading-relaxed italic">
+                      <h3 className="mb-3 text-2xl font-bold text-purple-100">💭 Affirmation Positive du Jour</h3>
+                      <p className="text-xl italic leading-relaxed text-purple-100/90">
                         "{getTodayRitual().affirmation}"
                       </p>
                     </div>
@@ -1866,33 +1915,33 @@ const NegusLunar = () => {
                 </div>
 
                 {/* Activité de la Phase Lunaire */}
-                <div className="bg-gradient-to-br from-indigo-500/20 to-blue-500/20 rounded-3xl p-8 backdrop-blur-sm border-2 border-indigo-400/30 shadow-2xl">
-                  <h3 className="text-2xl font-bold text-indigo-100 mb-4 flex items-center gap-3">
+                <div className="p-8 border-2 shadow-2xl bg-gradient-to-br from-indigo-500/20 to-blue-500/20 rounded-3xl backdrop-blur-sm border-indigo-400/30">
+                  <h3 className="flex items-center gap-3 mb-4 text-2xl font-bold text-indigo-100">
                     <Moon size={28} className="text-indigo-300" />
                     🌓 {getTodayRitual().activity}
                   </h3>
-                  <p className="text-lg text-indigo-100/90 leading-relaxed mb-4">
+                  <p className="mb-4 text-lg leading-relaxed text-indigo-100/90">
                     {getTodayRitual().description}
                   </p>
-                  <div className="bg-white/10 rounded-2xl p-6 mt-4">
-                    <h4 className="font-semibold text-indigo-200 mb-3">🧘 Méditation guidée (5 min)</h4>
-                    <p className="text-indigo-100/80 leading-relaxed">
+                  <div className="p-6 mt-4 bg-white/10 rounded-2xl">
+                    <h4 className="mb-3 font-semibold text-indigo-200">🧘 Méditation guidée (5 min)</h4>
+                    <p className="leading-relaxed text-indigo-100/80">
                       {getTodayRitual().meditation}
                     </p>
                   </div>
                 </div>
 
                 {/* Musique d'Ambiance */}
-                <div className="bg-gradient-to-br from-pink-500/20 to-rose-500/20 rounded-3xl p-8 backdrop-blur-sm border-2 border-pink-400/30 shadow-2xl">
-                  <h3 className="text-2xl font-bold text-pink-100 mb-4 flex items-center gap-3">
+                <div className="p-8 border-2 shadow-2xl bg-gradient-to-br from-pink-500/20 to-rose-500/20 rounded-3xl backdrop-blur-sm border-pink-400/30">
+                  <h3 className="flex items-center gap-3 mb-4 text-2xl font-bold text-pink-100">
                     🎵 Musique d'Ambiance Suggérée
                   </h3>
-                  <p className="text-pink-100/90 mb-4">{getTodayRitual().musicTitle}</p>
+                  <p className="mb-4 text-pink-100/90">{getTodayRitual().musicTitle}</p>
                   <button
                     type="button"
                     onClick={openMusicOnYouTube}
                     disabled={!musicLink}
-                    className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full transition-all hover:scale-105 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="inline-flex items-center gap-2 px-6 py-3 text-white transition-all bg-red-600 rounded-full shadow-lg hover:bg-red-700 hover:scale-105 disabled:opacity-60 disabled:cursor-not-allowed"
                     aria-label="Ouvrir la musique sur YouTube"
                   >
                     <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -1902,57 +1951,57 @@ const NegusLunar = () => {
                   </button>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid gap-6 md:grid-cols-2">
                   {/* Exercice de Respiration */}
-                  <div className="bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-3xl p-6 backdrop-blur-sm border-2 border-cyan-400/30 shadow-xl">
-                    <h3 className="text-xl font-bold text-cyan-100 mb-4 flex items-center gap-3">
+                  <div className="p-6 border-2 shadow-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-3xl backdrop-blur-sm border-cyan-400/30">
+                    <h3 className="flex items-center gap-3 mb-4 text-xl font-bold text-cyan-100">
                       <Wind size={24} className="text-cyan-300" />
                       🌬️ Exercice de Respiration
                     </h3>
-                    <p className="text-cyan-100/90 leading-relaxed">
+                    <p className="leading-relaxed text-cyan-100/90">
                       {getTodayRitual().breathingExercise}
                     </p>
                   </div>
 
                   {/* Posture de Yoga */}
-                  <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-3xl p-6 backdrop-blur-sm border-2 border-green-400/30 shadow-xl">
-                    <h3 className="text-xl font-bold text-green-100 mb-4 flex items-center gap-3">
+                  <div className="p-6 border-2 shadow-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-3xl backdrop-blur-sm border-green-400/30">
+                    <h3 className="flex items-center gap-3 mb-4 text-xl font-bold text-green-100">
                       <Activity size={24} className="text-green-300" />
                       🧘 Yoga Lunaire
                     </h3>
-                    <p className="text-green-100/90 leading-relaxed">
+                    <p className="leading-relaxed text-green-100/90">
                       {getTodayRitual().yogaPose}
                     </p>
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid gap-6 md:grid-cols-2">
                   {/* Conseil Sommeil */}
-                  <div className="bg-gradient-to-br from-violet-500/20 to-purple-500/20 rounded-3xl p-6 backdrop-blur-sm border-2 border-violet-400/30 shadow-xl">
-                    <h3 className="text-xl font-bold text-violet-100 mb-4 flex items-center gap-3">
+                  <div className="p-6 border-2 shadow-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 rounded-3xl backdrop-blur-sm border-violet-400/30">
+                    <h3 className="flex items-center gap-3 mb-4 text-xl font-bold text-violet-100">
                       <Coffee size={24} className="text-violet-300" />
                       💤 Conseil Sommeil
                     </h3>
-                    <p className="text-violet-100/90 leading-relaxed">
+                    <p className="leading-relaxed text-violet-100/90">
                       {getTodayRitual().sleepTip}
                     </p>
                   </div>
 
                   {/* Activité Physique */}
-                  <div className="bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-3xl p-6 backdrop-blur-sm border-2 border-orange-400/30 shadow-xl">
-                    <h3 className="text-xl font-bold text-orange-100 mb-4 flex items-center gap-3">
+                  <div className="p-6 border-2 shadow-xl bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-3xl backdrop-blur-sm border-orange-400/30">
+                    <h3 className="flex items-center gap-3 mb-4 text-xl font-bold text-orange-100">
                       <TrendingUp size={24} className="text-orange-300" />
                       🏃 Fitness Lunaire
                     </h3>
-                    <p className="text-orange-100/90 leading-relaxed">
+                    <p className="leading-relaxed text-orange-100/90">
                       {getTodayRitual().fitnessActivity}
                     </p>
                   </div>
                 </div>
 
                 {/* Tracker d'Humeur */}
-                <div className="bg-gradient-to-br from-yellow-500/20 to-amber-500/20 rounded-3xl p-8 backdrop-blur-sm border-2 border-yellow-400/30 shadow-2xl">
-                  <h3 className="text-2xl font-bold text-yellow-100 mb-6 flex items-center gap-3">
+                <div className="p-8 border-2 shadow-2xl bg-gradient-to-br from-yellow-500/20 to-amber-500/20 rounded-3xl backdrop-blur-sm border-yellow-400/30">
+                  <h3 className="flex items-center gap-3 mb-6 text-2xl font-bold text-yellow-100">
                     📊 Mon Humeur Aujourd'hui
                   </h3>
                   <div className="flex justify-center gap-4 mb-6">
@@ -1979,66 +2028,66 @@ const NegusLunar = () => {
                     ))}
                   </div>
                   {dailyMood && (
-                    <p className="text-center text-yellow-200/90 text-sm">
+                    <p className="text-sm text-center text-yellow-200/90">
                       ✅ Humeur enregistrée pour aujourd'hui !
                     </p>
                   )}
                 </div>
 
                 {/* Journal de Gratitude */}
-                <div className="bg-gradient-to-br from-rose-500/20 to-pink-500/20 rounded-3xl p-8 backdrop-blur-sm border-2 border-rose-400/30 shadow-2xl">
-                  <h3 className="text-2xl font-bold text-rose-100 mb-4 flex items-center gap-3">
+                <div className="p-8 border-2 shadow-2xl bg-gradient-to-br from-rose-500/20 to-pink-500/20 rounded-3xl backdrop-blur-sm border-rose-400/30">
+                  <h3 className="flex items-center gap-3 mb-4 text-2xl font-bold text-rose-100">
                     <Heart size={28} className="text-rose-300" />
                     📝 Journal de Gratitude
                   </h3>
-                  <p className="text-rose-100/80 mb-4">
+                  <p className="mb-4 text-rose-100/80">
                     Prenez un moment pour noter 3 choses pour lesquelles vous êtes reconnaissant(e) aujourd'hui :
                   </p>
                   <textarea
                     value={gratitudeText}
                     onChange={(e) => setGratitudeText(e.target.value)}
                     placeholder="1. Je suis reconnaissant(e) pour...&#10;2. J'apprécie...&#10;3. Je suis heureux(se) de..."
-                    className="w-full bg-white/10 border border-white/20 rounded-2xl p-4 text-white placeholder-purple-300/50 focus:outline-none focus:ring-2 focus:ring-rose-500/50 min-h-32 resize-none"
+                    className="w-full p-4 text-white border resize-none bg-white/10 border-white/20 rounded-2xl placeholder-purple-300/50 focus:outline-none focus:ring-2 focus:ring-rose-500/50 min-h-32"
                   />
-                  <p className="text-xs text-rose-200/60 mt-2">
+                  <p className="mt-2 text-xs text-rose-200/60">
                     💡 Astuce : Pratiquer la gratitude quotidiennement améliore votre bien-être et votre humeur !
                   </p>
                 </div>
 
                 {/* Statistiques d'Humeur */}
                 {moodHistory.length > 0 && (
-                  <div className="bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-3xl p-8 backdrop-blur-sm border-2 border-indigo-400/30 shadow-2xl">
-                    <h3 className="text-2xl font-bold text-indigo-100 mb-6 flex items-center gap-3">
+                  <div className="p-8 border-2 shadow-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-3xl backdrop-blur-sm border-indigo-400/30">
+                    <h3 className="flex items-center gap-3 mb-6 text-2xl font-bold text-indigo-100">
                       <TrendingUp size={28} className="text-indigo-300" />
                       📈 Mon Évolution
                     </h3>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                      <div className="bg-white/10 rounded-xl p-4 text-center">
+                    <div className="grid grid-cols-2 gap-4 mb-6 md:grid-cols-4">
+                      <div className="p-4 text-center bg-white/10 rounded-xl">
                         <div className="text-3xl font-bold text-indigo-200">{moodHistory.length}</div>
                         <div className="text-sm text-indigo-300/80">Jours suivis</div>
                       </div>
-                      <div className="bg-white/10 rounded-xl p-4 text-center">
+                      <div className="p-4 text-center bg-white/10 rounded-xl">
                         <div className="text-3xl font-bold text-green-200">
                           {Math.round((moodHistory.filter(m => m.mood >= 4).length / moodHistory.length) * 100)}%
                         </div>
                         <div className="text-sm text-green-300/80">Jours positifs</div>
                       </div>
-                      <div className="bg-white/10 rounded-xl p-4 text-center">
+                      <div className="p-4 text-center bg-white/10 rounded-xl">
                         <div className="text-3xl font-bold text-yellow-200">
                           {(moodHistory.reduce((sum, m) => sum + m.mood, 0) / moodHistory.length).toFixed(1)}
                         </div>
                         <div className="text-sm text-yellow-300/80">Humeur moyenne</div>
                       </div>
-                      <div className="bg-white/10 rounded-xl p-4 text-center">
+                      <div className="p-4 text-center bg-white/10 rounded-xl">
                         <div className="text-3xl">🌙</div>
                         <div className="text-sm text-purple-300/80">Cycle lunaire</div>
                       </div>
                     </div>
-                    <div className="bg-white/5 rounded-2xl p-4">
-                      <h4 className="font-semibold text-indigo-200 mb-3">Dernières entrées :</h4>
-                      <div className="space-y-2 max-h-48 overflow-y-auto">
+                    <div className="p-4 bg-white/5 rounded-2xl">
+                      <h4 className="mb-3 font-semibold text-indigo-200">Dernières entrées :</h4>
+                      <div className="space-y-2 overflow-y-auto max-h-48">
                         {moodHistory.slice(-7).reverse().map((entry, idx) => (
-                          <div key={idx} className="flex items-center justify-between bg-white/5 rounded-lg p-3">
+                          <div key={idx} className="flex items-center justify-between p-3 rounded-lg bg-white/5">
                             <span className="text-sm text-indigo-200">{entry.date}</span>
                             <span className="text-sm text-indigo-300/80">{entry.moonPhase}</span>
                             <div className="flex gap-1">
@@ -2099,19 +2148,19 @@ const NegusLunar = () => {
                 <div className="w-full border-t border-purple-500/20"></div>
               </div>
               <div className="relative flex justify-center">
-                <span className="bg-gradient-to-br from-indigo-950 via-purple-900 to-slate-900 px-4 text-2xl">
+                <span className="px-4 text-2xl bg-gradient-to-br from-indigo-950 via-purple-900 to-slate-900">
                   🌙
                 </span>
               </div>
             </div>
 
             {/* Contenu du footer */}
-            <div className="text-center space-y-4">
+            <div className="space-y-4 text-center">
               <div className="flex items-center justify-center gap-2 text-purple-200/90">
                 <span className="text-sm font-light">Créé avec</span>
                 <Heart size={16} className="text-pink-400 animate-pulse" />
                 <span className="text-sm font-light">par</span>
-                <span className="font-semibold bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
+                <span className="font-semibold text-transparent bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text">
                   Négus Dja
                 </span>
               </div>
@@ -2148,7 +2197,7 @@ const NegusLunar = () => {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 z-50 p-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-full shadow-2xl shadow-purple-500/50 transition-all duration-300 hover:scale-110 active:scale-95 group"
+          className="fixed z-50 p-4 transition-all duration-300 rounded-full shadow-2xl bottom-6 right-6 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 shadow-purple-500/50 hover:scale-110 active:scale-95 group"
           aria-label="Remonter en haut de la page"
         >
           <ArrowUp size={24} className="text-white group-hover:animate-bounce" />
@@ -2202,6 +2251,15 @@ const NegusLunar = () => {
           -webkit-overflow-scrolling: touch;
         }
       `}</style>
+
+      {/* Profil utilisateur */}
+      {showProfile && (
+        <UserProfile
+          onClose={() => setShowProfile(false)}
+          notes={notes}
+          moonPhase={moonPhase}
+        />
+      )}
 
       {/* Module Work (Mode Professionnel) */}
       {showWorkModule && (
