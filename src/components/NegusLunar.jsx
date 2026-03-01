@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Moon, Leaf, BookOpen, Plus, X, Calendar, ChevronLeft, ChevronRight, Download, Upload, UtensilsCrossed, Clock, Users, Sparkles, Heart, TrendingUp, Activity, Wind, Smile, Meh, Frown, Angry, Coffee, Camera, Target, Briefcase, ArrowUp, Menu, ShoppingCart } from 'lucide-react';
+import { Moon, Leaf, BookOpen, Plus, X, Home as HomeIcon, Calendar, ChevronLeft, ChevronRight, Download, Upload, UtensilsCrossed, Clock, Users, Sparkles, Heart, TrendingUp, Activity, Wind, Smile, Meh, Frown, Angry, Coffee, Camera, Target, Briefcase, ArrowUp, Menu, ShoppingCart } from 'lucide-react';
 import MoonCalendar from './MoonCalendar';
 import EclipseCalendar from './EclipseCalendar';
 import BarcodeScanner from './BarcodeScanner';
@@ -9,13 +9,14 @@ import WorkModule from './WorkModule';
 import DailyTracker from './DailyTracker';
 import ShoppingList from './ShoppingList';
 import { getAccurateMoonPhase, isFullMoon, isNewMoon } from '../data/moonPhases2026';
+import Home from './Home';
 import { isEclipseDate, getEclipseForDate } from '../data/lunarEclipses2026';
 import { useNotes, useMoodHistory } from '../hooks/useDatabase';
 import { exportAllData, importAllData } from '../utils/database';
 
 const NegusLunar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [activeTab, setActiveTab] = useState('lunar');
+  const [activeTab, setActiveTab] = useState('home');
   const [newNote, setNewNote] = useState('');
   const [selectedMood, setSelectedMood] = useState('');
   const [calendarMonth, setCalendarMonth] = useState(new Date());
@@ -69,25 +70,82 @@ const NegusLunar = () => {
 
   // Calcul de la phase lunaire
   const getMoonPhase = (date) => {
-    let year = date.getFullYear();
-    let month = date.getMonth() + 1;
-    const day = date.getDate();
-    
-    let c = 0, e = 0, jd = 0, b = 0;
-    
-    if (month < 3) {
-      year--;
-      month += 12;
-    }
-    
-    ++month;
-    c = 365.25 * year;
-    e = 30.6 * month;
+    const phaseData = getAccurateMoonPhase(date);
+    return {
+      name: phaseData.phaseName,
+      emoji: phaseData.emoji,
+      description: phaseData.description,
+      illumination: phaseData.illumination,
+      exactTime: phaseData.exactTime
+    };
+  };
+
+  // Obtenir les informations de phase pour une date
+  const getPhaseInfoForDate = (date) => {
+    const phaseData = getMoonPhase(date);
+    return phaseData;
+  };
+
+  // Obtenir la phase lunaire actuelle
+  const moonPhase = getMoonPhase(currentDate);
+
+  // Calculer les phases pour les 7 prochains jours
+  const weeklyPhases = useMemo(() => {
+    const start = new Date(currentDate);
+    return [...Array(7)].map((_, i) => {
+      const d = new Date(start);
+      d.setDate(start.getDate() + i);
+      const info = getPhaseInfoForDate(d);
+      return {
+        ...info,
+        date: d
+      };
+    });
+  }, [currentDate]);
+  
+  // Ajouter des informations supplémentaires
+  const todayIsFullMoon = isFullMoon(currentDate);
+  const todayIsNewMoon = isNewMoon(currentDate);
+  const todayIsEclipse = isEclipseDate(currentDate);
+  const todayEclipse = todayIsEclipse ? getEclipseForDate(currentDate) : null;
+
+  return (
+    <div className="relative min-h-screen overflow-hidden text-white bg-gradient-to-br from-indigo-950 via-purple-900 to-slate-900">
+      {/* Étoiles d'arrière-plan */}
+      <div className="absolute inset-0 opacity-30">
+        {[...Array(50)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-1 h-1 bg-white rounded-full animate-pulse"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 3}s`,
+              animationDuration: `${2 + Math.random() * 3}s`
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Gradient overlay pour la profondeur */}
+      <div className="absolute inset-0 bg-gradient-radial from-transparent via-purple-900/20 to-slate-900/40" />
+
+      <div className="relative z-10 max-w-6xl px-4 py-4 mx-auto sm:px-6 sm:py-8">
+        {/* Header */}
+        <header className="mb-8 text-center sm:mb-12">
+          <h1 className="mb-2 text-4xl font-bold tracking-tight text-transparent sm:text-5xl md:text-6xl sm:mb-3 bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 bg-clip-text">
+            NegusLunar
+          </h1>
+          <p className="px-4 text-sm font-light tracking-wide text-purple-200/80 sm:text-base md:text-lg">
+            Phases lunaires • Notes • Cuisine végétalienne
+          </p>
+        </header>
+
         {/* Navigation */}
         <nav className="flex flex-wrap justify-center gap-8 mb-10">
           {/* section principale */}
           <div className="flex flex-col items-center gap-4">
-            <span className="text-sm font-semibold uppercase tracking-wide text-purple-300">Principal</span>
+            <span className="text-sm font-semibold tracking-wide text-purple-300 uppercase">Principal</span>
             <div className="flex gap-4">
               <button
                 onClick={() => setActiveTab('home')}
@@ -116,7 +174,7 @@ const NegusLunar = () => {
 
           {/* section journal */}
           <div className="flex flex-col items-center gap-4">
-            <span className="text-sm font-semibold uppercase tracking-wide text-purple-300">Journal</span>
+            <span className="text-sm font-semibold tracking-wide text-purple-300 uppercase">Journal</span>
             <div className="flex gap-4">
               <button
                 onClick={() => setActiveTab('notes')}
@@ -134,7 +192,7 @@ const NegusLunar = () => {
 
           {/* section nutrition */}
           <div className="flex flex-col items-center gap-4">
-            <span className="text-sm font-semibold uppercase tracking-wide text-purple-300">Nutrition</span>
+            <span className="text-sm font-semibold tracking-wide text-purple-300 uppercase">Nutrition</span>
             <div className="flex gap-4">
               <button
                 onClick={() => setActiveTab('recipes')}
@@ -149,14 +207,8 @@ const NegusLunar = () => {
               </button>
             </div>
           </div>
-        </nav>
-      d.setDate(start.getDate() + i);
-      const info = getPhaseInfoForDate(d);
-      return {
-        ...info,
-        date: d
-      };
-    });
+        </nav> // end navigation
+  // (duplicate weeklyPhases code removed)
   }, [currentDate]);
   
   // Ajouter des informations supplémentaires
@@ -1133,7 +1185,7 @@ const NegusLunar = () => {
                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {/* section label Lunaire */}
           <div className="flex items-center px-2">
-            <span className="text-xs font-semibold uppercase text-purple-300">Lunaire</span>
+            <span className="text-xs font-semibold text-purple-300 uppercase">Lunaire</span>
           </div>
           <button
             onClick={() => handleTabChange('lunar')}
@@ -1173,7 +1225,7 @@ const NegusLunar = () => {
           </button>
           {/* section label Journal */}
           <div className="flex items-center px-2">
-            <span className="text-xs font-semibold uppercase text-purple-300">Journal</span>
+            <span className="text-xs font-semibold text-purple-300 uppercase">Journal</span>
           </div>
           <button
             onClick={() => handleTabChange('notes')}
@@ -1189,7 +1241,7 @@ const NegusLunar = () => {
           </button>
           {/* section label Nutrition */}
           <div className="flex items-center px-2">
-            <span className="text-xs font-semibold uppercase text-purple-300">Nutrition</span>
+            <span className="text-xs font-semibold text-purple-300 uppercase">Nutrition</span>
           </div>
           <button
             onClick={() => handleTabChange('recipes')}
@@ -1205,7 +1257,7 @@ const NegusLunar = () => {
           </button>
           {/* section label Nutrition */}
           <div className="flex items-center px-2">
-            <span className="text-xs font-semibold uppercase text-purple-300">Nutrition</span>
+            <span className="text-xs font-semibold text-purple-300 uppercase">Nutrition</span>
           </div>
           <button
             onClick={() => handleTabChange('dailyRecipe')}
@@ -1325,6 +1377,11 @@ const NegusLunar = () => {
 
         {/* Contenu principal */}
         <main className="p-4 border shadow-2xl backdrop-blur-md bg-white/5 rounded-2xl sm:rounded-3xl sm:p-6 md:p-8 border-white/10">
+          {/* Accueil */}
+          {activeTab === 'home' && (
+            <Home />
+          )}
+
           {/* Phase Lunaire */}
           {activeTab === 'lunar' && (
             <div className="space-y-4 text-center sm:space-y-6 md:space-y-8 animate-fadeIn">
