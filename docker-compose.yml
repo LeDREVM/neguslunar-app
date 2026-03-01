@@ -1,6 +1,5 @@
-version: '3.8'
-
 services:
+  # ── Production (Nginx) ──────────────────────────────────
   neguslunar:
     build:
       context: .
@@ -13,10 +12,22 @@ services:
       - NODE_ENV=production
     networks:
       - neguslunar-network
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.neguslunar.rule=Host(`neguslunar.localhost`)"
-      - "traefik.http.services.neguslunar.loadbalancer.server.port=80"
+
+  # ── Développement (Vite hot-reload) ─────────────────────
+  neguslunar-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: neguslunar-dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    networks:
+      - neguslunar-network
 
 networks:
   neguslunar-network:

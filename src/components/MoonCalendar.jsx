@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
 import { Calendar, Moon, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
-import { moonPhases2026, getNextFullMoon, getNextNewMoon, getMoonPhasesForMonth } from '../data/moonPhases2026';
+import { moonPhases2026, getNextFullMoon, getNextNewMoon, getNextFirstQuarter, getNextLastQuarter, getMoonPhasesForMonth } from '../data/moonPhases2026';
 
 const MoonCalendar = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [selectedYear] = useState(2026);
-  
+
   const monthNames = [
     'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
     'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
   ];
-  
+
   const nextFullMoon = getNextFullMoon();
   const nextNewMoon = getNextNewMoon();
+  const nextFirstQuarter = getNextFirstQuarter();
+  const nextLastQuarter = getNextLastQuarter();
   const monthPhases = getMoonPhasesForMonth(selectedYear, selectedMonth);
-  
+
   const changeMonth = (direction) => {
     setSelectedMonth(prev => {
       const newMonth = prev + direction;
@@ -23,80 +25,103 @@ const MoonCalendar = () => {
       return newMonth;
     });
   };
-  
+
+  // Configuration des cartes de phases
+  const phaseCards = [
+    {
+      data: nextFullMoon,
+      emoji: '🌕',
+      title: 'Prochaine Pleine Lune',
+      subtitle: 'Accomplissement & Gratitude',
+      gradientFrom: 'from-yellow-500/20',
+      gradientTo: 'to-orange-500/20',
+      borderColor: 'border-yellow-400/30',
+      textColor: 'text-yellow-200',
+      subtitleColor: 'text-yellow-300/80',
+      contentColor: 'text-yellow-100',
+      badgeBg: 'bg-yellow-500/20'
+    },
+    {
+      data: nextNewMoon,
+      emoji: '🌑',
+      title: 'Prochaine Nouvelle Lune',
+      subtitle: 'Nouveau Départ & Intentions',
+      gradientFrom: 'from-indigo-500/20',
+      gradientTo: 'to-purple-500/20',
+      borderColor: 'border-indigo-400/30',
+      textColor: 'text-indigo-200',
+      subtitleColor: 'text-indigo-300/80',
+      contentColor: 'text-indigo-100',
+      badgeBg: 'bg-indigo-500/20'
+    },
+    {
+      data: nextFirstQuarter,
+      emoji: '🌓',
+      title: 'Prochain Premier Quartier',
+      subtitle: 'Construction & Détermination',
+      gradientFrom: 'from-cyan-500/20',
+      gradientTo: 'to-blue-500/20',
+      borderColor: 'border-cyan-400/30',
+      textColor: 'text-cyan-200',
+      subtitleColor: 'text-cyan-300/80',
+      contentColor: 'text-cyan-100',
+      badgeBg: 'bg-cyan-500/20'
+    },
+    {
+      data: nextLastQuarter,
+      emoji: '🌗',
+      title: 'Prochain Dernier Quartier',
+      subtitle: 'Libération & Pardon',
+      gradientFrom: 'from-rose-500/20',
+      gradientTo: 'to-pink-500/20',
+      borderColor: 'border-rose-400/30',
+      textColor: 'text-rose-200',
+      subtitleColor: 'text-rose-300/80',
+      contentColor: 'text-rose-100',
+      badgeBg: 'bg-rose-500/20'
+    }
+  ];
+
   return (
     <div className="space-y-6 animate-fadeIn">
       {/* En-tête avec prochaines phases */}
       <div className="grid md:grid-cols-2 gap-4 mb-6">
-        {/* Prochaine Pleine Lune */}
-        <div className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-2xl p-6 backdrop-blur-sm border-2 border-yellow-400/30">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="text-4xl">🌕</div>
-            <div>
-              <h3 className="text-xl font-bold text-yellow-200">Prochaine Pleine Lune</h3>
-              <p className="text-yellow-300/80 text-sm">Accomplissement & Gratitude</p>
+        {phaseCards.map((card, idx) => (
+          <div key={idx} className={`bg-gradient-to-br ${card.gradientFrom} ${card.gradientTo} rounded-2xl p-6 backdrop-blur-sm border-2 ${card.borderColor}`}>
+            <div className="flex items-center gap-3 mb-3">
+              <div className="text-4xl">{card.emoji}</div>
+              <div>
+                <h3 className={`text-xl font-bold ${card.textColor}`}>{card.title}</h3>
+                <p className={`${card.subtitleColor} text-sm`}>{card.subtitle}</p>
+              </div>
             </div>
+            {card.data && (
+              <div className="space-y-2">
+                <div className={`flex items-center gap-2 ${card.contentColor}`}>
+                  <Calendar size={16} />
+                  <span className="font-semibold">
+                    {new Date(card.data.date).toLocaleDateString('fr-FR', {
+                      weekday: 'long',
+                      day: 'numeric',
+                      month: 'long'
+                    })}
+                  </span>
+                </div>
+                <div className={`flex items-center gap-2 ${card.contentColor}`}>
+                  <Clock size={16} />
+                  <span>{card.data.time}</span>
+                </div>
+                <div className={`mt-3 px-3 py-2 ${card.badgeBg} rounded-lg text-center`}>
+                  <span className={`text-2xl font-bold ${card.textColor}`}>
+                    {card.data.daysUntil === 0 ? "Aujourd'hui !" : `Dans ${card.data.daysUntil} jour${card.data.daysUntil > 1 ? 's' : ''}`}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
-          {nextFullMoon && (
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-yellow-100">
-                <Calendar size={16} />
-                <span className="font-semibold">
-                  {new Date(nextFullMoon.date).toLocaleDateString('fr-FR', { 
-                    weekday: 'long', 
-                    day: 'numeric', 
-                    month: 'long' 
-                  })}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 text-yellow-100">
-                <Clock size={16} />
-                <span>{nextFullMoon.time}</span>
-              </div>
-              <div className="mt-3 px-3 py-2 bg-yellow-500/20 rounded-lg text-center">
-                <span className="text-2xl font-bold text-yellow-200">
-                  {nextFullMoon.daysUntil === 0 ? "Aujourd'hui !" : `Dans ${nextFullMoon.daysUntil} jour${nextFullMoon.daysUntil > 1 ? 's' : ''}`}
-                </span>
-              </div>
-            </div>
-          )}
-        </div>
-        
-        {/* Prochaine Nouvelle Lune */}
-        <div className="bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-2xl p-6 backdrop-blur-sm border-2 border-indigo-400/30">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="text-4xl">🌑</div>
-            <div>
-              <h3 className="text-xl font-bold text-indigo-200">Prochaine Nouvelle Lune</h3>
-              <p className="text-indigo-300/80 text-sm">Nouveau Départ & Intentions</p>
-            </div>
-          </div>
-          {nextNewMoon && (
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-indigo-100">
-                <Calendar size={16} />
-                <span className="font-semibold">
-                  {new Date(nextNewMoon.date).toLocaleDateString('fr-FR', { 
-                    weekday: 'long', 
-                    day: 'numeric', 
-                    month: 'long' 
-                  })}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 text-indigo-100">
-                <Clock size={16} />
-                <span>{nextNewMoon.time}</span>
-              </div>
-              <div className="mt-3 px-3 py-2 bg-indigo-500/20 rounded-lg text-center">
-                <span className="text-2xl font-bold text-indigo-200">
-                  {nextNewMoon.daysUntil === 0 ? "Aujourd'hui !" : `Dans ${nextNewMoon.daysUntil} jour${nextNewMoon.daysUntil > 1 ? 's' : ''}`}
-                </span>
-              </div>
-            </div>
-          )}
-        </div>
+        ))}
       </div>
-      
+
       {/* Calendrier mensuel */}
       <div className="bg-white/5 rounded-2xl p-6 backdrop-blur-sm border border-white/10">
         <div className="flex items-center justify-between mb-6">
@@ -121,7 +146,7 @@ const MoonCalendar = () => {
             </button>
           </div>
         </div>
-        
+
         {/* Liste des phases du mois */}
         <div className="space-y-3">
           {monthPhases.length > 0 ? (
@@ -129,17 +154,16 @@ const MoonCalendar = () => {
               const phaseDate = new Date(phase.date);
               const isToday = phaseDate.toDateString() === new Date().toDateString();
               const isPast = phaseDate < new Date();
-              
+
               return (
                 <div
                   key={idx}
-                  className={`flex items-center gap-4 p-4 rounded-xl transition-all ${
-                    isToday
+                  className={`flex items-center gap-4 p-4 rounded-xl transition-all ${isToday
                       ? 'bg-purple-500/30 border-2 border-purple-400 shadow-lg shadow-purple-500/50'
                       : isPast
-                      ? 'bg-white/5 border border-white/10 opacity-60'
-                      : 'bg-white/10 border border-white/20 hover:border-purple-400/50'
-                  }`}
+                        ? 'bg-white/5 border border-white/10 opacity-60'
+                        : 'bg-white/10 border border-white/20 hover:border-purple-400/50'
+                    }`}
                 >
                   <div className="text-5xl">{phase.emoji}</div>
                   <div className="flex-1">
@@ -155,10 +179,10 @@ const MoonCalendar = () => {
                       <div className="flex items-center gap-1">
                         <Calendar size={14} />
                         <span>
-                          {phaseDate.toLocaleDateString('fr-FR', { 
-                            weekday: 'long', 
-                            day: 'numeric', 
-                            month: 'long' 
+                          {phaseDate.toLocaleDateString('fr-FR', {
+                            weekday: 'long',
+                            day: 'numeric',
+                            month: 'long'
                           })}
                         </span>
                       </div>
@@ -179,16 +203,37 @@ const MoonCalendar = () => {
           )}
         </div>
       </div>
-      
+
       {/* Légende */}
       <div className="bg-white/5 rounded-xl p-4 border border-white/10">
         <h4 className="text-sm font-semibold text-purple-200 mb-3">📖 Signification des phases</h4>
-        <div className="grid sm:grid-cols-2 gap-3 text-xs">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
           <div className="flex items-center gap-2">
             <span className="text-2xl">🌑</span>
             <div>
               <span className="text-purple-100 font-semibold">Nouvelle Lune</span>
               <p className="text-purple-300/70">Nouveau départ, intentions</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">🌒</span>
+            <div>
+              <span className="text-purple-100 font-semibold">Premier Croissant</span>
+              <p className="text-purple-300/70">Germination, action</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">🌓</span>
+            <div>
+              <span className="text-purple-100 font-semibold">Premier Quartier</span>
+              <p className="text-purple-300/70">Construction, détermination</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">🌔</span>
+            <div>
+              <span className="text-purple-100 font-semibold">Gibbeuse Croissante</span>
+              <p className="text-purple-300/70">Raffinement, ajustement</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -198,20 +243,50 @@ const MoonCalendar = () => {
               <p className="text-purple-300/70">Accomplissement, gratitude</p>
             </div>
           </div>
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">🌖</span>
+            <div>
+              <span className="text-purple-100 font-semibold">Gibbeuse Décroissante</span>
+              <p className="text-purple-300/70">Partage, récolte</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">🌗</span>
+            <div>
+              <span className="text-purple-100 font-semibold">Dernier Quartier</span>
+              <p className="text-purple-300/70">Libération, pardon</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">🌘</span>
+            <div>
+              <span className="text-purple-100 font-semibold">Dernier Croissant</span>
+              <p className="text-purple-300/70">Repos, introspection</p>
+            </div>
+          </div>
         </div>
       </div>
-      
+
       {/* Source */}
       <div className="text-center text-xs text-purple-300/50">
         <p>
-          Données astronomiques précises • Source:{' '}
-          <a 
-            href="https://alarmemeteo.ch/blog/calendrier-lunaire.html" 
-            target="_blank" 
+          Données astronomiques précises • Sources:{' '}
+          <a
+            href="https://www.lunaf.com"
+            target="_blank"
             rel="noopener noreferrer"
             className="text-purple-300 hover:text-purple-200 underline"
           >
-            Alarme-Météo
+            Lunaf
+          </a>
+          {', '}
+          <a
+            href="https://www.timeanddate.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-purple-300 hover:text-purple-200 underline"
+          >
+            Time and Date
           </a>
         </p>
       </div>
