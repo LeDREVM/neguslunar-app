@@ -83,52 +83,73 @@ const NegusLunar = () => {
     ++month;
     c = 365.25 * year;
     e = 30.6 * month;
-    jd = c + e + day - 694039.09;
-    jd /= 29.5305882;
-    b = parseInt(jd);
-    jd -= b;
-    b = Math.round(jd * 8);
-    
-    if (b >= 8) b = 0;
-    
-    const phases = [
-      { name: 'Nouvelle Lune', emoji: '🌑', description: 'Nouveau départ, intentions' },
-      { name: 'Premier Croissant', emoji: '🌒', description: 'Germination, action' },
-      { name: 'Premier Quartier', emoji: '🌓', description: 'Construction, détermination' },
-      { name: 'Gibbeuse Croissante', emoji: '🌔', description: 'Raffinement, ajustement' },
-      { name: 'Pleine Lune', emoji: '🌕', description: 'Accomplissement, gratitude' },
-      { name: 'Gibbeuse Décroissante', emoji: '🌖', description: 'Partage, récolte' },
-      { name: 'Dernier Quartier', emoji: '🌗', description: 'Libération, pardon' },
-      { name: 'Dernier Croissant', emoji: '🌘', description: 'Repos, introspection' }
-    ];
-    
-    return phases[b];
-  };
+        {/* Navigation */}
+        <nav className="flex flex-wrap justify-center gap-8 mb-10">
+          {/* section principale */}
+          <div className="flex flex-col items-center gap-4">
+            <span className="text-sm font-semibold uppercase tracking-wide text-purple-300">Principal</span>
+            <div className="flex gap-4">
+              <button
+                onClick={() => setActiveTab('home')}
+                className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${
+                  activeTab === 'home'
+                    ? 'bg-gradient-to-r from-yellow-400 to-orange-400 shadow-lg shadow-yellow-400/50 scale-105'
+                    : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
+                }`}
+              >
+                <HomeIcon size={20} />
+                Accueil
+              </button>
+              <button
+                onClick={() => setActiveTab('lunar')}
+                className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${
+                  activeTab === 'lunar'
+                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg shadow-purple-500/50 scale-105'
+                    : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
+                }`}
+              >
+                <Moon size={20} />
+                Phase Lunaire
+              </button>
+            </div>
+          </div>
 
-  // Utiliser les données précises si disponibles, sinon fallback sur le calcul
-  const accuratePhase = getAccurateMoonPhase(currentDate);
-  const moonPhase = accuratePhase || getMoonPhase(currentDate);
-  
-  const getPhaseInfoForDate = (date) => {
-    const accurate = getAccurateMoonPhase(date);
-    if (accurate) {
-      const fallback = getMoonPhase(date);
-      return {
-        name: accurate.name,
-        emoji: accurate.emoji || fallback.emoji,
-        description: accurate.description || fallback.description,
-        illumination: accurate.illumination,
-        exactTime: accurate.exactTime
-      };
-    }
-    return getMoonPhase(date);
-  };
+          {/* section journal */}
+          <div className="flex flex-col items-center gap-4">
+            <span className="text-sm font-semibold uppercase tracking-wide text-purple-300">Journal</span>
+            <div className="flex gap-4">
+              <button
+                onClick={() => setActiveTab('notes')}
+                className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${
+                  activeTab === 'notes'
+                    ? 'bg-gradient-to-r from-green-500 to-teal-500 shadow-lg shadow-green-500/50 scale-105'
+                    : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
+                }`}
+              >
+                <BookOpen size={20} />
+                Notes & Idées
+              </button>
+            </div>
+          </div>
 
-  const weeklyPhases = useMemo(() => {
-    const start = new Date(currentDate);
-    start.setHours(0, 0, 0, 0);
-    return Array.from({ length: 7 }, (_, i) => {
-      const d = new Date(start);
+          {/* section nutrition */}
+          <div className="flex flex-col items-center gap-4">
+            <span className="text-sm font-semibold uppercase tracking-wide text-purple-300">Nutrition</span>
+            <div className="flex gap-4">
+              <button
+                onClick={() => setActiveTab('recipes')}
+                className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${
+                  activeTab === 'recipes'
+                    ? 'bg-gradient-to-r from-pink-500 to-rose-500 shadow-lg shadow-pink-500/50 scale-105'
+                    : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
+                }`}
+              >
+                <Leaf size={20} />
+                Recettes
+              </button>
+            </div>
+          </div>
+        </nav>
       d.setDate(start.getDate() + i);
       const info = getPhaseInfoForDate(d);
       return {
@@ -1110,6 +1131,10 @@ const NegusLunar = () => {
           {/* Menu Desktop / Mobile déroulant */}
           <div className={`${showMobileMenu ? 'flex' : 'hidden'} lg:flex flex-col lg:flex-row overflow-x-auto gap-2 sm:gap-3 md:gap-4 pb-2 scrollbar-hide justify-start sm:justify-center`}
                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          {/* section label Lunaire */}
+          <div className="flex items-center px-2">
+            <span className="text-xs font-semibold uppercase text-purple-300">Lunaire</span>
+          </div>
           <button
             onClick={() => handleTabChange('lunar')}
             className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
@@ -1146,6 +1171,10 @@ const NegusLunar = () => {
             <span className="hidden sm:inline">Phases 2026</span>
             <span className="sm:hidden">🌙</span>
           </button>
+          {/* section label Journal */}
+          <div className="flex items-center px-2">
+            <span className="text-xs font-semibold uppercase text-purple-300">Journal</span>
+          </div>
           <button
             onClick={() => handleTabChange('notes')}
             className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
@@ -1158,6 +1187,10 @@ const NegusLunar = () => {
             <span className="hidden sm:inline">Notes</span>
             <span className="sm:hidden">📝</span>
           </button>
+          {/* section label Nutrition */}
+          <div className="flex items-center px-2">
+            <span className="text-xs font-semibold uppercase text-purple-300">Nutrition</span>
+          </div>
           <button
             onClick={() => handleTabChange('recipes')}
             className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
@@ -1170,6 +1203,10 @@ const NegusLunar = () => {
             <span className="hidden sm:inline">Recettes</span>
             <span className="sm:hidden">🍃</span>
           </button>
+          {/* section label Nutrition */}
+          <div className="flex items-center px-2">
+            <span className="text-xs font-semibold uppercase text-purple-300">Nutrition</span>
+          </div>
           <button
             onClick={() => handleTabChange('dailyRecipe')}
             className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
