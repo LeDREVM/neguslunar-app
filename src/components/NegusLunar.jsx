@@ -112,7 +112,7 @@ const NegusLunar = () => {
 
   // Recettes végétaliennes complètes par humeur
   const recipesByMood = {
-    énergique: [
+    'énergique': [
       { 
         name: 'Bowl de Quinoa Arc-en-ciel',
         time: '25 min',
@@ -199,7 +199,7 @@ const NegusLunar = () => {
         }
       }
     ],
-    calme: [
+    'calme': [
       { 
         name: 'Soupe Miso Réconfortante',
         time: '15 min',
@@ -291,7 +291,7 @@ const NegusLunar = () => {
         }
       }
     ],
-    créatif: [
+    'créatif': [
       { 
         name: 'Tacos de Jackfruit BBQ',
         time: '30 min',
@@ -390,7 +390,7 @@ const NegusLunar = () => {
         }
       }
     ],
-    contemplatif: [
+    'contemplatif': [
       { 
         name: 'Dal aux Lentilles Corail',
         time: '30 min',
