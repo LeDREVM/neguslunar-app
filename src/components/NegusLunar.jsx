@@ -109,113 +109,6 @@ const NegusLunar = () => {
   const todayIsEclipse = isEclipseDate(currentDate);
   const todayEclipse = todayIsEclipse ? getEclipseForDate(currentDate) : null;
 
-  return (
-    <div className="relative min-h-screen overflow-hidden text-white bg-gradient-to-br from-indigo-950 via-purple-900 to-slate-900">
-      {/* Étoiles d'arrière-plan */}
-      <div className="absolute inset-0 opacity-30">
-        {[...Array(50)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-white rounded-full animate-pulse"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${2 + Math.random() * 3}s`
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Gradient overlay pour la profondeur */}
-      <div className="absolute inset-0 bg-gradient-radial from-transparent via-purple-900/20 to-slate-900/40" />
-
-      <div className="relative z-10 max-w-6xl px-4 py-4 mx-auto sm:px-6 sm:py-8">
-        {/* Header */}
-        <header className="mb-8 text-center sm:mb-12">
-          <h1 className="mb-2 text-4xl font-bold tracking-tight text-transparent sm:text-5xl md:text-6xl sm:mb-3 bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 bg-clip-text">
-            NegusLunar
-          </h1>
-          <p className="px-4 text-sm font-light tracking-wide text-purple-200/80 sm:text-base md:text-lg">
-            Phases lunaires • Notes • Cuisine végétalienne
-          </p>
-        </header>
-
-        {/* Navigation */}
-        <nav className="flex flex-wrap justify-center gap-8 mb-10">
-          {/* section principale */}
-          <div className="flex flex-col items-center gap-4">
-            <span className="text-sm font-semibold tracking-wide text-purple-300 uppercase">Principal</span>
-            <div className="flex gap-4">
-              <button
-                onClick={() => setActiveTab('home')}
-                className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${
-                  activeTab === 'home'
-                    ? 'bg-gradient-to-r from-yellow-400 to-orange-400 shadow-lg shadow-yellow-400/50 scale-105'
-                    : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
-                }`}
-              >
-                <HomeIcon size={20} />
-                Accueil
-              </button>
-              <button
-                onClick={() => setActiveTab('lunar')}
-                className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${
-                  activeTab === 'lunar'
-                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg shadow-purple-500/50 scale-105'
-                    : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
-                }`}
-              >
-                <Moon size={20} />
-                Phase Lunaire
-              </button>
-            </div>
-          </div>
-
-          {/* section journal */}
-          <div className="flex flex-col items-center gap-4">
-            <span className="text-sm font-semibold tracking-wide text-purple-300 uppercase">Journal</span>
-            <div className="flex gap-4">
-              <button
-                onClick={() => setActiveTab('notes')}
-                className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${
-                  activeTab === 'notes'
-                    ? 'bg-gradient-to-r from-green-500 to-teal-500 shadow-lg shadow-green-500/50 scale-105'
-                    : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
-                }`}
-              >
-                <BookOpen size={20} />
-                Notes & Idées
-              </button>
-            </div>
-          </div>
-
-          {/* section nutrition */}
-          <div className="flex flex-col items-center gap-4">
-            <span className="text-sm font-semibold tracking-wide text-purple-300 uppercase">Nutrition</span>
-            <div className="flex gap-4">
-              <button
-                onClick={() => setActiveTab('recipes')}
-                className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${
-                  activeTab === 'recipes'
-                    ? 'bg-gradient-to-r from-pink-500 to-rose-500 shadow-lg shadow-pink-500/50 scale-105'
-                    : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
-                }`}
-              >
-                <Leaf size={20} />
-                Recettes
-              </button>
-            </div>
-          </div>
-        </nav> // end navigation
-  // (duplicate weeklyPhases code removed)
-  }, [currentDate]);
-  
-  // Ajouter des informations supplémentaires
-  const todayIsFullMoon = isFullMoon(currentDate);
-  const todayIsNewMoon = isNewMoon(currentDate);
-  const todayIsEclipse = isEclipseDate(currentDate);
-  const todayEclipse = todayIsEclipse ? getEclipseForDate(currentDate) : null;
 
   // Recettes végétaliennes complètes par humeur
   const recipesByMood = {
@@ -1122,35 +1015,69 @@ const NegusLunar = () => {
   const musicLink = getRitualMusicUrl();
 
   return (
-    <div className="relative min-h-screen overflow-hidden text-white bg-gradient-to-br from-indigo-950 via-purple-900 to-slate-900">
-      {/* Étoiles d'arrière-plan */}
-      <div className="absolute inset-0 opacity-30">
-        {[...Array(50)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-white rounded-full animate-pulse"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${2 + Math.random() * 3}s`
-            }}
-          />
-        ))}
+    <div className="relative min-h-screen overflow-hidden text-white" style={{background: 'linear-gradient(135deg, #0a0515 0%, #0f0a2e 30%, #1a0a3d 60%, #0d0822 100%)'}}>
+
+      {/* ── COUCHES AURORA / NÉBULEUSE ── */}
+      <div className="aurora-layer aurora-1" />
+      <div className="aurora-layer aurora-2" />
+      <div className="aurora-layer aurora-3" />
+
+      {/* ── LUNE DÉCORATIVE EN ARRIÈRE-PLAN ── */}
+      <div
+        className="moon-orb absolute opacity-20 pointer-events-none"
+        style={{ width: '320px', height: '320px', top: '-80px', right: '-60px' }}
+      />
+
+      {/* ── ÉTOILES FILANTES ── */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="shooting-star" />
+        <div className="shooting-star" />
+        <div className="shooting-star" />
+        <div className="shooting-star" />
+        <div className="shooting-star" />
       </div>
 
-      {/* Gradient overlay pour la profondeur */}
-      <div className="absolute inset-0 bg-gradient-radial from-transparent via-purple-900/20 to-slate-900/40" />
+      {/* ── ÉTOILES D'ARRIÈRE-PLAN (variées) ── */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[...Array(80)].map((_, i) => {
+          const size = i % 5 === 0 ? 3 : i % 3 === 0 ? 2 : 1;
+          const opacity = 0.3 + (i % 4) * 0.15;
+          return (
+            <div
+              key={i}
+              className="absolute rounded-full animate-pulse"
+              style={{
+                width: `${size}px`,
+                height: `${size}px`,
+                background: i % 7 === 0 ? '#c4b5fd' : i % 5 === 0 ? '#93c5fd' : '#ffffff',
+                left: `${(i * 13.7 + 5) % 100}%`,
+                top: `${(i * 7.3 + 3) % 100}%`,
+                opacity,
+                animationDelay: `${(i * 0.4) % 5}s`,
+                animationDuration: `${2.5 + (i % 4) * 0.8}s`,
+                boxShadow: size >= 2 ? `0 0 ${size * 3}px rgba(200,180,255,0.6)` : 'none'
+              }}
+            />
+          );
+        })}
+      </div>
+
+      {/* ── VIGNETTE / PROFONDEUR ── */}
+      <div className="absolute inset-0 pointer-events-none" style={{background: 'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.5) 100%)'}} />
 
       <div className="relative z-10 max-w-6xl px-4 py-4 mx-auto sm:px-6 sm:py-8">
         {/* Header */}
         <header className="mb-8 text-center sm:mb-12">
-          <h1 className="mb-2 text-4xl font-bold tracking-tight text-transparent sm:text-5xl md:text-6xl sm:mb-3 bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 bg-clip-text">
-            NegusLunar
-          </h1>
-          <p className="px-4 text-sm font-light tracking-wide text-purple-200/80 sm:text-base md:text-lg">
-            Phases lunaires • Notes • Cuisine végétalienne
+          <div className="relative inline-block mb-3">
+            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl text-shimmer">
+              NegusLunar
+            </h1>
+            <div className="absolute inset-0 blur-2xl opacity-30 bg-gradient-to-r from-violet-500 via-purple-500 to-pink-500 -z-10" />
+          </div>
+          <p className="px-4 text-sm font-light tracking-widest text-purple-300/70 sm:text-base md:text-lg uppercase">
+            Phases lunaires &nbsp;•&nbsp; Notes &nbsp;•&nbsp; Cuisine végétalienne
           </p>
+          <div className="divider-glow mt-6 max-w-md mx-auto" />
         </header>
 
         {/* Navigation */}
@@ -1159,9 +1086,9 @@ const NegusLunar = () => {
           <div className="flex items-center justify-between mb-4 lg:hidden">
             <button
               onClick={() => setShowMobileMenu(!showMobileMenu)}
-              className="flex items-center gap-2 px-4 py-2 transition-all border rounded-full bg-purple-500/30 hover:bg-purple-500/40 border-purple-400/50"
+              className="btn-glass flex items-center gap-2 px-4 py-2 transition-all rounded-full neon-border"
             >
-              <Menu size={20} />
+              <Menu size={18} />
               <span className="text-sm font-medium">Menu</span>
             </button>
             <span className="text-sm text-purple-200/80">
@@ -1189,10 +1116,10 @@ const NegusLunar = () => {
           </div>
           <button
             onClick={() => handleTabChange('lunar')}
-            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 font-medium ${
               activeTab === 'lunar'
-                ? 'bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg shadow-purple-500/50 scale-105'
-                : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
+                ? 'bg-gradient-to-r from-blue-500 to-violet-500 shadow-lg shadow-violet-500/40 scale-105 text-white'
+                : 'btn-glass text-white/80 hover:text-white'
             }`}
           >
             <Moon size={16} className="sm:w-5 sm:h-5" />
@@ -1201,10 +1128,10 @@ const NegusLunar = () => {
           </button>
           <button
             onClick={() => handleTabChange('calendar')}
-            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 font-medium ${
               activeTab === 'calendar'
-                ? 'bg-gradient-to-r from-indigo-500 to-blue-500 shadow-lg shadow-indigo-500/50 scale-105'
-                : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
+                ? 'bg-gradient-to-r from-indigo-500 to-blue-500 shadow-lg shadow-indigo-500/40 scale-105 text-white'
+                : 'btn-glass text-white/80 hover:text-white'
             }`}
           >
             <Calendar size={16} className="sm:w-5 sm:h-5" />
@@ -1213,10 +1140,10 @@ const NegusLunar = () => {
           </button>
           <button
             onClick={() => handleTabChange('moonCalendar')}
-            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 font-medium ${
               activeTab === 'moonCalendar'
-                ? 'bg-gradient-to-r from-yellow-500 to-orange-500 shadow-lg shadow-yellow-500/50 scale-105'
-                : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
+                ? 'bg-gradient-to-r from-amber-500 to-orange-500 shadow-lg shadow-amber-500/40 scale-105 text-black'
+                : 'btn-glass text-white/80 hover:text-white'
             }`}
           >
             <Moon size={16} className="sm:w-5 sm:h-5" />
@@ -1225,14 +1152,14 @@ const NegusLunar = () => {
           </button>
           {/* section label Journal */}
           <div className="flex items-center px-2">
-            <span className="text-xs font-semibold text-purple-300 uppercase">Journal</span>
+            <span className="text-xs font-semibold text-purple-400/70 uppercase tracking-widest">Journal</span>
           </div>
           <button
             onClick={() => handleTabChange('notes')}
-            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 font-medium ${
               activeTab === 'notes'
-                ? 'bg-gradient-to-r from-green-500 to-teal-500 shadow-lg shadow-green-500/50 scale-105'
-                : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
+                ? 'bg-gradient-to-r from-emerald-500 to-teal-500 shadow-lg shadow-emerald-500/40 scale-105 text-white'
+                : 'btn-glass text-white/80 hover:text-white'
             }`}
           >
             <BookOpen size={16} className="sm:w-5 sm:h-5" />
@@ -1241,30 +1168,26 @@ const NegusLunar = () => {
           </button>
           {/* section label Nutrition */}
           <div className="flex items-center px-2">
-            <span className="text-xs font-semibold text-purple-300 uppercase">Nutrition</span>
+            <span className="text-xs font-semibold text-purple-400/70 uppercase tracking-widest">Nutrition</span>
           </div>
           <button
             onClick={() => handleTabChange('recipes')}
-            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 font-medium ${
               activeTab === 'recipes'
-                ? 'bg-gradient-to-r from-pink-500 to-rose-500 shadow-lg shadow-pink-500/50 scale-105'
-                : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
+                ? 'bg-gradient-to-r from-pink-500 to-rose-500 shadow-lg shadow-pink-500/40 scale-105 text-white'
+                : 'btn-glass text-white/80 hover:text-white'
             }`}
           >
             <Leaf size={16} className="sm:w-5 sm:h-5" />
             <span className="hidden sm:inline">Recettes</span>
             <span className="sm:hidden">🍃</span>
           </button>
-          {/* section label Nutrition */}
-          <div className="flex items-center px-2">
-            <span className="text-xs font-semibold text-purple-300 uppercase">Nutrition</span>
-          </div>
           <button
             onClick={() => handleTabChange('dailyRecipe')}
-            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 font-medium ${
               activeTab === 'dailyRecipe'
-                ? 'bg-gradient-to-r from-orange-500 to-amber-500 shadow-lg shadow-orange-500/50 scale-105'
-                : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
+                ? 'bg-gradient-to-r from-orange-500 to-amber-500 shadow-lg shadow-orange-500/40 scale-105 text-black'
+                : 'btn-glass text-white/80 hover:text-white'
             }`}
           >
             <UtensilsCrossed size={16} className="sm:w-5 sm:h-5" />
@@ -1273,10 +1196,10 @@ const NegusLunar = () => {
           </button>
           <button
             onClick={() => handleTabChange('ritual')}
-            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 font-medium ${
               activeTab === 'ritual'
-                ? 'bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-lg shadow-purple-500/50 scale-105'
-                : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
+                ? 'bg-gradient-to-r from-violet-500 via-purple-500 to-pink-500 shadow-lg shadow-purple-500/40 scale-105 text-white'
+                : 'btn-glass text-white/80 hover:text-white'
             }`}
           >
             <Sparkles size={16} className="sm:w-5 sm:h-5" />
@@ -1285,10 +1208,10 @@ const NegusLunar = () => {
           </button>
           <button
             onClick={() => handleTabChange('eclipses')}
-            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 font-medium ${
               activeTab === 'eclipses'
-                ? 'bg-gradient-to-r from-red-500 to-orange-500 shadow-lg shadow-red-500/50 scale-105'
-                : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
+                ? 'bg-gradient-to-r from-red-500 to-orange-500 shadow-lg shadow-red-500/40 scale-105 text-white'
+                : 'btn-glass text-white/80 hover:text-white'
             }`}
           >
             <Moon size={16} className="sm:w-5 sm:h-5" />
@@ -1384,11 +1307,18 @@ const NegusLunar = () => {
 
           {/* Phase Lunaire */}
           {activeTab === 'lunar' && (
-            <div className="space-y-4 text-center sm:space-y-6 md:space-y-8 animate-fadeIn">
-              <div className="mb-4 text-6xl sm:text-7xl md:text-8xl lg:text-9xl sm:mb-6 animate-pulse">
-                {moonPhase.emoji}
+            <div className="space-y-4 text-center sm:space-y-6 md:space-y-8 animate-fadeInScale">
+              {/* Lune animée avec halo */}
+              <div className="relative inline-block mb-4 sm:mb-6">
+                <div className="absolute inset-0 rounded-full blur-3xl opacity-40 bg-gradient-to-r from-blue-400 via-violet-400 to-purple-400 scale-150 animate-pulse" />
+                <div
+                  className="relative text-6xl sm:text-7xl md:text-8xl lg:text-9xl animate-float"
+                  style={{ filter: 'drop-shadow(0 0 20px rgba(167,139,250,0.7)) drop-shadow(0 0 50px rgba(99,102,241,0.4))' }}
+                >
+                  {moonPhase.emoji}
+                </div>
               </div>
-              <h2 className="px-4 text-2xl font-bold text-transparent sm:text-3xl md:text-4xl bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text">
+              <h2 className="px-4 text-2xl font-bold sm:text-3xl md:text-4xl text-shimmer">
                 {moonPhase.name}
               </h2>
               
@@ -1419,15 +1349,19 @@ const NegusLunar = () => {
               
               {/* Illumination */}
               {moonPhase.illumination !== undefined && (
-                <div className="max-w-xs mx-auto">
-                  <div className="flex items-center justify-between mb-2 text-sm text-purple-300">
-                    <span>Illumination</span>
-                    <span className="font-bold">{moonPhase.illumination}%</span>
+                <div className="max-w-xs mx-auto glass-card rounded-2xl p-4">
+                  <div className="flex items-center justify-between mb-3 text-sm">
+                    <span className="text-purple-300 font-medium">Illumination lunaire</span>
+                    <span className="font-bold text-shimmer-gold text-lg">{moonPhase.illumination}%</span>
                   </div>
-                  <div className="w-full h-3 overflow-hidden rounded-full bg-white/10">
-                    <div 
-                      className="h-full transition-all duration-500 bg-gradient-to-r from-yellow-400 to-orange-400"
-                      style={{ width: `${moonPhase.illumination}%` }}
+                  <div className="w-full h-2.5 overflow-hidden rounded-full bg-white/10">
+                    <div
+                      className="h-full transition-all duration-700 rounded-full relative overflow-hidden"
+                      style={{
+                        width: `${moonPhase.illumination}%`,
+                        background: 'linear-gradient(90deg, #f59e0b, #fcd34d, #f59e0b)',
+                        boxShadow: '0 0 10px rgba(251,191,36,0.6), 0 0 20px rgba(251,191,36,0.3)'
+                      }}
                     />
                   </div>
                 </div>
@@ -1458,7 +1392,7 @@ const NegusLunar = () => {
                   {weeklyPhases.map((phase, idx) => (
                     <div
                       key={phase.date.toISOString() + idx}
-                      className="bg-white/5 rounded-2xl p-4 border border-white/10 hover:border-blue-400/40 transition-all hover:scale-[1.01]"
+                      className="glass-card holo-card rounded-2xl p-4 hover:border-blue-400/40 transition-all hover:scale-[1.02] cursor-default"
                     >
                       <div className="flex items-center justify-between mb-2">
                         <div className="text-2xl">{phase.emoji}</div>
@@ -1559,9 +1493,9 @@ const NegusLunar = () => {
 
           {/* Notes */}
           {activeTab === 'notes' && (
-            <div className="space-y-6 animate-fadeIn">
+            <div className="space-y-6 animate-fadeInScale">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-3xl font-bold text-transparent bg-gradient-to-r from-green-200 to-teal-200 bg-clip-text">
+                <h2 className="text-3xl font-bold" style={{background:'linear-gradient(90deg,#6ee7b7,#2dd4bf)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>
                 Journal & Intentions
               </h2>
                 
@@ -1598,13 +1532,14 @@ const NegusLunar = () => {
               </div>
               
               {/* Formulaire de nouvelle note */}
-              <div className="p-6 border bg-white/10 rounded-2xl backdrop-blur-sm border-white/20">
+              <div className="glass-card-strong rounded-2xl p-6" style={{borderColor:'rgba(52,211,153,0.15)'}}>
                 <div className="space-y-4">
                   <textarea
                     value={newNote}
                     onChange={(e) => setNewNote(e.target.value)}
                     placeholder="Écris tes pensées, intentions ou idées..."
-                    className="w-full p-4 text-white border resize-none bg-white/5 border-white/20 rounded-xl placeholder-purple-300/50 focus:outline-none focus:ring-2 focus:ring-green-500/50 min-h-32"
+                    className="w-full p-4 text-white border resize-none rounded-xl placeholder-purple-300/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 min-h-32 transition-all duration-300"
+                    style={{background:'rgba(255,255,255,0.05)', borderColor:'rgba(255,255,255,0.15)'}}
                   />
                   
                   <div className="flex gap-3">
@@ -1626,7 +1561,8 @@ const NegusLunar = () => {
                   <button
                     onClick={addNote}
                     disabled={!newNote.trim() || !selectedMood}
-                    className="flex items-center justify-center w-full gap-2 py-3 font-medium transition-all bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl"
+                    className="flex items-center justify-center w-full gap-2 py-3 font-semibold transition-all rounded-xl disabled:opacity-40 disabled:cursor-not-allowed hover:scale-[1.02] active:scale-[0.98]"
+                    style={{background:'linear-gradient(135deg,#10b981,#0d9488)', boxShadow:'0 4px 20px rgba(16,185,129,0.3)'}}
                   >
                     <Plus size={20} />
                     Ajouter la note
@@ -1639,7 +1575,7 @@ const NegusLunar = () => {
                 {notes.map((note) => (
                   <div
                     key={note.id}
-                    className="p-5 transition-all border bg-white/10 rounded-2xl backdrop-blur-sm border-white/20 hover:border-green-500/50 group"
+                    className="glass-card holo-card rounded-2xl p-5 group hover:border-emerald-500/40"
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-3">
@@ -2187,13 +2123,14 @@ const NegusLunar = () => {
         {/* Footer */}
         <footer className="mt-16 mb-8">
           <div className="max-w-4xl mx-auto">
-            {/* Ligne de séparation élégante */}
+            {/* Ligne de séparation lumineuse */}
             <div className="relative mb-8">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-purple-500/20"></div>
-              </div>
-              <div className="relative flex justify-center">
-                <span className="px-4 text-2xl bg-gradient-to-br from-indigo-950 via-purple-900 to-slate-900">
+              <div className="divider-glow" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span
+                  className="px-4 text-2xl animate-float"
+                  style={{ filter: 'drop-shadow(0 0 12px rgba(167,139,250,0.8))' }}
+                >
                   🌙
                 </span>
               </div>
@@ -2242,10 +2179,14 @@ const NegusLunar = () => {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed z-50 p-4 transition-all duration-300 rounded-full shadow-2xl bottom-6 right-6 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 shadow-purple-500/50 hover:scale-110 active:scale-95 group"
+          className="fixed z-50 p-4 transition-all duration-300 rounded-full bottom-6 right-6 hover:scale-110 active:scale-95 group"
+          style={{
+            background: 'linear-gradient(135deg, #7c3aed, #ec4899)',
+            boxShadow: '0 0 20px rgba(124,58,237,0.5), 0 0 40px rgba(124,58,237,0.25), 0 8px 25px rgba(0,0,0,0.4)'
+          }}
           aria-label="Remonter en haut de la page"
         >
-          <ArrowUp size={24} className="text-white group-hover:animate-bounce" />
+          <ArrowUp size={22} className="text-white group-hover:animate-bounce" />
         </button>
       )}
 
