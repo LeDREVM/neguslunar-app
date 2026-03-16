@@ -1092,7 +1092,8 @@ const NegusLunar = () => {
               <span className="text-sm font-medium">Menu</span>
             </button>
             <span className="text-sm text-purple-200/80">
-              {activeTab === 'lunar' ? '🌙 Phase Lunaire' :
+              {activeTab === 'home' ? '🏠 Accueil' :
+               activeTab === 'lunar' ? '🌙 Phase Lunaire' :
                activeTab === 'calendar' ? '📅 Calendrier' :
                activeTab === 'moonCalendar' ? '🌙 Phases 2026' :
                activeTab === 'notes' ? '📝 Notes' :
@@ -1110,9 +1111,23 @@ const NegusLunar = () => {
           {/* Menu Desktop / Mobile déroulant */}
           <div className={`${showMobileMenu ? 'flex' : 'hidden'} lg:flex flex-col lg:flex-row overflow-x-auto gap-2 sm:gap-3 md:gap-4 pb-2 scrollbar-hide justify-start sm:justify-center`}
                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          {/* Accueil */}
+          <button
+            onClick={() => handleTabChange('home')}
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 font-medium ${
+              activeTab === 'home'
+                ? 'bg-gradient-to-r from-yellow-400 to-orange-400 shadow-lg shadow-yellow-400/40 scale-105 text-black'
+                : 'btn-glass text-white/80 hover:text-white'
+            }`}
+          >
+            <HomeIcon size={16} className="sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Accueil</span>
+            <span className="sm:hidden">🏠</span>
+          </button>
+
           {/* section label Lunaire */}
           <div className="flex items-center px-2">
-            <span className="text-xs font-semibold text-purple-300 uppercase">Lunaire</span>
+            <span className="text-xs font-semibold text-purple-400/70 uppercase tracking-widest">Lunaire</span>
           </div>
           <button
             onClick={() => handleTabChange('lunar')}
