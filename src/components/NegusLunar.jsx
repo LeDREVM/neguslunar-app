@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Moon, Leaf, BookOpen, Plus, X, Home as HomeIcon, Calendar, ChevronLeft, ChevronRight, Download, Upload, UtensilsCrossed, Clock, Users, Sparkles, Heart, TrendingUp, Activity, Wind, Smile, Meh, Frown, Angry, Coffee, Camera, Target, Briefcase, ArrowUp, Menu, ShoppingCart } from 'lucide-react';
+import { Moon, Leaf, BookOpen, Plus, X, Home as HomeIcon, Calendar, ChevronLeft, ChevronRight, Download, Upload, UtensilsCrossed, Clock, Users, Sparkles, Heart, TrendingUp, Activity, Wind, Smile, Meh, Frown, Angry, Coffee, Camera, Target, Briefcase, ArrowUp, Menu, ShoppingCart, Cloud } from 'lucide-react';
 import MoonCalendar from './MoonCalendar';
 import EclipseCalendar from './EclipseCalendar';
 import BarcodeScanner from './BarcodeScanner';
 import IntermittentFasting from './IntermittentFasting';
 import MealPlanner from './MealPlanner';
 import WorkModule from './WorkModule';
+import NextcloudSync from './NextcloudSync';
 import DailyTracker from './DailyTracker';
 import ShoppingList from './ShoppingList';
 import { getAccurateMoonPhase, isFullMoon, isNewMoon } from '../data/moonPhases2026';
@@ -21,6 +22,7 @@ const NegusLunar = () => {
   const [selectedMood, setSelectedMood] = useState('');
   const [calendarMonth, setCalendarMonth] = useState(new Date());
   const [showWorkModule, setShowWorkModule] = useState(false);
+  const [showNextcloud, setShowNextcloud] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const fileInputRef = useRef(null);
@@ -1260,6 +1262,15 @@ const NegusLunar = () => {
           </button>
 
           <button
+            onClick={() => setShowNextcloud(true)}
+            className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-700 hover:to-indigo-700 shadow-lg shadow-sky-500/50 hover:scale-105"
+          >
+            <Cloud size={16} className="sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Nextcloud</span>
+            <span className="sm:hidden">☁️</span>
+          </button>
+
+          <button
             onClick={() => handleTabChange('scanner')}
             className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
               activeTab === 'scanner'
@@ -2256,6 +2267,25 @@ const NegusLunar = () => {
       {/* Module Work (Mode Professionnel) */}
       {showWorkModule && (
         <WorkModule onClose={() => setShowWorkModule(false)} />
+      )}
+
+      {/* Nextcloud Sync */}
+      {showNextcloud && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}
+          onClick={(e) => { if (e.target === e.currentTarget) setShowNextcloud(false); }}
+        >
+          <div className="relative w-full max-w-lg">
+            <button
+              onClick={() => setShowNextcloud(false)}
+              className="absolute -top-3 -right-3 z-10 p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-all"
+            >
+              <X size={16} />
+            </button>
+            <NextcloudSync />
+          </div>
+        </div>
       )}
     </div>
   );
