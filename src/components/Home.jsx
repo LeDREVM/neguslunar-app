@@ -1,6 +1,7 @@
 import React from 'react';
 import { useProfile } from '../hooks/useProfile';
 import ProfileManager from './ProfileManager';
+import NextcloudSync from './NextcloudSync';
 import { Moon, Sparkles } from 'lucide-react';
 
 const Home = () => {
@@ -52,6 +53,9 @@ const Home = () => {
 
       {/* Carte de profil */}
       <ProfileManager />
+
+      {/* Synchronisation Nextcloud */}
+      <NextcloudSync />
     </div>
   );
 };
