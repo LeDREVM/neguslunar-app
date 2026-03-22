@@ -86,49 +86,49 @@ export const moonPhases2026 = [
  * Chaque entrée indique la date à partir de laquelle le nouveau cycle commence.
  * - 'montante'   : la lune monte chaque jour dans le ciel (déclinaison croissante vers le nord)
  * - 'descendante': la lune descend chaque jour (déclinaison décroissante vers le sud)
- * Référence : pic ascendant (max) ~17 déc 2025 → descendante ; creux ~30 déc 2025 → montante
+ * Référence validée : 1er mars 2026 = descendante
+ * Recalibré avec demi-cycles de ~13,66 jours depuis cette référence.
  */
 export const lunarCycleTransitions2026 = [
   // Janvier
-  { date: '2026-01-01', cycle: 'montante' },    // après le creux du 30 déc 2025
-  { date: '2026-01-13', cycle: 'descendante' },  // pic atteint
-  { date: '2026-01-27', cycle: 'montante' },     // creux atteint
+  { date: '2026-01-01', cycle: 'descendante' },  // calculé depuis référence mars
+  { date: '2026-01-14', cycle: 'montante' },
+  { date: '2026-01-28', cycle: 'descendante' },
   // Février
-  { date: '2026-02-10', cycle: 'descendante' },
-  { date: '2026-02-23', cycle: 'montante' },
+  { date: '2026-02-11', cycle: 'montante' },
+  { date: '2026-02-25', cycle: 'descendante' },  // → 1er mars = descendante ✓
   // Mars
-  { date: '2026-03-09', cycle: 'descendante' },
-  { date: '2026-03-22', cycle: 'montante' },
+  { date: '2026-03-11', cycle: 'montante' },
+  { date: '2026-03-25', cycle: 'descendante' },
   // Avril
-  { date: '2026-04-05', cycle: 'descendante' },
-  { date: '2026-04-19', cycle: 'montante' },
+  { date: '2026-04-08', cycle: 'montante' },
+  { date: '2026-04-22', cycle: 'descendante' },
   // Mai
-  { date: '2026-05-02', cycle: 'descendante' },
-  { date: '2026-05-16', cycle: 'montante' },
-  { date: '2026-05-29', cycle: 'descendante' },
+  { date: '2026-05-05', cycle: 'montante' },
+  { date: '2026-05-19', cycle: 'descendante' },
   // Juin
-  { date: '2026-06-12', cycle: 'montante' },
-  { date: '2026-06-25', cycle: 'descendante' },
+  { date: '2026-06-02', cycle: 'montante' },
+  { date: '2026-06-16', cycle: 'descendante' },
+  { date: '2026-06-29', cycle: 'montante' },
   // Juillet
-  { date: '2026-07-08', cycle: 'montante' },
-  { date: '2026-07-22', cycle: 'descendante' },
+  { date: '2026-07-13', cycle: 'descendante' },
+  { date: '2026-07-27', cycle: 'montante' },
   // Août
-  { date: '2026-08-04', cycle: 'montante' },
-  { date: '2026-08-18', cycle: 'descendante' },
+  { date: '2026-08-09', cycle: 'descendante' },
+  { date: '2026-08-23', cycle: 'montante' },
   // Septembre
-  { date: '2026-09-01', cycle: 'montante' },
-  { date: '2026-09-14', cycle: 'descendante' },
-  { date: '2026-09-27', cycle: 'montante' },
+  { date: '2026-09-06', cycle: 'descendante' },
+  { date: '2026-09-19', cycle: 'montante' },
   // Octobre
-  { date: '2026-10-11', cycle: 'descendante' },
-  { date: '2026-10-24', cycle: 'montante' },
+  { date: '2026-10-03', cycle: 'descendante' },
+  { date: '2026-10-17', cycle: 'montante' },
+  { date: '2026-10-30', cycle: 'descendante' },
   // Novembre
-  { date: '2026-11-07', cycle: 'descendante' },
-  { date: '2026-11-20', cycle: 'montante' },
+  { date: '2026-11-13', cycle: 'montante' },
+  { date: '2026-11-27', cycle: 'descendante' },
   // Décembre
-  { date: '2026-12-04', cycle: 'descendante' },
-  { date: '2026-12-17', cycle: 'montante' },
-  { date: '2026-12-31', cycle: 'descendante' },
+  { date: '2026-12-10', cycle: 'montante' },
+  { date: '2026-12-24', cycle: 'descendante' },
 ];
 
 /**
