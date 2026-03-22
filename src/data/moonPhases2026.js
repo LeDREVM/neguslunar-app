@@ -81,6 +81,74 @@ export const moonPhases2026 = [
 ];
 
 /**
+ * Lune Montante / Descendante 2026
+ * Basé sur le cycle de déclinaison lunaire (~27,32 jours / demi-cycle ~13,66 jours)
+ * Chaque entrée indique la date à partir de laquelle le nouveau cycle commence.
+ * - 'montante'   : la lune monte chaque jour dans le ciel (déclinaison croissante vers le nord)
+ * - 'descendante': la lune descend chaque jour (déclinaison décroissante vers le sud)
+ * Référence : pic ascendant (max) ~17 déc 2025 → descendante ; creux ~30 déc 2025 → montante
+ */
+export const lunarCycleTransitions2026 = [
+  // Janvier
+  { date: '2026-01-01', cycle: 'montante' },    // après le creux du 30 déc 2025
+  { date: '2026-01-13', cycle: 'descendante' },  // pic atteint
+  { date: '2026-01-27', cycle: 'montante' },     // creux atteint
+  // Février
+  { date: '2026-02-10', cycle: 'descendante' },
+  { date: '2026-02-23', cycle: 'montante' },
+  // Mars
+  { date: '2026-03-09', cycle: 'descendante' },
+  { date: '2026-03-22', cycle: 'montante' },
+  // Avril
+  { date: '2026-04-05', cycle: 'descendante' },
+  { date: '2026-04-19', cycle: 'montante' },
+  // Mai
+  { date: '2026-05-02', cycle: 'descendante' },
+  { date: '2026-05-16', cycle: 'montante' },
+  { date: '2026-05-29', cycle: 'descendante' },
+  // Juin
+  { date: '2026-06-12', cycle: 'montante' },
+  { date: '2026-06-25', cycle: 'descendante' },
+  // Juillet
+  { date: '2026-07-08', cycle: 'montante' },
+  { date: '2026-07-22', cycle: 'descendante' },
+  // Août
+  { date: '2026-08-04', cycle: 'montante' },
+  { date: '2026-08-18', cycle: 'descendante' },
+  // Septembre
+  { date: '2026-09-01', cycle: 'montante' },
+  { date: '2026-09-14', cycle: 'descendante' },
+  { date: '2026-09-27', cycle: 'montante' },
+  // Octobre
+  { date: '2026-10-11', cycle: 'descendante' },
+  { date: '2026-10-24', cycle: 'montante' },
+  // Novembre
+  { date: '2026-11-07', cycle: 'descendante' },
+  { date: '2026-11-20', cycle: 'montante' },
+  // Décembre
+  { date: '2026-12-04', cycle: 'descendante' },
+  { date: '2026-12-17', cycle: 'montante' },
+  { date: '2026-12-31', cycle: 'descendante' },
+];
+
+/**
+ * Retourne 'montante' ou 'descendante' pour une date donnée
+ */
+export const getLunarCycle = (date) => {
+  const target = new Date(date);
+  target.setHours(0, 0, 0, 0);
+
+  let current = null;
+  for (const t of lunarCycleTransitions2026) {
+    const d = new Date(t.date);
+    d.setHours(0, 0, 0, 0);
+    if (d <= target) current = t.cycle;
+    else break;
+  }
+  return current; // null si hors données
+};
+
+/**
  * Description et illumination pour chaque phase principale
  */
 const phaseDetails = {

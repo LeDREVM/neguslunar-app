@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Calendar, Moon, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
-import { moonPhases2026, getNextFullMoon, getNextNewMoon, getNextFirstQuarter, getNextLastQuarter, getMoonPhasesForMonth } from '../data/moonPhases2026';
+import { moonPhases2026, getNextFullMoon, getNextNewMoon, getNextFirstQuarter, getNextLastQuarter, getMoonPhasesForMonth, getLunarCycle, lunarCycleTransitions2026 } from '../data/moonPhases2026';
 
 const MoonCalendar = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
@@ -16,6 +16,19 @@ const MoonCalendar = () => {
   const nextFirstQuarter = getNextFirstQuarter();
   const nextLastQuarter = getNextLastQuarter();
   const monthPhases = getMoonPhasesForMonth(selectedYear, selectedMonth);
+
+  const today = new Date();
+  const currentCycle = getLunarCycle(today);
+  const nextCycleTransition = lunarCycleTransitions2026.find(t => new Date(t.date) > today) || null;
+  const daysUntilTransition = nextCycleTransition
+    ? Math.ceil((new Date(nextCycleTransition.date) - today) / (1000 * 60 * 60 * 24))
+    : null;
+
+  // Transitions pour le mois sélectionné
+  const monthTransitions = lunarCycleTransitions2026.filter(t => {
+    const d = new Date(t.date);
+    return d.getFullYear() === selectedYear && d.getMonth() === selectedMonth;
+  });
 
   const changeMonth = (direction) => {
     setSelectedMonth(prev => {
@@ -84,6 +97,42 @@ const MoonCalendar = () => {
 
   return (
     <div className="space-y-6 animate-fadeIn">
+
+      {/* Lune montante / descendante — aujourd'hui */}
+      {currentCycle && (
+        <div className={`flex flex-col sm:flex-row items-start sm:items-center gap-4 p-5 rounded-2xl border-2 ${
+          currentCycle === 'montante'
+            ? 'bg-gradient-to-r from-amber-500/15 to-yellow-500/10 border-amber-400/30'
+            : 'bg-gradient-to-r from-indigo-500/15 to-slate-500/10 border-indigo-400/30'
+        }`}>
+          <div className="text-5xl">{currentCycle === 'montante' ? '🌙↑' : '🌙↓'}</div>
+          <div className="flex-1">
+            <h3 className={`text-xl font-bold ${currentCycle === 'montante' ? 'text-amber-200' : 'text-indigo-200'}`}>
+              Lune {currentCycle === 'montante' ? 'Montante' : 'Descendante'} — Aujourd'hui
+            </h3>
+            <p className={`text-sm ${currentCycle === 'montante' ? 'text-amber-300/80' : 'text-indigo-300/80'}`}>
+              {currentCycle === 'montante'
+                ? 'Énergie en hausse · Favorable à la plantation, la cueillette, la créativité'
+                : 'Énergie en baisse · Favorable au repos, la taille, le soin des racines'}
+            </p>
+          </div>
+          {nextCycleTransition && (
+            <div className={`text-center px-4 py-2 rounded-xl text-sm font-semibold ${
+              currentCycle === 'montante' ? 'bg-amber-500/20 text-amber-200' : 'bg-indigo-500/20 text-indigo-200'
+            }`}>
+              <div>Prochaine transition</div>
+              <div className="text-lg font-bold">
+                {daysUntilTransition === 0 ? "Aujourd'hui" : `Dans ${daysUntilTransition}j`}
+              </div>
+              <div className="text-xs opacity-70">
+                Lune {nextCycleTransition.cycle === 'montante' ? 'montante' : 'descendante'} le{' '}
+                {new Date(nextCycleTransition.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* En-tête avec prochaines phases */}
       <div className="grid md:grid-cols-2 gap-4 mb-6">
         {phaseCards.map((card, idx) => (
@@ -154,6 +203,7 @@ const MoonCalendar = () => {
               const phaseDate = new Date(phase.date);
               const isToday = phaseDate.toDateString() === new Date().toDateString();
               const isPast = phaseDate < new Date();
+              const cycle = getLunarCycle(phaseDate);
 
               return (
                 <div
@@ -190,6 +240,15 @@ const MoonCalendar = () => {
                         <Clock size={14} />
                         <span>{phase.time}</span>
                       </div>
+                      {cycle && (
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                          cycle === 'montante'
+                            ? 'bg-amber-500/20 text-amber-300'
+                            : 'bg-indigo-500/20 text-indigo-300'
+                        }`}>
+                          {cycle === 'montante' ? '↑ Montante' : '↓ Descendante'}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -203,6 +262,28 @@ const MoonCalendar = () => {
           )}
         </div>
       </div>
+
+      {/* Périodes montante / descendante du mois */}
+      {monthTransitions.length > 0 && (
+        <div className="bg-white/5 rounded-2xl p-5 border border-white/10">
+          <h4 className="text-sm font-semibold text-purple-200 mb-3">🌙 Changements de cycle — {monthNames[selectedMonth]}</h4>
+          <div className="space-y-2">
+            {monthTransitions.map((t, idx) => (
+              <div key={idx} className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm ${
+                t.cycle === 'montante'
+                  ? 'bg-amber-500/10 border border-amber-400/20 text-amber-200'
+                  : 'bg-indigo-500/10 border border-indigo-400/20 text-indigo-200'
+              }`}>
+                <span className="text-lg">{t.cycle === 'montante' ? '↑' : '↓'}</span>
+                <span className="font-semibold">Lune {t.cycle === 'montante' ? 'Montante' : 'Descendante'}</span>
+                <span className="ml-auto text-xs opacity-70">
+                  à partir du {new Date(t.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Légende */}
       <div className="bg-white/5 rounded-xl p-4 border border-white/10">
@@ -262,6 +343,20 @@ const MoonCalendar = () => {
             <div>
               <span className="text-purple-100 font-semibold">Dernier Croissant</span>
               <p className="text-purple-300/70">Repos, introspection</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-2xl text-amber-300">↑</span>
+            <div>
+              <span className="text-amber-100 font-semibold">Lune Montante</span>
+              <p className="text-purple-300/70">Plantation, cueillette, créativité</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-2xl text-indigo-300">↓</span>
+            <div>
+              <span className="text-indigo-100 font-semibold">Lune Descendante</span>
+              <p className="text-purple-300/70">Repos, taille, soins des racines</p>
             </div>
           </div>
         </div>

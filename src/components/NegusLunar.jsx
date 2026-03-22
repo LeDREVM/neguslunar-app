@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Moon, Leaf, BookOpen, Plus, X, Home as HomeIcon, Calendar, ChevronLeft, ChevronRight, Download, Upload, UtensilsCrossed, Clock, Users, Sparkles, Heart, TrendingUp, Activity, Wind, Smile, Meh, Frown, Angry, Coffee, Camera, Target, Briefcase, ArrowUp, Menu, ShoppingCart } from 'lucide-react';
+import { Moon, Leaf, BookOpen, Plus, X, Home as HomeIcon, Calendar, ChevronLeft, ChevronRight, Download, Upload, UtensilsCrossed, Clock, Users, Sparkles, Heart, TrendingUp, Activity, Wind, Smile, Meh, Frown, Angry, Coffee, Camera, Target, Briefcase, ArrowUp, Menu, ShoppingCart, Cloud } from 'lucide-react';
 import MoonCalendar from './MoonCalendar';
 import EclipseCalendar from './EclipseCalendar';
 import BarcodeScanner from './BarcodeScanner';
 import IntermittentFasting from './IntermittentFasting';
 import MealPlanner from './MealPlanner';
 import WorkModule from './WorkModule';
+import NextcloudSync from './NextcloudSync';
 import DailyTracker from './DailyTracker';
 import ShoppingList from './ShoppingList';
 import { getAccurateMoonPhase, isFullMoon, isNewMoon } from '../data/moonPhases2026';
@@ -21,6 +22,7 @@ const NegusLunar = () => {
   const [selectedMood, setSelectedMood] = useState('');
   const [calendarMonth, setCalendarMonth] = useState(new Date());
   const [showWorkModule, setShowWorkModule] = useState(false);
+  const [showNextcloud, setShowNextcloud] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const fileInputRef = useRef(null);
@@ -112,7 +114,7 @@ const NegusLunar = () => {
 
   // Recettes végétaliennes complètes par humeur
   const recipesByMood = {
-    énergique: [
+    'énergique': [
       { 
         name: 'Bowl de Quinoa Arc-en-ciel',
         time: '25 min',
@@ -199,7 +201,7 @@ const NegusLunar = () => {
         }
       }
     ],
-    calme: [
+    'calme': [
       { 
         name: 'Soupe Miso Réconfortante',
         time: '15 min',
@@ -291,7 +293,7 @@ const NegusLunar = () => {
         }
       }
     ],
-    créatif: [
+    'créatif': [
       { 
         name: 'Tacos de Jackfruit BBQ',
         time: '30 min',
@@ -390,7 +392,7 @@ const NegusLunar = () => {
         }
       }
     ],
-    contemplatif: [
+    'contemplatif': [
       { 
         name: 'Dal aux Lentilles Corail',
         time: '30 min',
@@ -1092,7 +1094,8 @@ const NegusLunar = () => {
               <span className="text-sm font-medium">Menu</span>
             </button>
             <span className="text-sm text-purple-200/80">
-              {activeTab === 'lunar' ? '🌙 Phase Lunaire' :
+              {activeTab === 'home' ? '🏠 Accueil' :
+               activeTab === 'lunar' ? '🌙 Phase Lunaire' :
                activeTab === 'calendar' ? '📅 Calendrier' :
                activeTab === 'moonCalendar' ? '🌙 Phases 2026' :
                activeTab === 'notes' ? '📝 Notes' :
@@ -1110,9 +1113,23 @@ const NegusLunar = () => {
           {/* Menu Desktop / Mobile déroulant */}
           <div className={`${showMobileMenu ? 'flex' : 'hidden'} lg:flex flex-col lg:flex-row overflow-x-auto gap-2 sm:gap-3 md:gap-4 pb-2 scrollbar-hide justify-start sm:justify-center`}
                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          {/* Accueil */}
+          <button
+            onClick={() => handleTabChange('home')}
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 font-medium ${
+              activeTab === 'home'
+                ? 'bg-gradient-to-r from-yellow-400 to-orange-400 shadow-lg shadow-yellow-400/40 scale-105 text-black'
+                : 'btn-glass text-white/80 hover:text-white'
+            }`}
+          >
+            <HomeIcon size={16} className="sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Accueil</span>
+            <span className="sm:hidden">🏠</span>
+          </button>
+
           {/* section label Lunaire */}
           <div className="flex items-center px-2">
-            <span className="text-xs font-semibold text-purple-300 uppercase">Lunaire</span>
+            <span className="text-xs font-semibold text-purple-400/70 uppercase tracking-widest">Lunaire</span>
           </div>
           <button
             onClick={() => handleTabChange('lunar')}
@@ -1242,6 +1259,15 @@ const NegusLunar = () => {
             <Briefcase size={16} className="sm:w-5 sm:h-5" />
             <span className="hidden sm:inline">Mode Pro</span>
             <span className="sm:hidden">💼</span>
+          </button>
+
+          <button
+            onClick={() => setShowNextcloud(true)}
+            className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-700 hover:to-indigo-700 shadow-lg shadow-sky-500/50 hover:scale-105"
+          >
+            <Cloud size={16} className="sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Nextcloud</span>
+            <span className="sm:hidden">☁️</span>
           </button>
 
           <button
@@ -2241,6 +2267,25 @@ const NegusLunar = () => {
       {/* Module Work (Mode Professionnel) */}
       {showWorkModule && (
         <WorkModule onClose={() => setShowWorkModule(false)} />
+      )}
+
+      {/* Nextcloud Sync */}
+      {showNextcloud && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}
+          onClick={(e) => { if (e.target === e.currentTarget) setShowNextcloud(false); }}
+        >
+          <div className="relative w-full max-w-lg">
+            <button
+              onClick={() => setShowNextcloud(false)}
+              className="absolute -top-3 -right-3 z-10 p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-all"
+            >
+              <X size={16} />
+            </button>
+            <NextcloudSync />
+          </div>
+        </div>
       )}
     </div>
   );
