@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, X, Trash2, TrendingUp, Activity, Utensils, Calendar, BookOpen } from 'lucide-react';
+import { Plus, X, Trash2, TrendingUp, Activity, Utensils, Calendar, BookOpen, Zap } from 'lucide-react';
 import { useDailyMeals, useDailyExercises } from '../hooks/useDatabase';
 import { getByIndex, STORES } from '../utils/database';
 import RecipeBrowser from './RecipeBrowser';
+import { useProfile } from '../context/ProfileContext';
 
-const DailyTracker = () => {
+const DailyTracker = ({ pendingMeal, onPendingMealConsumed }) => {
+  const { activeProfileId, getGoals } = useProfile();
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [meals, setMeals] = useState([]);
   const [exercises, setExercises] = useState([]);
@@ -126,18 +128,34 @@ const DailyTracker = () => {
     { name: 'Marche', caloriesPerMinute: 4 }
   ];
 
-  // Charger les données pour la date sélectionnée depuis IndexedDB
+  // Charger les données pour la date sélectionnée depuis IndexedDB (filtrées par profil)
   useEffect(() => {
     const loadDayData = async () => {
       const dayMeals = await getByIndex(STORES.DAILY_MEALS, 'date', selectedDate);
       const dayExercises = await getByIndex(STORES.DAILY_EXERCISES, 'date', selectedDate);
-      
-      setMeals(dayMeals);
-      setExercises(dayExercises);
+      // Filtrer par profil actif
+      setMeals(dayMeals.filter(m => !m.profileId || m.profileId === activeProfileId));
+      setExercises(dayExercises.filter(e => !e.profileId || e.profileId === activeProfileId));
     };
-    
     loadDayData();
-  }, [selectedDate, allMeals, allExercises]);
+  }, [selectedDate, allMeals, allExercises, activeProfileId]);
+
+  // Auto-ajouter un repas venant du Scanner de codes-barres
+  useEffect(() => {
+    if (!pendingMeal) return;
+    const mealWithMeta = {
+      ...pendingMeal,
+      id: Date.now(),
+      date: selectedDate,
+      profileId: activeProfileId,
+      time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+      source: 'scanner'
+    };
+    addMealDB(mealWithMeta).then(() => {
+      if (onPendingMealConsumed) onPendingMealConsumed();
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingMeal]);
 
   // Ajouter un repas depuis une recette
   const addMealFromRecipe = async (recipe) => {
@@ -173,7 +191,8 @@ const DailyTracker = () => {
     const mealWithDate = {
       ...newMeal,
       id: Date.now(),
-      date: selectedDate
+      date: selectedDate,
+      profileId: activeProfileId
     };
     
     await addMealDB(mealWithDate);
@@ -196,6 +215,7 @@ const DailyTracker = () => {
       ...exerciseForm,
       id: Date.now(),
       date: selectedDate,
+      profileId: activeProfileId,
       time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
     };
     
@@ -226,13 +246,14 @@ const DailyTracker = () => {
   // Balance calorique
   const calorieBalance = nutritionTotals.calories - totalCaloriesBurned;
 
-  // Objectifs journaliers (personnalisables)
+  // Objectifs journaliers depuis MealPlanner (via ProfileContext)
+  const profileGoals = getGoals();
   const dailyGoals = {
-    calories: 2000,
-    proteins: 80,
-    carbs: 250,
-    fats: 65,
-    fiber: 30
+    calories: profileGoals.dailyCalories,
+    proteins: profileGoals.dailyProteins,
+    carbs:    profileGoals.dailyCarbs,
+    fats:     profileGoals.dailyFats,
+    fiber:    30
   };
 
   const mealTypeLabels = {
@@ -244,6 +265,17 @@ const DailyTracker = () => {
 
   return (
     <div className="space-y-6">
+      {/* Notification repas scanné en attente */}
+      {pendingMeal && (
+        <div className="bg-gradient-to-r from-green-900/40 to-emerald-900/40 border border-green-500/50 rounded-xl p-4 flex items-center gap-3">
+          <Zap size={20} className="text-green-400 shrink-0" />
+          <div className="flex-1">
+            <p className="text-green-300 font-semibold text-sm">Repas scanné ajouté au journal !</p>
+            <p className="text-green-400/80 text-xs">{pendingMeal.name} — {pendingMeal.calories} kcal</p>
+          </div>
+        </div>
+      )}
+
       {/* En-tête avec sélection de date */}
       <div className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 rounded-xl p-6 border border-purple-700/30">
         <div className="flex items-center justify-between mb-4">

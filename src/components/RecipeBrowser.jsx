@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { Filter, Search, X, Plus, Clock, Users, Flame, Heart } from 'lucide-react';
+import { Filter, Search, X, Plus, Clock, Users, Flame, Heart, ShoppingCart } from 'lucide-react';
 import { recipes, filterRecipes, categories, moods, daysOfWeek } from '../data/recipesDatabase';
 import { ingredients, ingredientCategories, getIngredientsByCategory } from '../data/ingredientsDatabase';
 
-const RecipeBrowser = ({ onSelectRecipe }) => {
+const RecipeBrowser = ({ onSelectRecipe, onAddToShoppingList }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMood, setSelectedMood] = useState('all');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -562,16 +562,30 @@ const RecipeBrowser = ({ onSelectRecipe }) => {
                 </div>
               </div>
 
-              {/* Bouton d'ajout */}
-              {onSelectRecipe && (
-                <button
-                  onClick={() => handleAddToDay(selectedRecipe)}
-                  className="flex items-center justify-center w-full gap-2 py-3 font-semibold text-white transition-all bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-xl"
-                >
-                  <Plus size={20} />
-                  Ajouter à ma journée
-                </button>
-              )}
+              {/* Boutons d'action */}
+              <div className="flex gap-3">
+                {onSelectRecipe && (
+                  <button
+                    onClick={() => handleAddToDay(selectedRecipe)}
+                    className="flex-1 flex items-center justify-center gap-2 py-3 font-semibold text-white transition-all bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-xl"
+                  >
+                    <Plus size={20} />
+                    Ma journée
+                  </button>
+                )}
+                {onAddToShoppingList && (
+                  <button
+                    onClick={() => {
+                      onAddToShoppingList(selectedRecipe.ingredients);
+                      setSelectedRecipe(null);
+                    }}
+                    className="flex-1 flex items-center justify-center gap-2 py-3 font-semibold text-white transition-all bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 rounded-xl"
+                  >
+                    <ShoppingCart size={20} />
+                    Courses
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>

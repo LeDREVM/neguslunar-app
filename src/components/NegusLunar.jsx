@@ -8,6 +8,7 @@ import MealPlanner from './MealPlanner';
 import WorkModule from './WorkModule';
 import DailyTracker from './DailyTracker';
 import ShoppingList from './ShoppingList';
+import SyncPanel from './SyncPanel';
 import HomePage from './HomePage';
 import UserProfile from './UserProfile';
 import ProfileSwitcher, { ProfileSelector } from './ProfileSwitcher';
@@ -15,7 +16,7 @@ import { useProfile } from '../context/ProfileContext';
 import { getAccurateMoonPhase, isFullMoon, isNewMoon } from '../data/moonPhases2026';
 import { isEclipseDate, getEclipseForDate } from '../data/lunarEclipses2026';
 import { useNotes, useMoodHistory } from '../hooks/useDatabase';
-import { exportAllData, importAllData } from '../utils/database';
+import { exportAllData, importAllData, getAllItems, STORES } from '../utils/database';
 
 const NegusLunar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -43,6 +44,22 @@ const NegusLunar = () => {
   
   // État pour afficher la liste de courses
   const [showShoppingList, setShowShoppingList] = useState(false);
+
+  // Connexions inter-modules
+  const [pendingMeal, setPendingMeal] = useState(null);       // Scanner → Tracker
+  const [pendingIngredients, setPendingIngredients] = useState(null); // Recettes → Courses
+
+  const { activeProfileId } = useProfile();
+
+  // Collecte de toutes les données pour Nextcloud sync
+  const getAllSyncData = async () => {
+    const meals = await getAllItems(STORES.DAILY_MEALS);
+    const exercises = await getAllItems(STORES.DAILY_EXERCISES);
+    const fasting = JSON.parse(localStorage.getItem(`neguslunar-fasting-history-${activeProfileId}`) || '[]');
+    const shopping = JSON.parse(localStorage.getItem(`shoppingList-${activeProfileId}`) || '[]');
+    const goals = (JSON.parse(localStorage.getItem('neguslunar-profile-goals') || '{}'))[activeProfileId] || {};
+    return { meals, exercises, fasting, shopping, goals };
+  };
 
   // Gérer le bouton "Scroll to Top"
   useEffect(() => {
@@ -1650,7 +1667,10 @@ const NegusLunar = () => {
               {/* Liste de courses */}
               {showShoppingList && (
                 <div className="mb-8">
-                  <ShoppingList />
+                  <ShoppingList
+                    pendingIngredients={pendingIngredients}
+                    onPendingIngredientsConsumed={() => setPendingIngredients(null)}
+                  />
                 </div>
               )}
               
@@ -1729,6 +1749,12 @@ const NegusLunar = () => {
                                 <p className="font-semibold text-yellow-200">{recipe.nutrition.fibres}</p>
                               </div>
                             </div>
+                            <button
+                              onClick={() => { setPendingIngredients(recipe.ingredients); setShowShoppingList(true); }}
+                              className="mt-3 w-full flex items-center justify-center gap-2 py-2 text-xs font-semibold text-white bg-teal-700/60 hover:bg-teal-600/80 rounded-lg transition-colors"
+                            >
+                              <ShoppingCart size={14} /> Ajouter aux courses
+                            </button>
                           </div>
                         </div>
                       ))}
@@ -2118,7 +2144,7 @@ const NegusLunar = () => {
           {/* Scanner de codes-barres */}
           {activeTab === 'scanner' && (
             <div className="animate-fadeIn">
-              <BarcodeScanner />
+              <BarcodeScanner onAddToTracker={(meal) => { setPendingMeal(meal); setActiveTab('tracker'); }} />
             </div>
           )}
 
@@ -2138,8 +2164,15 @@ const NegusLunar = () => {
 
           {/* Dashboard de suivi journalier */}
           {activeTab === 'tracker' && (
-            <div className="animate-fadeIn">
-              <DailyTracker />
+            <div className="animate-fadeIn space-y-6">
+              <DailyTracker
+                pendingMeal={pendingMeal}
+                onPendingMealConsumed={() => setPendingMeal(null)}
+              />
+              <SyncPanel
+                getAllSyncData={getAllSyncData}
+                onDataRestored={() => window.location.reload()}
+              />
             </div>
           )}
         </main>
