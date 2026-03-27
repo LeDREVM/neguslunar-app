@@ -1,0 +1,29 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Vite Dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 3000
+    },
+    {
+      "name": "Vite Preview",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "serve"],
+      "port": 3000
+    },
+    {
+      "name": "Docker Dev (Vite HMR)",
+      "runtimeExecutable": "docker-compose",
+      "runtimeArgs": ["up", "neguslunar-dev"],
+      "port": 5173
+    },
+    {
+      "name": "Docker Prod (Nginx)",
+      "runtimeExecutable": "docker-compose",
+      "runtimeArgs": ["up", "neguslunar"],
+      "port": 3000
+    }
+  ]
+}

@@ -26,11 +26,8 @@ export const clearNextcloudConfig = () => {
 // ── WebDAV helpers ────────────────────────────────────────────────────────────
 
 const buildUrl = (serverUrl, username, remotePath) => {
-  // En développement, on passe par le proxy Vite (/nc) pour éviter les erreurs CORS.
-  // En production (build), on utilise l'URL directe du serveur.
-  const base = import.meta.env.DEV
-    ? '/nc'
-    : serverUrl.replace(/\/$/, '');
+  // Toujours passer par le proxy /nc (Vite en dev, Nginx en prod) pour éviter CORS.
+  const base = '/nc';
   return `${base}/remote.php/dav/files/${encodeURIComponent(username)}${remotePath}`;
 };
 
@@ -135,8 +132,7 @@ export const fetchFromNextcloud = async (profileId, config) => {
  */
 export const testNextcloudConnection = async (serverUrl, username, password) => {
   try {
-    const base = import.meta.env.DEV ? '/nc' : serverUrl.replace(/\/$/, '');
-    const url = `${base}/remote.php/dav/files/${encodeURIComponent(username)}/`;
+    const url = `/nc/remote.php/dav/files/${encodeURIComponent(username)}/`;
     const res = await fetch(url, {
       method: 'PROPFIND',
       headers: {
