@@ -1,24 +1,19 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Moon, Leaf, BookOpen, Plus, X, Calendar, ChevronLeft, ChevronRight, Download, Upload, UtensilsCrossed, Clock, Users, Sparkles, Heart, TrendingUp, Activity, Wind, Smile, Meh, Frown, Angry, Coffee, Camera, Target, Briefcase, ArrowUp, Menu, ShoppingCart, Home, User, BarChart3 } from 'lucide-react';
+import { Moon, Leaf, BookOpen, Plus, X, Calendar, ChevronLeft, ChevronRight, Download, Upload, UtensilsCrossed, Clock, Users, Sparkles, Heart, TrendingUp, Activity, Wind, Smile, Meh, Frown, Angry, Coffee, Camera, Target, Briefcase, ArrowUp, Menu, ShoppingCart, Home, User } from 'lucide-react';
 import MoonCalendar from './MoonCalendar';
 import EclipseCalendar from './EclipseCalendar';
 import BarcodeScanner from './BarcodeScanner';
 import IntermittentFasting from './IntermittentFasting';
 import MealPlanner from './MealPlanner';
 import WorkModule from './WorkModule';
-import SportPerformance from './SportPerformance';
-import Dashboard from './Dashboard';
 import DailyTracker from './DailyTracker';
 import ShoppingList from './ShoppingList';
-import SyncPanel from './SyncPanel';
 import HomePage from './HomePage';
 import UserProfile from './UserProfile';
-import ProfileSwitcher, { ProfileSelector } from './ProfileSwitcher';
-import { useProfile } from '../context/ProfileContext';
 import { getAccurateMoonPhase, isFullMoon, isNewMoon } from '../data/moonPhases2026';
 import { isEclipseDate, getEclipseForDate } from '../data/lunarEclipses2026';
 import { useNotes, useMoodHistory } from '../hooks/useDatabase';
-import { exportAllData, importAllData, getAllItems, STORES } from '../utils/database';
+import { exportAllData, importAllData } from '../utils/database';
 
 const NegusLunar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -46,22 +41,6 @@ const NegusLunar = () => {
   
   // État pour afficher la liste de courses
   const [showShoppingList, setShowShoppingList] = useState(false);
-
-  // Connexions inter-modules
-  const [pendingMeal, setPendingMeal] = useState(null);       // Scanner → Tracker
-  const [pendingIngredients, setPendingIngredients] = useState(null); // Recettes → Courses
-
-  const { activeProfileId } = useProfile();
-
-  // Collecte de toutes les données pour Nextcloud sync
-  const getAllSyncData = async () => {
-    const meals = await getAllItems(STORES.DAILY_MEALS);
-    const exercises = await getAllItems(STORES.DAILY_EXERCISES);
-    const fasting = JSON.parse(localStorage.getItem(`neguslunar-fasting-history-${activeProfileId}`) || '[]');
-    const shopping = JSON.parse(localStorage.getItem(`shoppingList-${activeProfileId}`) || '[]');
-    const goals = (JSON.parse(localStorage.getItem('neguslunar-profile-goals') || '{}'))[activeProfileId] || {};
-    return { meals, exercises, fasting, shopping, goals };
-  };
 
   // Gérer le bouton "Scroll to Top"
   useEffect(() => {
@@ -1118,18 +1097,15 @@ const NegusLunar = () => {
               </h1>
             </div>
 
-            {/* Profil switcher + bouton profil */}
-            <div className="flex items-center gap-2">
-              <ProfileSwitcher />
-              <button
-                onClick={() => setShowProfile(true)}
-                title="Mon profil"
-                className="flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-300 bg-white/10 hover:bg-white/20 border border-white/10 hover:border-purple-400/40"
-              >
-                <User size={20} className="text-white/70" />
-                <span className="hidden sm:inline text-sm font-medium text-white/80">Profil</span>
-              </button>
-            </div>
+            {/* Bouton Profil */}
+            <button
+              onClick={() => setShowProfile(true)}
+              title="Mon profil"
+              className="flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-300 bg-white/10 hover:bg-white/20 border border-white/10 hover:border-purple-400/40"
+            >
+              <User size={20} className="text-white/70" />
+              <span className="hidden sm:inline text-sm font-medium text-white/80">Profil</span>
+            </button>
           </div>
           <p className="px-4 text-sm font-light tracking-wide text-purple-200/80 sm:text-base text-center">
             Phases lunaires • Notes • Cuisine végétalienne
@@ -1159,9 +1135,7 @@ const NegusLunar = () => {
                activeTab === 'scanner' ? '📷 Scanner' :
                activeTab === 'fasting' ? '⏱️ Jeûne' :
                activeTab === 'mealplan' ? '🎯 Plans Repas' :
-               activeTab === 'tracker' ? '📊 Mon Suivi' :
-               activeTab === 'sport' ? '🏋️ Sport' :
-               activeTab === 'dashboard' ? '📈 Dashboard' : 'Menu'}
+               activeTab === 'tracker' ? '📊 Mon Suivi' : 'Menu'}
             </span>
           </div>
 
@@ -1329,30 +1303,6 @@ const NegusLunar = () => {
             <span className="sm:hidden">🎯</span>
           </button>
 
-          <button
-            onClick={() => handleTabChange('sport')}
-            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
-              activeTab === 'sport'
-                ? 'bg-gradient-to-r from-orange-500 to-red-500 shadow-lg shadow-orange-500/50 scale-105'
-                : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
-            }`}
-          >
-            <Activity size={16} className="sm:w-5 sm:h-5" />
-            <span className="hidden sm:inline">Sport</span>
-            <span className="sm:hidden">🏋️</span>
-          </button>
-          <button
-            onClick={() => handleTabChange('dashboard')}
-            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
-              activeTab === 'dashboard'
-                ? 'bg-gradient-to-r from-emerald-500 to-teal-500 shadow-lg shadow-emerald-500/50 scale-105'
-                : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
-            }`}
-          >
-            <BarChart3 size={16} className="sm:w-5 sm:h-5" />
-            <span className="hidden sm:inline">Dashboard</span>
-            <span className="sm:hidden">📈</span>
-          </button>
           <button
             onClick={() => handleTabChange('tracker')}
             className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
@@ -1695,10 +1645,7 @@ const NegusLunar = () => {
               {/* Liste de courses */}
               {showShoppingList && (
                 <div className="mb-8">
-                  <ShoppingList
-                    pendingIngredients={pendingIngredients}
-                    onPendingIngredientsConsumed={() => setPendingIngredients(null)}
-                  />
+                  <ShoppingList />
                 </div>
               )}
               
@@ -1777,12 +1724,6 @@ const NegusLunar = () => {
                                 <p className="font-semibold text-yellow-200">{recipe.nutrition.fibres}</p>
                               </div>
                             </div>
-                            <button
-                              onClick={() => { setPendingIngredients(recipe.ingredients); setShowShoppingList(true); }}
-                              className="mt-3 w-full flex items-center justify-center gap-2 py-2 text-xs font-semibold text-white bg-teal-700/60 hover:bg-teal-600/80 rounded-lg transition-colors"
-                            >
-                              <ShoppingCart size={14} /> Ajouter aux courses
-                            </button>
                           </div>
                         </div>
                       ))}
@@ -2172,7 +2113,7 @@ const NegusLunar = () => {
           {/* Scanner de codes-barres */}
           {activeTab === 'scanner' && (
             <div className="animate-fadeIn">
-              <BarcodeScanner onAddToTracker={(meal) => { setPendingMeal(meal); setActiveTab('tracker'); }} />
+              <BarcodeScanner />
             </div>
           )}
 
@@ -2186,36 +2127,14 @@ const NegusLunar = () => {
           {/* Plans de repas personnalisés */}
           {activeTab === 'mealplan' && (
             <div className="animate-fadeIn">
-              <MealPlanner onAddToShoppingList={(ingredients) => { setPendingIngredients(ingredients); handleTabChange('recipes'); setShowShoppingList(true); }} />
+              <MealPlanner />
             </div>
           )}
 
           {/* Dashboard de suivi journalier */}
-          {/* Dashboard Analytics */}
-          {activeTab === 'dashboard' && (
-            <div className="animate-fadeIn">
-              <Dashboard />
-            </div>
-          )}
-
-          {/* Sport Performance */}
-          {activeTab === 'sport' && (
-            <div className="animate-fadeIn">
-              <SportPerformance />
-            </div>
-          )}
-
           {activeTab === 'tracker' && (
-            <div className="animate-fadeIn space-y-6">
-              <DailyTracker
-                pendingMeal={pendingMeal}
-                onPendingMealConsumed={() => setPendingMeal(null)}
-                onAddToShoppingList={(ingredients) => { setPendingIngredients(ingredients); handleTabChange('recipes'); setShowShoppingList(true); }}
-              />
-              <SyncPanel
-                getAllSyncData={getAllSyncData}
-                onDataRestored={() => window.location.reload()}
-              />
+            <div className="animate-fadeIn">
+              <DailyTracker />
             </div>
           )}
         </main>
