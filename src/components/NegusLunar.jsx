@@ -6,6 +6,7 @@ import BarcodeScanner from './BarcodeScanner';
 import IntermittentFasting from './IntermittentFasting';
 import MealPlanner from './MealPlanner';
 import WorkModule from './WorkModule';
+import SportPerformance from './SportPerformance';
 import DailyTracker from './DailyTracker';
 import ShoppingList from './ShoppingList';
 import SyncPanel from './SyncPanel';
@@ -1157,7 +1158,8 @@ const NegusLunar = () => {
                activeTab === 'scanner' ? '📷 Scanner' :
                activeTab === 'fasting' ? '⏱️ Jeûne' :
                activeTab === 'mealplan' ? '🎯 Plans Repas' :
-               activeTab === 'tracker' ? '📊 Mon Suivi' : 'Menu'}
+               activeTab === 'tracker' ? '📊 Mon Suivi' :
+               activeTab === 'sport' ? '🏋️ Sport' : 'Menu'}
             </span>
           </div>
 
@@ -1325,6 +1327,18 @@ const NegusLunar = () => {
             <span className="sm:hidden">🎯</span>
           </button>
 
+          <button
+            onClick={() => handleTabChange('sport')}
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
+              activeTab === 'sport'
+                ? 'bg-gradient-to-r from-orange-500 to-red-500 shadow-lg shadow-orange-500/50 scale-105'
+                : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
+            }`}
+          >
+            <Activity size={16} className="sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Sport</span>
+            <span className="sm:hidden">🏋️</span>
+          </button>
           <button
             onClick={() => handleTabChange('tracker')}
             className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
@@ -2163,6 +2177,13 @@ const NegusLunar = () => {
           )}
 
           {/* Dashboard de suivi journalier */}
+          {/* Sport Performance */}
+          {activeTab === 'sport' && (
+            <div className="animate-fadeIn">
+              <SportPerformance />
+            </div>
+          )}
+
           {activeTab === 'tracker' && (
             <div className="animate-fadeIn space-y-6">
               <DailyTracker
