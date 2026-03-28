@@ -29,16 +29,21 @@ export const clearNextcloudConfig = () => {
 
 // ── WebDAV helpers ────────────────────────────────────────────────────────────
 
-// Toujours passer par le proxy /nc (Vite en dev, Nginx en prod) pour éviter CORS.
-const buildUrl = (username, remotePath) => {
-  return `/nc/remote.php/dav/files/${encodeURIComponent(username)}${remotePath}`;
+// En dev: proxy /nc (Vite). En prod: requête directe au serveur Nextcloud.
+const buildUrl = (username, remotePath, serverUrl) => {
+  if (import.meta.env.DEV) {
+    return `/nc/remote.php/dav/files/${encodeURIComponent(username)}${remotePath}`;
+  }
+  // Prod : URL directe vers le serveur Nextcloud
+  const base = (serverUrl || '').replace(/\/+$/, '');
+  return `${base}/remote.php/dav/files/${encodeURIComponent(username)}${remotePath}`;
 };
 
 const authHeader = (username, password) =>
   'Basic ' + btoa(`${username}:${password}`);
 
-const ensureRemoteDir = async (username, password, dirPath) => {
-  const url = buildUrl(username, dirPath);
+const ensureRemoteDir = async (username, password, dirPath, serverUrl) => {
+  const url = buildUrl(username, dirPath, serverUrl);
   await fetch(url, {
     method: 'MKCOL',
     headers: { Authorization: authHeader(username, password) }
@@ -47,8 +52,8 @@ const ensureRemoteDir = async (username, password, dirPath) => {
 
 // ── Single file operations ────────────────────────────────────────────────────
 
-const pushFile = async (username, password, filePath, payload) => {
-  const url = buildUrl(username, filePath);
+const pushFile = async (username, password, filePath, payload, serverUrl) => {
+  const url = buildUrl(username, filePath, serverUrl);
   const res = await fetch(url, {
     method: 'PUT',
     headers: {
@@ -60,8 +65,8 @@ const pushFile = async (username, password, filePath, payload) => {
   return res.ok || res.status === 201 || res.status === 204;
 };
 
-const pullFile = async (username, password, filePath) => {
-  const url = buildUrl(username, filePath);
+const pullFile = async (username, password, filePath, serverUrl) => {
+  const url = buildUrl(username, filePath, serverUrl);
   const res = await fetch(url, {
     method: 'GET',
     headers: { Authorization: authHeader(username, password) }
@@ -78,7 +83,7 @@ const pullFile = async (username, password, filePath) => {
  */
 export const testNextcloudConnection = async (serverUrl, username, password) => {
   try {
-    const url = `/nc/remote.php/dav/files/${encodeURIComponent(username)}/`;
+    const url = buildUrl(username, '/', serverUrl);
     const res = await fetch(url, {
       method: 'PROPFIND',
       headers: { Authorization: authHeader(username, password), Depth: '0' }
@@ -99,17 +104,18 @@ export const testNextcloudConnection = async (serverUrl, username, password) => 
  * @param {object} config  - { username, password }
  */
 export const syncModule = async (profileId, module, data, config) => {
-  const { username, password } = config;
+  const { username, password, serverUrl } = config;
   try {
-    await ensureRemoteDir(username, password, '/NegusLunar');
-    await ensureRemoteDir(username, password, `/NegusLunar/${profileId}`);
+    await ensureRemoteDir(username, password, '/NegusLunar', serverUrl);
+    await ensureRemoteDir(username, password, `/NegusLunar/${profileId}`, serverUrl);
 
     const fileMap = {
       fasting:   'fasting-history.json',
       meals:     'daily-meals.json',
       exercises: 'daily-exercises.json',
       shopping:  'shopping-list.json',
-      goals:     'meal-goals.json'
+      goals:     'meal-goals.json',
+      sport:     'sport-reports.json'
     };
 
     const filename = fileMap[module];
@@ -120,7 +126,7 @@ export const syncModule = async (profileId, module, data, config) => {
       module,
       syncDate: new Date().toISOString(),
       data
-    });
+    }, serverUrl);
 
     return ok
       ? { success: true, message: `${module} synchronisé.` }
@@ -134,7 +140,7 @@ export const syncModule = async (profileId, module, data, config) => {
  * Fetch a single module from Nextcloud.
  */
 export const fetchModule = async (profileId, module, config) => {
-  const { username, password } = config;
+  const { username, password, serverUrl } = config;
   const fileMap = {
     fasting:   'fasting-history.json',
     meals:     'daily-meals.json',
@@ -146,7 +152,7 @@ export const fetchModule = async (profileId, module, config) => {
   if (!filename) return { success: false, data: null };
 
   try {
-    const json = await pullFile(username, password, `/NegusLunar/${profileId}/${filename}`);
+    const json = await pullFile(username, password, `/NegusLunar/${profileId}/${filename}`, serverUrl);
     return { success: true, data: json?.data ?? null };
   } catch (err) {
     return { success: false, data: null, message: err.message };
@@ -180,7 +186,7 @@ export const syncAllModules = async (profileId, allData, config) => {
  * Fetch ALL modules from Nextcloud.
  */
 export const fetchAllModules = async (profileId, config) => {
-  const modules = ['fasting', 'meals', 'exercises', 'shopping', 'goals'];
+  const modules = ['fasting', 'meals', 'exercises', 'shopping', 'goals', 'sport'];
   const results = {};
   for (const module of modules) {
     results[module] = await fetchModule(profileId, module, config);
