@@ -116,6 +116,18 @@ const HomePage = ({ moonPhase, currentDate, notes, onNavigate, onOpenWork, userN
       action: () => onNavigate('sport'),
     },
     {
+      id: 'dashboard',
+      icon: TrendingUp,
+      label: 'Dashboard',
+      desc: 'Vue globale & stats',
+      emoji: '📈',
+      gradient: 'from-emerald-500/30 to-teal-600/30',
+      border: 'border-emerald-400/30',
+      hover: 'hover:border-emerald-400/60',
+      glow: 'shadow-emerald-500/20',
+      action: () => onNavigate('dashboard'),
+    },
+    {
       id: 'mealplan',
       icon: Target,
       label: 'Plans Repas',

@@ -432,6 +432,28 @@ const ShoppingList = ({ pendingIngredients, onPendingIngredientsConsumed }) => {
             })}
           </div>
         )}
+
+        {/* Résumé du panier */}
+        {totalCount > 0 && (
+          <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-200 rounded-xl p-4 mt-4">
+            <h4 className="font-bold text-emerald-800 mb-2 flex items-center gap-2">
+              <ShoppingCart size={16} /> Résumé du panier
+            </h4>
+            <div className="flex flex-wrap gap-2 text-xs">
+              {Object.entries(groupedItems).map(([cat, items]) => {
+                const catInfo = ingredientCategories.find(c => c.id === cat);
+                return (
+                  <span key={cat} className="bg-white px-2 py-1 rounded-full border border-emerald-200 text-emerald-700">
+                    {catInfo?.emoji || '📦'} {items.length} {catInfo?.name || cat}
+                  </span>
+                );
+              })}
+            </div>
+            <div className="mt-2 text-sm text-emerald-600">
+              {totalCount} articles • {checkedCount} cochés • {totalCount - checkedCount} restants
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

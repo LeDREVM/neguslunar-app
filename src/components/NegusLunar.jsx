@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Moon, Leaf, BookOpen, Plus, X, Calendar, ChevronLeft, ChevronRight, Download, Upload, UtensilsCrossed, Clock, Users, Sparkles, Heart, TrendingUp, Activity, Wind, Smile, Meh, Frown, Angry, Coffee, Camera, Target, Briefcase, ArrowUp, Menu, ShoppingCart, Home, User } from 'lucide-react';
+import { Moon, Leaf, BookOpen, Plus, X, Calendar, ChevronLeft, ChevronRight, Download, Upload, UtensilsCrossed, Clock, Users, Sparkles, Heart, TrendingUp, Activity, Wind, Smile, Meh, Frown, Angry, Coffee, Camera, Target, Briefcase, ArrowUp, Menu, ShoppingCart, Home, User, BarChart3 } from 'lucide-react';
 import MoonCalendar from './MoonCalendar';
 import EclipseCalendar from './EclipseCalendar';
 import BarcodeScanner from './BarcodeScanner';
@@ -7,6 +7,7 @@ import IntermittentFasting from './IntermittentFasting';
 import MealPlanner from './MealPlanner';
 import WorkModule from './WorkModule';
 import SportPerformance from './SportPerformance';
+import Dashboard from './Dashboard';
 import DailyTracker from './DailyTracker';
 import ShoppingList from './ShoppingList';
 import SyncPanel from './SyncPanel';
@@ -1159,7 +1160,8 @@ const NegusLunar = () => {
                activeTab === 'fasting' ? '⏱️ Jeûne' :
                activeTab === 'mealplan' ? '🎯 Plans Repas' :
                activeTab === 'tracker' ? '📊 Mon Suivi' :
-               activeTab === 'sport' ? '🏋️ Sport' : 'Menu'}
+               activeTab === 'sport' ? '🏋️ Sport' :
+               activeTab === 'dashboard' ? '📈 Dashboard' : 'Menu'}
             </span>
           </div>
 
@@ -1338,6 +1340,18 @@ const NegusLunar = () => {
             <Activity size={16} className="sm:w-5 sm:h-5" />
             <span className="hidden sm:inline">Sport</span>
             <span className="sm:hidden">🏋️</span>
+          </button>
+          <button
+            onClick={() => handleTabChange('dashboard')}
+            className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
+              activeTab === 'dashboard'
+                ? 'bg-gradient-to-r from-emerald-500 to-teal-500 shadow-lg shadow-emerald-500/50 scale-105'
+                : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
+            }`}
+          >
+            <BarChart3 size={16} className="sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Dashboard</span>
+            <span className="sm:hidden">📈</span>
           </button>
           <button
             onClick={() => handleTabChange('tracker')}
@@ -2172,11 +2186,18 @@ const NegusLunar = () => {
           {/* Plans de repas personnalisés */}
           {activeTab === 'mealplan' && (
             <div className="animate-fadeIn">
-              <MealPlanner />
+              <MealPlanner onAddToShoppingList={(ingredients) => { setPendingIngredients(ingredients); handleTabChange('recipes'); setShowShoppingList(true); }} />
             </div>
           )}
 
           {/* Dashboard de suivi journalier */}
+          {/* Dashboard Analytics */}
+          {activeTab === 'dashboard' && (
+            <div className="animate-fadeIn">
+              <Dashboard />
+            </div>
+          )}
+
           {/* Sport Performance */}
           {activeTab === 'sport' && (
             <div className="animate-fadeIn">
@@ -2189,6 +2210,7 @@ const NegusLunar = () => {
               <DailyTracker
                 pendingMeal={pendingMeal}
                 onPendingMealConsumed={() => setPendingMeal(null)}
+                onAddToShoppingList={(ingredients) => { setPendingIngredients(ingredients); handleTabChange('recipes'); setShowShoppingList(true); }}
               />
               <SyncPanel
                 getAllSyncData={getAllSyncData}

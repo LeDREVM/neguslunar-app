@@ -5,7 +5,7 @@ import { getByIndex, STORES } from '../utils/database';
 import RecipeBrowser from './RecipeBrowser';
 import { useProfile } from '../context/ProfileContext';
 
-const DailyTracker = ({ pendingMeal, onPendingMealConsumed }) => {
+const DailyTracker = ({ pendingMeal, onPendingMealConsumed, onAddToShoppingList }) => {
   const { activeProfileId, getGoals } = useProfile();
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [meals, setMeals] = useState([]);
@@ -397,7 +397,7 @@ const DailyTracker = ({ pendingMeal, onPendingMealConsumed }) => {
           {/* Navigateur de recettes */}
           {showRecipeBrowser && (
             <div className="mb-4">
-              <RecipeBrowser onSelectRecipe={addMealFromRecipe} />
+              <RecipeBrowser onSelectRecipe={addMealFromRecipe} onAddToShoppingList={onAddToShoppingList} />
             </div>
           )}
 

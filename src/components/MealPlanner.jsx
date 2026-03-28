@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Target, TrendingDown, TrendingUp, Activity, Calendar, ChefHat, Plus, X, Edit2, Check, Zap } from 'lucide-react';
+import { Target, TrendingDown, TrendingUp, Activity, Calendar, ChefHat, Plus, X, Edit2, Check, Zap, ShoppingCart } from 'lucide-react';
 import { useProfile } from '../context/ProfileContext';
 
-const MealPlanner = () => {
+const MealPlanner = ({ onAddToShoppingList }) => {
   const { activeProfileId, setGoals } = useProfile();
   const profileKey = activeProfileId || 'default';
 
@@ -463,19 +463,29 @@ const MealPlanner = () => {
                 </div>
               </div>
               
-              <div className="flex gap-3 mt-3 pt-3 border-t border-gray-700">
-                <div className="text-sm">
-                  <span className="text-blue-400 font-semibold">{meal.proteins}g</span>
-                  <span className="text-gray-500 ml-1">P</span>
+              <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-700">
+                <div className="flex gap-3">
+                  <div className="text-sm">
+                    <span className="text-blue-400 font-semibold">{meal.proteins}g</span>
+                    <span className="text-gray-500 ml-1">P</span>
+                  </div>
+                  <div className="text-sm">
+                    <span className="text-green-400 font-semibold">{meal.carbs}g</span>
+                    <span className="text-gray-500 ml-1">G</span>
+                  </div>
+                  <div className="text-sm">
+                    <span className="text-yellow-400 font-semibold">{meal.fats}g</span>
+                    <span className="text-gray-500 ml-1">L</span>
+                  </div>
                 </div>
-                <div className="text-sm">
-                  <span className="text-green-400 font-semibold">{meal.carbs}g</span>
-                  <span className="text-gray-500 ml-1">G</span>
-                </div>
-                <div className="text-sm">
-                  <span className="text-yellow-400 font-semibold">{meal.fats}g</span>
-                  <span className="text-gray-500 ml-1">L</span>
-                </div>
+                {onAddToShoppingList && (
+                  <button
+                    onClick={() => onAddToShoppingList(meal.items)}
+                    className="flex items-center gap-1 px-2 py-1 text-xs bg-teal-700/50 hover:bg-teal-600/70 text-teal-200 rounded-lg transition-colors"
+                  >
+                    <ShoppingCart size={12} /> Courses
+                  </button>
+                )}
               </div>
             </div>
           ))}
@@ -488,6 +498,17 @@ const MealPlanner = () => {
           <div className="text-xs text-gray-500">
             P = Protéines | G = Glucides | L = Lipides
           </div>
+          {onAddToShoppingList && (
+            <button
+              onClick={() => {
+                const allItems = mealSuggestions.flatMap(m => m.items);
+                onAddToShoppingList(allItems);
+              }}
+              className="mt-3 inline-flex items-center gap-2 px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded-lg transition-colors text-sm font-semibold"
+            >
+              <ShoppingCart size={16} /> Ajouter tout aux courses
+            </button>
+          )}
         </div>
       </div>
 
