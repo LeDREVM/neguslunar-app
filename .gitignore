@@ -1,3 +1,6 @@
+# Claude Code worktrees
+.claude/worktrees/
+
 # Dépendances
 node_modules/
 package-lock.json
