@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Camera, X, Search, Plus, Check, Store, Database } from 'lucide-react';
 import { searchInLocalDatabase, searchByName, getTotalProducts } from '../data/productsDatabase';
 
-const BarcodeScanner = () => {
+const BarcodeScanner = ({ onAddToTracker }) => {
   const [scanning, setScanning] = useState(false);
   const [barcode, setBarcode] = useState('');
   const [foodData, setFoodData] = useState(null);
@@ -307,13 +307,38 @@ const BarcodeScanner = () => {
             </div>
           </div>
 
-          <button
-            onClick={() => addFood(foodData)}
-            className="w-full mt-4 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
-          >
-            <Plus size={20} />
-            <span>Ajouter à ma liste</span>
-          </button>
+          <div className="flex gap-2 mt-4">
+            <button
+              onClick={() => addFood(foodData)}
+              className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
+            >
+              <Plus size={18} />
+              <span>Ma liste</span>
+            </button>
+            {onAddToTracker && (
+              <button
+                onClick={() => {
+                  onAddToTracker({
+                    name: foodData.name,
+                    calories: Math.round(foodData.calories),
+                    proteins: Math.round(foodData.proteins),
+                    carbs:    Math.round(foodData.carbs),
+                    fats:     Math.round(foodData.fats),
+                    fiber:    Math.round(foodData.fiber || 0),
+                    type:     'snack',
+                    source:   'scanner',
+                    barcode:  foodData.barcode
+                  });
+                  setFoodData(null);
+                  setBarcode('');
+                }}
+                className="flex-1 bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 rounded-lg transition-colors flex items-center justify-center gap-2 font-semibold"
+              >
+                <Check size={18} />
+                <span>Journal du jour</span>
+              </button>
+            )}
+          </div>
         </div>
       )}
 

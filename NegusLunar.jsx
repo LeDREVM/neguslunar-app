@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Moon, Leaf, BookOpen, Plus, X } from 'lucide-react';
+import { Moon, Leaf, BookOpen, Plus, X, Home as HomeIcon } from 'lucide-react';
+
+// components
+import ProfileManager from './src/components/ProfileManager';
+import Home from './src/components/Home';
 
 const NegusLunar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [activeTab, setActiveTab] = useState('lunar');
+  const [activeTab, setActiveTab] = useState('home');
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState('');
   const [selectedMood, setSelectedMood] = useState('');
@@ -136,7 +140,7 @@ const NegusLunar = () => {
   const firstDay = getFirstDayOfMonth(calendarDate);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-900 to-slate-900 text-white relative overflow-hidden">
+    <div className="relative min-h-screen overflow-hidden text-white bg-gradient-to-br from-indigo-950 via-purple-900 to-slate-900">
       {/* Étoiles d'arrière-plan */}
       <div className="absolute inset-0 opacity-30">
         {[...Array(50)].map((_, i) => (
@@ -156,19 +160,30 @@ const NegusLunar = () => {
       {/* Gradient overlay pour la profondeur */}
       <div className="absolute inset-0 bg-gradient-radial from-transparent via-purple-900/20 to-slate-900/40" />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 py-8">
+      <div className="relative z-10 max-w-6xl px-6 py-8 mx-auto">
         {/* Header */}
         <header className="mb-12 text-center">
-          <h1 className="text-6xl font-bold mb-3 bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 bg-clip-text text-transparent tracking-tight">
+          <h1 className="mb-3 text-6xl font-bold tracking-tight text-transparent bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 bg-clip-text">
             NegusLunar
           </h1>
-          <p className="text-purple-200/80 text-lg font-light tracking-wide">
+          <p className="text-lg font-light tracking-wide text-purple-200/80">
             Phases lunaires • Notes • Cuisine végétalienne
           </p>
         </header>
 
         {/* Navigation */}
         <nav className="flex justify-center gap-4 mb-10">
+          <button
+            onClick={() => setActiveTab('home')}
+            className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${
+              activeTab === 'home'
+                ? 'bg-gradient-to-r from-yellow-400 to-orange-400 shadow-lg shadow-yellow-400/50 scale-105'
+                : 'bg-white/10 hover:bg-white/20 backdrop-blur-sm'
+            }`}
+          >
+            <HomeIcon size={20} />
+            Accueil
+          </button>
           <button
             onClick={() => setActiveTab('lunar')}
             className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-300 ${
@@ -205,20 +220,24 @@ const NegusLunar = () => {
         </nav>
 
         {/* Contenu principal */}
-        <main className="backdrop-blur-md bg-white/5 rounded-3xl p-8 shadow-2xl border border-white/10">
+        <main className="p-8 border shadow-2xl backdrop-blur-md bg-white/5 rounded-3xl border-white/10">
           {/* Phase Lunaire */}
+          {activeTab === 'home' && (
+            <Home />
+          )}
+
           {activeTab === 'lunar' && (
-            <div className="text-center space-y-8 animate-fadeIn">
-              <div className="text-9xl mb-6 animate-pulse">
+            <div className="space-y-8 text-center animate-fadeIn">
+              <div className="mb-6 text-9xl animate-pulse">
                 {moonPhase.emoji}
               </div>
-              <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">
+              <h2 className="text-4xl font-bold text-transparent bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text">
                 {moonPhase.name}
               </h2>
-              <p className="text-xl text-purple-200/80 max-w-md mx-auto leading-relaxed">
+              <p className="max-w-md mx-auto text-xl leading-relaxed text-purple-200/80">
                 {moonPhase.description}
               </p>
-              <div className="text-purple-300/60 text-sm">
+              <div className="text-sm text-purple-300/60">
                 {currentDate.toLocaleDateString('fr-FR', { 
                   weekday: 'long', 
                   year: 'numeric', 
@@ -230,7 +249,7 @@ const NegusLunar = () => {
               {/* Bouton Calendrier */}
               <button
                 onClick={() => setShowCalendar(!showCalendar)}
-                className="mt-6 px-6 py-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 transition-all font-medium flex items-center justify-center gap-2 mx-auto"
+                className="flex items-center justify-center gap-2 px-6 py-3 mx-auto mt-6 font-medium transition-all rounded-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
               >
                 <Moon size={20} />
                 Choisir une date
@@ -241,18 +260,18 @@ const NegusLunar = () => {
           {/* Notes */}
           {activeTab === 'notes' && (
             <div className="space-y-6 animate-fadeIn">
-              <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-green-200 to-teal-200 bg-clip-text text-transparent">
+              <h2 className="mb-6 text-3xl font-bold text-transparent bg-gradient-to-r from-green-200 to-teal-200 bg-clip-text">
                 Journal & Intentions
               </h2>
               
               {/* Formulaire de nouvelle note */}
-              <div className="bg-white/10 rounded-2xl p-6 backdrop-blur-sm border border-white/20">
+              <div className="p-6 border bg-white/10 rounded-2xl backdrop-blur-sm border-white/20">
                 <div className="space-y-4">
                   <textarea
                     value={newNote}
                     onChange={(e) => setNewNote(e.target.value)}
                     placeholder="Écris tes pensées, intentions ou idées..."
-                    className="w-full bg-white/5 border border-white/20 rounded-xl p-4 text-white placeholder-purple-300/50 focus:outline-none focus:ring-2 focus:ring-green-500/50 min-h-32 resize-none"
+                    className="w-full p-4 text-white border resize-none bg-white/5 border-white/20 rounded-xl placeholder-purple-300/50 focus:outline-none focus:ring-2 focus:ring-green-500/50 min-h-32"
                   />
                   
                   <div className="flex gap-3">
@@ -274,7 +293,7 @@ const NegusLunar = () => {
                   <button
                     onClick={addNote}
                     disabled={!newNote.trim() || !selectedMood}
-                    className="w-full bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 disabled:opacity-50 disabled:cursor-not-allowed py-3 rounded-xl font-medium flex items-center justify-center gap-2 transition-all"
+                    className="flex items-center justify-center w-full gap-2 py-3 font-medium transition-all bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl"
                   >
                     <Plus size={20} />
                     Ajouter la note
@@ -287,11 +306,11 @@ const NegusLunar = () => {
                 {notes.map((note) => (
                   <div
                     key={note.id}
-                    className="bg-white/10 rounded-2xl p-5 backdrop-blur-sm border border-white/20 hover:border-green-500/50 transition-all group"
+                    className="p-5 transition-all border bg-white/10 rounded-2xl backdrop-blur-sm border-white/20 hover:border-green-500/50 group"
                   >
-                    <div className="flex justify-between items-start mb-3">
-                      <div className="flex gap-3 items-center">
-                        <span className="px-3 py-1 bg-green-500/20 text-green-200 rounded-full text-xs font-medium">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <span className="px-3 py-1 text-xs font-medium text-green-200 rounded-full bg-green-500/20">
                           {note.mood}
                         </span>
                         <span className="text-xs text-purple-300/60">
@@ -300,17 +319,17 @@ const NegusLunar = () => {
                       </div>
                       <button
                         onClick={() => deleteNote(note.id)}
-                        className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 transition-all"
+                        className="text-red-400 transition-all opacity-0 group-hover:opacity-100 hover:text-red-300"
                       >
                         <X size={18} />
                       </button>
                     </div>
-                    <p className="text-purple-100 leading-relaxed">{note.text}</p>
+                    <p className="leading-relaxed text-purple-100">{note.text}</p>
                   </div>
                 ))}
                 
                 {notes.length === 0 && (
-                  <div className="text-center py-12 text-purple-300/60">
+                  <div className="py-12 text-center text-purple-300/60">
                     <BookOpen size={48} className="mx-auto mb-4 opacity-50" />
                     <p>Aucune note pour le moment. Commence ton journal lunaire !</p>
                   </div>
@@ -322,27 +341,27 @@ const NegusLunar = () => {
           {/* Recettes */}
           {activeTab === 'recipes' && (
             <div className="space-y-6 animate-fadeIn">
-              <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-pink-200 to-rose-200 bg-clip-text text-transparent">
+              <h2 className="mb-6 text-3xl font-bold text-transparent bg-gradient-to-r from-pink-200 to-rose-200 bg-clip-text">
                 Recettes Végétaliennes par Humeur
               </h2>
               
               <div className="space-y-6">
                 {Object.entries(recipesByMood).map(([mood, recipes]) => (
                   <div key={mood} className="space-y-3">
-                    <h3 className="text-xl font-semibold capitalize text-pink-200 flex items-center gap-2">
+                    <h3 className="flex items-center gap-2 text-xl font-semibold text-pink-200 capitalize">
                       <Leaf size={20} className="text-green-400" />
                       {mood}
                     </h3>
-                    <div className="grid md:grid-cols-3 gap-4">
+                    <div className="grid gap-4 md:grid-cols-3">
                       {recipes.map((recipe, idx) => (
                         <div
                           key={idx}
-                          className="bg-white/10 rounded-xl p-5 backdrop-blur-sm border border-white/20 hover:border-pink-500/50 transition-all hover:scale-105"
+                          className="p-5 transition-all border bg-white/10 rounded-xl backdrop-blur-sm border-white/20 hover:border-pink-500/50 hover:scale-105"
                         >
-                          <h4 className="font-semibold text-pink-100 mb-2">
+                          <h4 className="mb-2 font-semibold text-pink-100">
                             {recipe.name}
                           </h4>
-                          <p className="text-sm text-purple-200/70 leading-relaxed">
+                          <p className="text-sm leading-relaxed text-purple-200/70">
                             {recipe.ingredients}
                           </p>
                         </div>
@@ -356,29 +375,29 @@ const NegusLunar = () => {
         </main>
 
         {/* Footer */}
-        <footer className="mt-12 text-center text-purple-300/60 text-sm">
+        <footer className="mt-12 text-sm text-center text-purple-300/60">
           <p>Créé avec 🌙 par Négus Dja • Guadeloupe</p>
         </footer>
       </div>
 
       {/* Pop-up Calendrier */}
       {showCalendar && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50" onClick={() => setShowCalendar(false)}>
-          <div className="bg-gradient-to-br from-indigo-950 via-purple-900 to-slate-900 rounded-3xl p-8 border border-white/20 max-w-sm w-11/12 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={() => setShowCalendar(false)}>
+          <div className="w-11/12 max-w-sm p-8 border shadow-2xl bg-gradient-to-br from-indigo-950 via-purple-900 to-slate-900 rounded-3xl border-white/20" onClick={(e) => e.stopPropagation()}>
             {/* Header du calendrier */}
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex items-center justify-between mb-6">
               <button
                 onClick={handlePrevMonth}
-                className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all"
+                className="px-4 py-2 transition-all rounded-lg bg-white/10 hover:bg-white/20"
               >
                 ←
               </button>
-              <h3 className="text-xl font-bold text-center flex-1">
+              <h3 className="flex-1 text-xl font-bold text-center">
                 {monthNames[calendarDate.getMonth()]} {calendarDate.getFullYear()}
               </h3>
               <button
                 onClick={handleNextMonth}
-                className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all"
+                className="px-4 py-2 transition-all rounded-lg bg-white/10 hover:bg-white/20"
               >
                 →
               </button>
@@ -387,7 +406,7 @@ const NegusLunar = () => {
             {/* Jours de la semaine */}
             <div className="grid grid-cols-7 gap-2 mb-4">
               {['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].map((day) => (
-                <div key={day} className="text-center text-xs font-semibold text-purple-300">
+                <div key={day} className="text-xs font-semibold text-center text-purple-300">
                   {day}
                 </div>
               ))}
@@ -427,7 +446,7 @@ const NegusLunar = () => {
             {/* Bouton de fermeture */}
             <button
               onClick={() => setShowCalendar(false)}
-              className="w-full px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all text-white font-medium"
+              className="w-full px-4 py-2 font-medium text-white transition-all rounded-lg bg-white/10 hover:bg-white/20"
             >
               Fermer
             </button>

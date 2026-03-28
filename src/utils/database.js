@@ -16,7 +16,8 @@ const STORES = {
   MEAL_PLANS: 'mealPlans',
   DAILY_MEALS: 'dailyMeals',
   DAILY_EXERCISES: 'dailyExercises',
-  USER_SETTINGS: 'userSettings'
+  USER_SETTINGS: 'userSettings',
+  USER_PROFILE: 'userProfile'
 };
 
 /**
@@ -96,6 +97,13 @@ export const initDB = () => {
       // Store pour les paramètres utilisateur
       if (!db.objectStoreNames.contains(STORES.USER_SETTINGS)) {
         db.createObjectStore(STORES.USER_SETTINGS, { keyPath: 'key' });
+      }
+
+      // Store pour le profil utilisateur
+      if (!db.objectStoreNames.contains(STORES.USER_PROFILE)) {
+        const profileStore = db.createObjectStore(STORES.USER_PROFILE, { keyPath: 'id' });
+        profileStore.createIndex('name', 'name', { unique: false });
+        profileStore.createIndex('email', 'email', { unique: false });
       }
     };
   });
@@ -236,48 +244,100 @@ export const getByIndex = async (storeName, indexName, value) => {
 };
 
 /**
+ * Fonctions utilitaires pour le profil utilisateur (clé fixe 'me')
+ */
+export const getProfile = async () => {
+  try {
+    return await getItem(STORES.USER_PROFILE, 'me');
+  } catch (error) {
+    console.error('Erreur getProfile:', error);
+    return null;
+  }
+};
+
+export const setProfile = async (profile) => {
+  try {
+    const toSave = Object.assign({ id: 'me' }, profile || {});
+    return await setItem(STORES.USER_PROFILE, toSave);
+  } catch (error) {
+    console.error('Erreur setProfile:', error);
+    throw error;
+  }
+};
+
+export const deleteProfile = async () => {
+  try {
+    return await deleteItem(STORES.USER_PROFILE, 'me');
+  } catch (error) {
+    console.error('Erreur deleteProfile:', error);
+    throw error;
+  }
+};
+
+/**
  * Migrer les données depuis localStorage vers IndexedDB
  */
 export const migrateFromLocalStorage = async () => {
   try {
-    // Migrer les notes
+    // Migrer les notes (éviter doublons)
     const savedNotes = localStorage.getItem('negusLunarNotes');
     if (savedNotes) {
       const notes = JSON.parse(savedNotes);
+      let count = 0;
       for (const note of notes) {
-        await setItem(STORES.NOTES, note);
+        // vérification par clé (note.id attendue)
+        const existing = await getItem(STORES.NOTES, note.id);
+        if (!existing) {
+          await setItem(STORES.NOTES, note);
+          count++;
+        }
       }
-      console.log(`✅ ${notes.length} notes migrées`);
+      console.log(`✅ ${count}/${notes.length} notes migrées (doublons ignorés)`);
     }
 
-    // Migrer l'historique d'humeur
+    // Migrer l'historique d'humeur (éviter doublons)
     const savedMoodHistory = localStorage.getItem('negusLunarMoodHistory');
     if (savedMoodHistory) {
       const moodHistory = JSON.parse(savedMoodHistory);
+      let count = 0;
       for (const mood of moodHistory) {
-        await setItem(STORES.MOOD_HISTORY, mood);
+        const existing = await getItem(STORES.MOOD_HISTORY, mood.date);
+        if (!existing) {
+          await setItem(STORES.MOOD_HISTORY, mood);
+          count++;
+        }
       }
-      console.log(`✅ ${moodHistory.length} entrées d'humeur migrées`);
+      console.log(`✅ ${count}/${moodHistory.length} entrées d'humeur migrées (doublons ignorés)`);
     }
 
-    // Migrer les projets de travail
+    // Migrer les projets de travail (éviter doublons)
     const savedProjects = localStorage.getItem('workProjects');
     if (savedProjects) {
       const projects = JSON.parse(savedProjects);
+      let count = 0;
       for (const project of projects) {
-        await setItem(STORES.WORK_PROJECTS, project);
+        const existing = await getItem(STORES.WORK_PROJECTS, project.id);
+        if (!existing) {
+          await setItem(STORES.WORK_PROJECTS, project);
+          count++;
+        }
       }
-      console.log(`✅ ${projects.length} projets migrés`);
+      console.log(`✅ ${count}/${projects.length} projets migrés (doublons ignorés)`);
     }
 
-    // Migrer les sessions de travail
+    // Migrer les sessions de travail (éviter doublons)
     const savedSessions = localStorage.getItem('workSessions');
     if (savedSessions) {
       const sessions = JSON.parse(savedSessions);
+      let count = 0;
       for (const session of sessions) {
-        await setItem(STORES.WORK_SESSIONS, session);
+        const existing = await getItem(STORES.WORK_SESSIONS, session.id);
+        if (!existing) {
+          await setItem(STORES.WORK_SESSIONS, session);
+          count++;
+        }
       }
-      console.log(`✅ ${sessions.length} sessions migrées`);
+      console.log(`✅ ${count}/${sessions.length} sessions migrées (doublons ignorés)`);
     }
 
     console.log('✅ Migration terminée avec succès !');

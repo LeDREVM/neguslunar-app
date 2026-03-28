@@ -1,36 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { Target, TrendingDown, TrendingUp, Activity, Calendar, ChefHat, Plus, X, Edit2, Check } from 'lucide-react';
+import { Target, TrendingDown, TrendingUp, Activity, Calendar, ChefHat, Plus, X, Edit2, Check, Zap, ShoppingCart } from 'lucide-react';
+import { useProfile } from '../context/ProfileContext';
 
-const MealPlanner = () => {
-  const [goal, setGoal] = useState('maintenance'); // weight-loss, muscle-gain, maintenance
+const MealPlanner = ({ onAddToShoppingList }) => {
+  const { activeProfileId, setGoals } = useProfile();
+  const profileKey = activeProfileId || 'default';
+
+  const [goal, setGoal] = useState('maintenance');
   const [userProfile, setUserProfile] = useState({
-    age: 30,
-    weight: 70,
-    height: 170,
-    gender: 'male',
-    activityLevel: 'moderate'
+    age: 30, weight: 70, height: 170, gender: 'male', activityLevel: 'moderate'
   });
   const [showProfileEdit, setShowProfileEdit] = useState(false);
   const [mealPlans, setMealPlans] = useState([]);
   const [selectedDay, setSelectedDay] = useState(new Date().getDay());
+  const [goalsSent, setGoalsSent] = useState(false);
 
-  // Charger les données depuis localStorage
+  // Clés scopées au profil
+  const keys = {
+    profile: `neguslunar-user-profile-${profileKey}`,
+    goal:    `neguslunar-goal-${profileKey}`,
+    plans:   `neguslunar-meal-plans-${profileKey}`
+  };
+
+  // Charger les données depuis localStorage (scopées au profil)
   useEffect(() => {
-    const savedProfile = localStorage.getItem('neguslunar-user-profile');
-    const savedGoal = localStorage.getItem('neguslunar-goal');
-    const savedPlans = localStorage.getItem('neguslunar-meal-plans');
+    const savedProfile = localStorage.getItem(keys.profile);
+    const savedGoal    = localStorage.getItem(keys.goal);
+    const savedPlans   = localStorage.getItem(keys.plans);
 
     if (savedProfile) setUserProfile(JSON.parse(savedProfile));
-    if (savedGoal) setGoal(savedGoal);
-    if (savedPlans) setMealPlans(JSON.parse(savedPlans));
-  }, []);
+    if (savedGoal)    setGoal(savedGoal);
+    if (savedPlans)   setMealPlans(JSON.parse(savedPlans));
+    setGoalsSent(false);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profileKey]);
 
   // Sauvegarder dans localStorage
   useEffect(() => {
-    localStorage.setItem('neguslunar-user-profile', JSON.stringify(userProfile));
-    localStorage.setItem('neguslunar-goal', goal);
-    localStorage.setItem('neguslunar-meal-plans', JSON.stringify(mealPlans));
-  }, [userProfile, goal, mealPlans]);
+    localStorage.setItem(keys.profile, JSON.stringify(userProfile));
+    localStorage.setItem(keys.goal,    goal);
+    localStorage.setItem(keys.plans,   JSON.stringify(mealPlans));
+  }, [userProfile, goal, mealPlans, keys.profile, keys.goal, keys.plans]);
 
   // Objectifs disponibles
   const goals = {
@@ -402,6 +412,24 @@ const MealPlanner = () => {
         <div className="bg-blue-900/20 border border-blue-700/30 rounded-lg p-3 text-sm text-blue-300">
           <strong>💡 Info:</strong> Ces valeurs sont calculées selon votre profil et votre objectif de {currentGoal.name.toLowerCase()}.
         </div>
+
+        {/* Bouton : appliquer au DailyTracker */}
+        <button
+          onClick={() => {
+            setGoals({
+              dailyCalories: targetCalories,
+              dailyProteins: macros.proteins,
+              dailyCarbs: macros.carbs,
+              dailyFats: macros.fats
+            });
+            setGoalsSent(true);
+            setTimeout(() => setGoalsSent(false), 3000);
+          }}
+          className="mt-4 w-full flex items-center justify-center gap-2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white py-3 rounded-xl font-semibold transition-all"
+        >
+          <Zap size={18} />
+          {goalsSent ? '✓ Objectifs appliqués au Suivi quotidien !' : 'Appliquer ces objectifs au Suivi quotidien'}
+        </button>
       </div>
 
       {/* Suggestions de repas */}
@@ -435,19 +463,29 @@ const MealPlanner = () => {
                 </div>
               </div>
               
-              <div className="flex gap-3 mt-3 pt-3 border-t border-gray-700">
-                <div className="text-sm">
-                  <span className="text-blue-400 font-semibold">{meal.proteins}g</span>
-                  <span className="text-gray-500 ml-1">P</span>
+              <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-700">
+                <div className="flex gap-3">
+                  <div className="text-sm">
+                    <span className="text-blue-400 font-semibold">{meal.proteins}g</span>
+                    <span className="text-gray-500 ml-1">P</span>
+                  </div>
+                  <div className="text-sm">
+                    <span className="text-green-400 font-semibold">{meal.carbs}g</span>
+                    <span className="text-gray-500 ml-1">G</span>
+                  </div>
+                  <div className="text-sm">
+                    <span className="text-yellow-400 font-semibold">{meal.fats}g</span>
+                    <span className="text-gray-500 ml-1">L</span>
+                  </div>
                 </div>
-                <div className="text-sm">
-                  <span className="text-green-400 font-semibold">{meal.carbs}g</span>
-                  <span className="text-gray-500 ml-1">G</span>
-                </div>
-                <div className="text-sm">
-                  <span className="text-yellow-400 font-semibold">{meal.fats}g</span>
-                  <span className="text-gray-500 ml-1">L</span>
-                </div>
+                {onAddToShoppingList && (
+                  <button
+                    onClick={() => onAddToShoppingList(meal.items)}
+                    className="flex items-center gap-1 px-2 py-1 text-xs bg-teal-700/50 hover:bg-teal-600/70 text-teal-200 rounded-lg transition-colors"
+                  >
+                    <ShoppingCart size={12} /> Courses
+                  </button>
+                )}
               </div>
             </div>
           ))}
@@ -460,6 +498,17 @@ const MealPlanner = () => {
           <div className="text-xs text-gray-500">
             P = Protéines | G = Glucides | L = Lipides
           </div>
+          {onAddToShoppingList && (
+            <button
+              onClick={() => {
+                const allItems = mealSuggestions.flatMap(m => m.items);
+                onAddToShoppingList(allItems);
+              }}
+              className="mt-3 inline-flex items-center gap-2 px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white rounded-lg transition-colors text-sm font-semibold"
+            >
+              <ShoppingCart size={16} /> Ajouter tout aux courses
+            </button>
+          )}
         </div>
       </div>
 

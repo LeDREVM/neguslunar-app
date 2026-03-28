@@ -1,12 +1,19 @@
-import React, { useState, useMemo } from 'react';
-import { ShoppingCart, Plus, X, Trash2, Check, Download, Filter } from 'lucide-react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { ShoppingCart, Plus, X, Trash2, Check, Download, Filter, Cloud, RefreshCw } from 'lucide-react';
 import { ingredientCategories, getIngredientsByCategory, ingredients } from '../data/ingredientsDatabase';
+import { useProfile } from '../context/ProfileContext';
+import { syncModule, fetchModule, loadNextcloudConfig } from '../utils/nextcloudSync';
 
-const ShoppingList = () => {
+const ShoppingList = ({ pendingIngredients, onPendingIngredientsConsumed }) => {
+  const { activeProfileId } = useProfile();
+  const storageKey = `shoppingList-${activeProfileId}`;
+
   const [shoppingItems, setShoppingItems] = useState(() => {
-    const saved = localStorage.getItem('shoppingList');
+    const saved = localStorage.getItem(storageKey);
     return saved ? JSON.parse(saved) : [];
   });
+  const [syncing, setSyncing] = useState(false);
+  const [syncMsg, setSyncMsg] = useState(null);
   
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -18,9 +25,35 @@ const ShoppingList = () => {
     notes: ''
   });
 
+  // Reload items when profile changes
+  useEffect(() => {
+    const saved = localStorage.getItem(storageKey);
+    setShoppingItems(saved ? JSON.parse(saved) : []);
+  }, [activeProfileId]);
+
+  // Auto-add pending ingredients from RecipeBrowser
+  useEffect(() => {
+    if (!pendingIngredients?.length) return;
+    const newItems = pendingIngredients.map((name, i) => ({
+      id: Date.now() + i,
+      ingredient: { name, category: 'recipe', emoji: '🍽️' },
+      quantity: '',
+      unit: '',
+      notes: '',
+      checked: false,
+      addedAt: new Date().toISOString()
+    }));
+    setShoppingItems(prev => {
+      const updated = [...prev, ...newItems];
+      localStorage.setItem(storageKey, JSON.stringify(updated));
+      return updated;
+    });
+    if (onPendingIngredientsConsumed) onPendingIngredientsConsumed();
+  }, [pendingIngredients]);
+
   // Sauvegarder automatiquement dans localStorage
   const saveToLocalStorage = (items) => {
-    localStorage.setItem('shoppingList', JSON.stringify(items));
+    localStorage.setItem(storageKey, JSON.stringify(items));
   };
 
   // Filtrer les ingrédients disponibles
@@ -93,6 +126,31 @@ const ShoppingList = () => {
     saveToLocalStorage(updated);
   };
 
+  // Sync Nextcloud
+  const handleSync = async (direction) => {
+    const config = loadNextcloudConfig();
+    if (!config) { setSyncMsg({ ok: false, text: 'Nextcloud non configuré' }); return; }
+    setSyncing(true); setSyncMsg(null);
+    if (direction === 'push') {
+      const r = await syncModule(activeProfileId, 'shopping', shoppingItems, config);
+      setSyncMsg({ ok: r.success, text: r.success ? 'Envoyé ✓' : 'Échec envoi' });
+    } else {
+      const r = await fetchModule(activeProfileId, 'shopping', config);
+      if (r.success && Array.isArray(r.data)) {
+        const merged = [...r.data, ...shoppingItems];
+        const seen = new Set();
+        const deduped = merged.filter(i => { if (seen.has(i.id)) return false; seen.add(i.id); return true; });
+        setShoppingItems(deduped);
+        saveToLocalStorage(deduped);
+        setSyncMsg({ ok: true, text: 'Récupéré ✓' });
+      } else {
+        setSyncMsg({ ok: false, text: 'Échec récupération' });
+      }
+    }
+    setSyncing(false);
+    setTimeout(() => setSyncMsg(null), 3000);
+  };
+
   // Exporter la liste
   const exportList = () => {
     const text = shoppingItems
@@ -143,12 +201,18 @@ const ShoppingList = () => {
               </p>
             </div>
           </div>
-          <button
-            onClick={() => setShowAddForm(!showAddForm)}
-            className="bg-white/20 hover:bg-white/30 p-3 rounded-lg transition-colors"
-          >
-            {showAddForm ? <X size={24} /> : <Plus size={24} />}
-          </button>
+          <div className="flex items-center gap-2">
+            <button onClick={() => handleSync('pull')} disabled={syncing} title="Récupérer depuis Nextcloud"
+              className="bg-white/20 hover:bg-white/30 p-2 rounded-lg transition-colors">
+              {syncing ? <RefreshCw size={18} className="animate-spin" /> : <Cloud size={18} />}
+            </button>
+            <button
+              onClick={() => setShowAddForm(!showAddForm)}
+              className="bg-white/20 hover:bg-white/30 p-3 rounded-lg transition-colors"
+            >
+              {showAddForm ? <X size={24} /> : <Plus size={24} />}
+            </button>
+          </div>
         </div>
 
         {/* Barre de progression */}
@@ -159,6 +223,9 @@ const ShoppingList = () => {
               style={{ width: `${(checkedCount / totalCount) * 100}%` }}
             />
           </div>
+        )}
+        {syncMsg && (
+          <p className={`text-xs mt-2 ${syncMsg.ok ? 'text-green-200' : 'text-red-200'}`}>{syncMsg.text}</p>
         )}
       </div>
 
@@ -276,6 +343,14 @@ const ShoppingList = () => {
                 <Download size={18} />
                 Exporter
               </button>
+              <button
+                onClick={() => handleSync('push')}
+                disabled={syncing}
+                className="flex-1 min-w-[150px] bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 text-white py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+              >
+                <Cloud size={18} />
+                Nextcloud
+              </button>
               {checkedCount > 0 && (
                 <button
                   onClick={deleteCheckedItems}
@@ -355,6 +430,28 @@ const ShoppingList = () => {
                 </div>
               );
             })}
+          </div>
+        )}
+
+        {/* Résumé du panier */}
+        {totalCount > 0 && (
+          <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-200 rounded-xl p-4 mt-4">
+            <h4 className="font-bold text-emerald-800 mb-2 flex items-center gap-2">
+              <ShoppingCart size={16} /> Résumé du panier
+            </h4>
+            <div className="flex flex-wrap gap-2 text-xs">
+              {Object.entries(groupedItems).map(([cat, items]) => {
+                const catInfo = ingredientCategories.find(c => c.id === cat);
+                return (
+                  <span key={cat} className="bg-white px-2 py-1 rounded-full border border-emerald-200 text-emerald-700">
+                    {catInfo?.emoji || '📦'} {items.length} {catInfo?.name || cat}
+                  </span>
+                );
+              })}
+            </div>
+            <div className="mt-2 text-sm text-emerald-600">
+              {totalCount} articles • {checkedCount} cochés • {totalCount - checkedCount} restants
+            </div>
           </div>
         )}
       </div>

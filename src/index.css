@@ -20,75 +20,455 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'Space Mono', monospace;
 }
 
+/* ============================================
+   ANIMATIONS DE BASE
+   ============================================ */
+
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(3deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes rotateSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(147, 51, 234, 0.4), 0 0 40px rgba(147, 51, 234, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(147, 51, 234, 0.8), 0 0 80px rgba(147, 51, 234, 0.4), 0 0 120px rgba(147, 51, 234, 0.2); }
+}
+
+@keyframes moonGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 40px rgba(200, 180, 255, 0.3),
+      0 0 80px rgba(160, 140, 220, 0.2),
+      0 0 120px rgba(120, 100, 180, 0.1),
+      inset 0 0 30px rgba(255, 255, 255, 0.05);
   }
-  to {
+  50% {
+    box-shadow:
+      0 0 60px rgba(200, 180, 255, 0.5),
+      0 0 120px rgba(160, 140, 220, 0.35),
+      0 0 200px rgba(120, 100, 180, 0.2),
+      inset 0 0 50px rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* ============================================
+   ÉTOILES FILANTES
+   ============================================ */
+
+@keyframes shootingStar {
+  0% {
+    transform: translateX(0) translateY(0) rotate(-45deg);
     opacity: 1;
-    transform: translateY(0);
+    width: 0;
+  }
+  70% { opacity: 1; }
+  100% {
+    transform: translateX(-400px) translateY(400px) rotate(-45deg);
+    opacity: 0;
+    width: 120px;
   }
 }
 
-.animate-fadeIn {
-  animation: fadeIn 0.5s ease-out;
+@keyframes shootingStarAlt {
+  0% {
+    transform: translateX(0) translateY(0) rotate(-35deg);
+    opacity: 0.9;
+    width: 0;
+  }
+  70% { opacity: 0.9; }
+  100% {
+    transform: translateX(-300px) translateY(300px) rotate(-35deg);
+    opacity: 0;
+    width: 80px;
+  }
 }
 
-/* Scrollbar personnalisé */
+.shooting-star {
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(200,180,255,1) 100%);
+  border-radius: 2px;
+  animation: shootingStar 3s linear infinite;
+}
+
+.shooting-star:nth-child(1) { top: 15%; left: 85%; animation-delay: 0s; animation-duration: 4s; }
+.shooting-star:nth-child(2) { top: 25%; left: 70%; animation-delay: 2.5s; animation-duration: 3.5s; }
+.shooting-star:nth-child(3) { top: 8%; left: 60%; animation-delay: 5s; animation-duration: 5s; }
+.shooting-star:nth-child(4) { top: 40%; left: 90%; animation-delay: 7s; animation-duration: 3s; }
+.shooting-star:nth-child(5) { top: 5%; left: 75%; animation-delay: 10s; animation-duration: 4.5s; animation-name: shootingStarAlt; }
+
+/* ============================================
+   AURORA / NÉBULEUSE
+   ============================================ */
+
+@keyframes aurora1 {
+  0%, 100% { transform: translateX(-5%) translateY(0%) scale(1); opacity: 0.15; }
+  33% { transform: translateX(5%) translateY(-3%) scale(1.05); opacity: 0.25; }
+  66% { transform: translateX(-3%) translateY(3%) scale(0.98); opacity: 0.18; }
+}
+
+@keyframes aurora2 {
+  0%, 100% { transform: translateX(5%) translateY(2%) scale(1); opacity: 0.12; }
+  40% { transform: translateX(-5%) translateY(-4%) scale(1.08); opacity: 0.22; }
+  70% { transform: translateX(2%) translateY(5%) scale(0.95); opacity: 0.15; }
+}
+
+@keyframes aurora3 {
+  0%, 100% { transform: translateX(0%) translateY(-2%) scale(1.02); opacity: 0.1; }
+  50% { transform: translateX(-4%) translateY(4%) scale(0.97); opacity: 0.2; }
+}
+
+.aurora-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.aurora-1 {
+  background: radial-gradient(ellipse 80% 50% at 20% 40%, rgba(79, 70, 229, 0.35) 0%, transparent 60%),
+              radial-gradient(ellipse 60% 40% at 80% 20%, rgba(168, 85, 247, 0.25) 0%, transparent 50%);
+  animation: aurora1 15s ease-in-out infinite;
+}
+
+.aurora-2 {
+  background: radial-gradient(ellipse 70% 60% at 70% 70%, rgba(99, 102, 241, 0.3) 0%, transparent 55%),
+              radial-gradient(ellipse 50% 50% at 30% 80%, rgba(139, 92, 246, 0.2) 0%, transparent 50%);
+  animation: aurora2 20s ease-in-out infinite;
+}
+
+.aurora-3 {
+  background: radial-gradient(ellipse 90% 40% at 50% 10%, rgba(196, 181, 253, 0.15) 0%, transparent 60%),
+              radial-gradient(ellipse 40% 70% at 90% 60%, rgba(167, 139, 250, 0.2) 0%, transparent 50%);
+  animation: aurora3 25s ease-in-out infinite;
+}
+
+/* ============================================
+   LUNE RÉALISTE
+   ============================================ */
+
+.moon-orb {
+  position: absolute;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 35%, rgba(255, 255, 240, 0.95) 0%, rgba(220, 210, 255, 0.8) 30%, rgba(160, 140, 220, 0.6) 60%, rgba(80, 60, 140, 0.4) 100%);
+  animation: moonGlow 6s ease-in-out infinite, floatSlow 20s ease-in-out infinite;
+  overflow: hidden;
+}
+
+.moon-orb::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.2) 0%, transparent 40%),
+    radial-gradient(circle at 70% 60%, rgba(0,0,0,0.15) 0%, transparent 30%),
+    radial-gradient(circle at 40% 70%, rgba(0,0,0,0.1) 0%, transparent 20%),
+    radial-gradient(circle at 80% 30%, rgba(0,0,0,0.08) 0%, transparent 25%);
+}
+
+.moon-orb::after {
+  content: '';
+  position: absolute;
+  top: 5%;
+  left: 10%;
+  right: 10%;
+  height: 30%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 100%);
+  border-radius: 50%;
+  filter: blur(8px);
+}
+
+/* ============================================
+   GLASSMORPHISME AMÉLIORÉ
+   ============================================ */
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 1px 0 rgba(255, 255, 255, 0.1) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.2) inset;
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.4),
+    0 1px 0 rgba(255, 255, 255, 0.15) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.2) inset;
+  transform: translateY(-2px);
+}
+
+.glass-card-strong {
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    0 1px 0 rgba(255, 255, 255, 0.12) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.3) inset,
+    0 0 0 1px rgba(147, 51, 234, 0.1);
+}
+
+/* ============================================
+   EFFETS NÉON / GLOW
+   ============================================ */
+
+.neon-text-purple {
+  color: #c084fc;
+  text-shadow: 0 0 10px rgba(192, 132, 252, 0.8), 0 0 30px rgba(192, 132, 252, 0.4), 0 0 60px rgba(192, 132, 252, 0.2);
+}
+
+.neon-text-blue {
+  color: #93c5fd;
+  text-shadow: 0 0 10px rgba(147, 197, 253, 0.8), 0 0 30px rgba(147, 197, 253, 0.4);
+}
+
+.neon-glow-purple {
+  box-shadow: 0 0 15px rgba(147, 51, 234, 0.5), 0 0 30px rgba(147, 51, 234, 0.3), 0 0 60px rgba(147, 51, 234, 0.15);
+}
+
+.neon-glow-blue {
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.5), 0 0 30px rgba(59, 130, 246, 0.3);
+}
+
+.neon-glow-pink {
+  box-shadow: 0 0 15px rgba(236, 72, 153, 0.5), 0 0 30px rgba(236, 72, 153, 0.3);
+}
+
+.neon-border {
+  border: 1px solid rgba(147, 51, 234, 0.4);
+  box-shadow: 0 0 10px rgba(147, 51, 234, 0.3) inset, 0 0 20px rgba(147, 51, 234, 0.2);
+}
+
+/* ============================================
+   BOUTONS RÉALISTES
+   ============================================ */
+
+.btn-glass {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-glass::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transition: left 0.4s ease;
+}
+
+.btn-glass:hover::before {
+  left: 100%;
+}
+
+.btn-glass:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.btn-glass:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Ripple effect */
+@keyframes ripple {
+  0% { transform: scale(0); opacity: 0.6; }
+  100% { transform: scale(4); opacity: 0; }
+}
+
+.ripple-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-container .ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  animation: ripple 0.6s linear;
+  pointer-events: none;
+}
+
+/* ============================================
+   TEXTE SHIMMER / GRADIENT ANIMÉ
+   ============================================ */
+
+.text-shimmer {
+  background: linear-gradient(
+    90deg,
+    #c084fc 0%,
+    #e879f9 25%,
+    #a78bfa 50%,
+    #818cf8 75%,
+    #c084fc 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4s linear infinite;
+}
+
+.text-shimmer-gold {
+  background: linear-gradient(
+    90deg,
+    #fbbf24 0%,
+    #f59e0b 25%,
+    #fcd34d 50%,
+    #f59e0b 75%,
+    #fbbf24 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+/* ============================================
+   CARTE AVEC REFLET (HOLOGRAPHIC)
+   ============================================ */
+
+@keyframes holographic {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.holo-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.holo-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.03) 30%,
+    rgba(255, 255, 255, 0.06) 40%,
+    rgba(255, 255, 255, 0.03) 50%,
+    transparent 60%
+  );
+  background-size: 400% 400%;
+  animation: holographic 8s ease infinite;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ============================================
+   SCROLLBAR AMÉLIORÉE
+   ============================================ */
+
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(147, 51, 234, 0.5);
-  border-radius: 5px;
+  background: linear-gradient(180deg, rgba(147, 51, 234, 0.6), rgba(99, 102, 241, 0.6));
+  border-radius: 3px;
+  transition: background 0.3s;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(147, 51, 234, 0.7);
+  background: linear-gradient(180deg, rgba(147, 51, 234, 0.9), rgba(99, 102, 241, 0.9));
 }
 
-/* Optimisations iPhone 12+ (390px × 844px et supérieur) */
+/* ============================================
+   CLASSES UTILITAIRES
+   ============================================ */
+
+.animate-fadeIn { animation: fadeIn 0.5s ease-out; }
+.animate-fadeInScale { animation: fadeInScale 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-floatSlow { animation: floatSlow 20s ease-in-out infinite; }
+.animate-shimmer { animation: shimmer 3s linear infinite; }
+.animate-rotateSlow { animation: rotateSlow 30s linear infinite; }
+.animate-pulseGlow { animation: pulseGlow 3s ease-in-out infinite; }
+
+.bg-gradient-radial {
+  background: radial-gradient(circle at 50% 50%, var(--tw-gradient-stops));
+}
+
+/* Divider lumineux */
+.divider-glow {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(147, 51, 234, 0.5), rgba(99, 102, 241, 0.5), transparent);
+  box-shadow: 0 0 8px rgba(147, 51, 234, 0.3);
+}
+
+/* Hide scrollbar */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+
+/* ============================================
+   RESPONSIVE MOBILE
+   ============================================ */
+
 @media (max-width: 430px) {
-  /* Améliorer la lisibilité sur petits écrans */
   body {
     font-size: 14px;
     -webkit-tap-highlight-color: transparent;
   }
-  
-  /* Éviter le zoom sur les inputs */
-  input, textarea, select {
-    font-size: 16px !important;
-  }
-  
-  /* Optimiser l'espace vertical */
-  .container {
-    padding-left: 12px !important;
-    padding-right: 12px !important;
-  }
+  input, textarea, select { font-size: 16px !important; }
+  .container { padding-left: 12px !important; padding-right: 12px !important; }
 }
 
-/* iPhone 12/13/14 (390px) */
 @media (max-width: 390px) {
-  h1 {
-    font-size: 2rem !important;
-  }
-  
-  h2 {
-    font-size: 1.5rem !important;
-  }
-  
-  h3 {
-    font-size: 1.25rem !important;
-  }
+  h1 { font-size: 2rem !important; }
+  h2 { font-size: 1.5rem !important; }
+  h3 { font-size: 1.25rem !important; }
 }
 
-/* Support du notch iPhone */
 @supports (padding: max(0px)) {
   body {
     padding-left: max(12px, env(safe-area-inset-left));
